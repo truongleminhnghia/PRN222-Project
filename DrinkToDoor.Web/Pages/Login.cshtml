@@ -1,0 +1,31 @@
+@page
+@model DrinkToDoor.Web.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Pages/Shared/_LayoutAuth.cshtml";
+}
+
+<div class="card shadow-lg">
+    <div class="card-body p-4">
+        <h1 class="card-title text-center mb-4">Đăng Nhập</h1>
+        <form method="post" novalidate>
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-4">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Đăng Nhập</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 12px; font-size: 16px; font-weight: 400;">Nếu bạn chưa có tài khoảng?
+            <a asp-asp-page="/Register" style="color: blue; cursor: pointer;">Đăng kí</a>
+        </p>
+    </div>
+</div>

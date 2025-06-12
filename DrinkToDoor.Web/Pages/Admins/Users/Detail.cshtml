@@ -1,0 +1,89 @@
+@page
+@using DrinkToDoor.Data.enums
+@model DrinkToDoor.Web.Pages.Admins.Users.DetailModel
+@{
+    ViewData["Title"] = "Xem Chi tiết";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container-xxl py-4">
+  <div class="card shadow-sm">
+    <!-- Card Header: Avatar + Name -->
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+      <img src="@(Model.UserResponse.Avatar ?? "/images/default-avatar.png")"
+           class="rounded-circle border border-white me-3"
+           style="width:60px; height:60px; object-fit:cover;"
+           alt="Avatar" />
+      <h3 class="mb-0">@($"{Model.UserResponse.FirstName} {Model.UserResponse.LastName}".Trim())</h3>
+    </div>
+    
+    <!-- Card Body: Details -->
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-md-4 text-center">
+          <img src="@(Model.UserResponse.Avatar ?? "/images/default-avatar.png")"
+               class="img-fluid rounded-circle border"
+               style="width:180px; height:180px; object-fit:cover;"
+               alt="Avatar" />
+        </div>
+        <div class="col-md-8">
+          <dl class="row">
+            <dt class="col-sm-4 text-muted">ID</dt>
+            <dd class="col-sm-8 mb-3">@Model.UserResponse.Id</dd>
+
+            <dt class="col-sm-4 text-muted">Email</dt>
+            <dd class="col-sm-8 mb-3">@Model.UserResponse.Email</dd>
+
+            <dt class="col-sm-4 text-muted">Họ &amp; Tên</dt>
+            <dd class="col-sm-8 mb-3">
+              @($"{Model.UserResponse.FirstName} {Model.UserResponse.LastName}".Trim())
+            </dd>
+
+            <dt class="col-sm-4 text-muted">Số điện thoại</dt>
+            <dd class="col-sm-8 mb-3">@Model.UserResponse.Phone</dd>
+
+            <dt class="col-sm-4 text-muted">Địa chỉ</dt>
+            <dd class="col-sm-8 mb-3">@Model.UserResponse.Address</dd>
+
+            <dt class="col-sm-4 text-muted">Role</dt>
+            <dd class="col-sm-8 mb-3">@Model.UserResponse.RoleName.ToString().Replace("ROLE_","")</dd>
+
+            <dt class="col-sm-4 text-muted">Trạng thái</dt>
+            <dd class="col-sm-8 mb-3">
+              @{ var st = Model.UserResponse.EnumAccountStatus;
+                 var cls = st == EnumAccountStatus.ACTIVE ? "badge bg-success" : "badge bg-danger"; }
+              <span class="@cls">@st</span>
+            </dd>
+
+            <dt class="col-sm-4 text-muted">Giới tính</dt>
+            <dd class="col-sm-8 mb-3">
+              @(Model.UserResponse.Gender == EnumGender.MALE ? "Nam"
+                : Model.UserResponse.Gender == EnumGender.FEMALE ? "Nữ" : "-")
+            </dd>
+
+            <dt class="col-sm-4 text-muted">Ngày sinh</dt>
+            <dd class="col-sm-8 mb-3">
+              @Model.UserResponse.DateOfBirth?.ToString("dd/MM/yyyy") ?? "-"
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Footer: Actions -->
+    <div class="card-footer bg-light d-flex justify-content-end">
+      <a asp-page="./Index" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-arrow-left-circle me-1"></i> Quay về
+      </a>
+      <a asp-page="./Edit" asp-route-id="@Model.UserResponse.Id" class="btn btn-warning me-2">
+        <i class="bi bi-pencil-fill me-1"></i> Chỉnh sửa
+      </a>
+      <form method="post" asp-page-handler="Delete" asp-route-id="@Model.UserResponse.Id"
+            onsubmit="return confirm('Bạn có chắc chắn xóa người dùng này?');">
+        <button type="submit" class="btn btn-danger">
+          <i class="bi bi-trash-fill me-1"></i> Xóa
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

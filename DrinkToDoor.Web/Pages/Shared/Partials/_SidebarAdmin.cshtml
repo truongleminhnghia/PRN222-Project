@@ -1,0 +1,50 @@
+<nav id="sidebar" class="bg-light border-end d-none d-lg-block">
+    <div class="p-3">
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item mb-1">
+                <a asp-page="/Admins/Dashboard" class="nav-link">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a asp-page="/Admins/Users/Index" class="nav-link">
+                    <i class="bi bi-speedometer2 me-2"></i> Người dùng
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a asp-page="/Admins/Ingredients/Index" class="nav-link">
+                    <i class="bi bi-box-seam me-2"></i> Nguyên liệu
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a asp-page="/Admins/Kits/Index" class="nav-link">
+                    <i class="bi bi-box-seam me-2"></i> Kits
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a asp-page="/Admins/Orders/Index" class="nav-link">
+                    <i class="bi bi-basket me-2"></i> Đơn hàng
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Menu</h5>
+        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <nav class="nav nav-pills flex-column p-3">
+            <a asp-page="/Admin/Dashboard" class="nav-link mb-1">
+                <i class="bi bi-speedometer2 me-2"></i> Dashboard
+            </a>
+            <a asp-page="/Admin/Products" class="nav-link mb-1">
+                <i class="bi bi-box-seam me-2"></i> Nguyên liệu
+            </a>
+            <a asp-page="/Admin/Orders" class="nav-link mb-1">
+                <i class="bi bi-basket me-2"></i> Đơn hàng
+            </a>
+        </nav>
+    </div>
+</div>

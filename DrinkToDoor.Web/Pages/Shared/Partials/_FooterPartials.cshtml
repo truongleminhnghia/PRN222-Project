@@ -1,0 +1,57 @@
+<!-- Pages/Shared/Partials/_Footer.cshtml -->
+<footer class="bg-dark text-light pt-5">
+  <div class="container">
+    <div class="row gy-4">
+      <!-- Column 1: Logo & Description -->
+      <div class="col-12 col-md-4">
+        <a asp-page="/Index" class="d-flex align-items-center mb-3 text-decoration-none text-light">
+          <img src="~/images/logos/logo.png" alt="Logo" class="me-2" style="height:32px;">
+          <span class="h5 mb-0">Blend &amp; Brew</span>
+        </a>
+        <p class="small">
+          Chúng tôi mang đến cho bạn những sản phẩm cà phê và nguyên liệu chất lượng nhất, để mỗi tách
+          đều là trải nghiệm hoàn hảo.
+        </p>
+      </div>
+
+      <!-- Column 2: Links -->
+      <div class="col-12 col-md-4">
+        <h6 class="text-uppercase mb-3">Liên kết nhanh</h6>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a asp-page="/Index" class="text-light text-decoration-none">Trang chủ</a></li>
+          <li class="mb-2"><a asp-page="/KhuyenMai" class="text-light text-decoration-none">Khuyến mãi</a></li>
+          <li class="mb-2"><a asp-page="/NguyenLieuKit" class="text-light text-decoration-none">Nguyên liệu &amp; Kit</a></li>
+          <li class="mb-2"><a asp-page="/GioiThieu" class="text-light text-decoration-none">Giới thiệu</a></li>
+          <li class="mb-2"><a asp-page="/Privacy" class="text-light text-decoration-none">Chính sách bảo mật</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Contact & Social -->
+      <div class="col-12 col-md-4">
+        <h6 class="text-uppercase mb-3">Liên hệ</h6>
+        <address class="small mb-3">
+          📍 123 Đường Cà Phê, Quận 1, TP.HCM<br>
+          📞 Hotline: <a href="tel:0123456789" class="text-light text-decoration-none">0123 456 789</a><br>
+          📧 Email: <a href="mailto:info@blendbrew.vn" class="text-light text-decoration-none">info@blendbrew.vn</a>
+        </address>
+        <div class="d-flex">
+          <a href="#" class="text-light fs-4 me-3" aria-label="Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="#" class="text-light fs-4 me-3" aria-label="Instagram">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="#" class="text-light fs-4" aria-label="Twitter">
+            <i class="bi bi-twitter"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="border-secondary my-4">
+
+    <div class="text-center small pb-3">
+      &copy; 2025 Blend &amp; Brew. All rights reserved.
+    </div>
+  </div>
+</footer>
