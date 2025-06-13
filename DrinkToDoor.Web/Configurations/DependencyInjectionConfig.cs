@@ -23,6 +23,9 @@ namespace DrinkToDoor.Web.Configurations
 
             // repository
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IImageRepository, ImageRepository>();
 
             return services;
         }

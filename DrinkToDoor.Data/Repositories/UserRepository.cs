@@ -9,7 +9,7 @@ namespace DrinkToDoor.Data.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private DrinkToDoorDbContext _context;
+        private readonly DrinkToDoorDbContext _context;
 
         public UserRepository(DrinkToDoorDbContext context)
         {
