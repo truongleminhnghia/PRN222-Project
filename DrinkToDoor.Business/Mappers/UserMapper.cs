@@ -12,6 +12,8 @@ namespace DrinkToDoor.Business.Mappers
         {
             CreateMap<UserRequest, User>().ReverseMap();
             CreateMap<User, UserResponse>().ReverseMap();
+            CreateMap<Category, CategoryResponse>();
+            CreateMap<CategoryRequest, Category>();
         }
     }
 }

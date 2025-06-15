@@ -10,6 +10,8 @@ namespace DrinkToDoor.Data
     {
         private readonly DrinkToDoorDbContext _context;
         private IUserRepository? _userRepository;
+        private ICategoryRepository? _categoryRepository;
+
 
         public UnitOfWork(DrinkToDoorDbContext context)
         {
@@ -17,6 +19,8 @@ namespace DrinkToDoor.Data
         }
 
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);
+        public ICategoryRepository Categories => _categoryRepository ??= new CategoryRepository(_context);
+
 
         public async Task SaveChangesAsync()
         {
