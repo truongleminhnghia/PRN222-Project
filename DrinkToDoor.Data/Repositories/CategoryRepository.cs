@@ -29,9 +29,19 @@ namespace DrinkToDoor.Data.Repositories
             return true;
         }
 
-        public Task<IEnumerable<Category>> GetAllAsync(EnumCategoryType? categoryType)
+        public async Task<IEnumerable<Category>> GetAllAsync(string? name, EnumCategoryType? categoryType)
         {
-            throw new NotImplementedException();
+            IQueryable<Category> query = _context.Categories;
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(c => c.Name.Contains(name));
+            }
+            if (categoryType.HasValue != null)
+            {
+                query = query.Where(c => c.CategoryType == categoryType.Value);
+            }
+            query.OrderBy(c => c.Name);
+            return await query.ToListAsync();
         }
 
         public async Task<Category?> FindById(Guid id)
@@ -43,6 +53,11 @@ namespace DrinkToDoor.Data.Repositories
         {
             _context.Categories.Update(category);
             return 1;
+        }
+
+        public async Task<Category> FindByName(string name)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Name == name);
         }
     }
 }

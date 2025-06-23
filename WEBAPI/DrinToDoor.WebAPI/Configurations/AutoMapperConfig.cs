@@ -9,6 +9,7 @@ namespace DrinToDoor.WebAPI.Configurations
         )
         {
             services.AddAutoMapper(typeof(UserMapper));
+            services.AddAutoMapper(typeof(CategoryMapper));
             return services;
         }
     }

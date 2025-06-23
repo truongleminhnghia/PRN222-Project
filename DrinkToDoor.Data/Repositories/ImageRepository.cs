@@ -1,7 +1,6 @@
 
 using DrinkToDoor.Data.Context;
 using DrinkToDoor.Data.Entities;
-using DrinkToDoor.Data.enums;
 using DrinkToDoor.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

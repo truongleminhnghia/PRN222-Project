@@ -10,6 +10,7 @@ namespace DrinkToDoor.Data.Repositories.Interfaces
         Task<int> UpdateAsync(Category category);
         Task<bool> DeleteAsync(Category category);
         Task<Category?> FindById(Guid id);
-        Task<IEnumerable<Category>> GetAllAsync(EnumCategoryType? categoryType);
+        Task<Category> FindByName(string name);
+        Task<IEnumerable<Category>> GetAllAsync(string? name, EnumCategoryType? categoryType);
     }
 }

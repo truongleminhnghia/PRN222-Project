@@ -16,7 +16,7 @@ namespace DrinkToDoor.BLL.ViewModel.Requests
         public string? Avatar { get; set; }
         [Required]
         [EnumDataType(typeof(EnumRoleName))]
-        public EnumRoleName RoleName { get; set; }
+        public EnumRoleName? RoleName { get; set; }
         public EnumGender? Gender { get; set; }
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{yyyy-MM-dd}", ApplyFormatInEditMode = true)]
