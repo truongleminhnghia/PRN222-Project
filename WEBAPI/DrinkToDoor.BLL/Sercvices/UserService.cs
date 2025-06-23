@@ -8,7 +8,7 @@ using DrinkToDoor.BLL.ViewModel.Responses;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
-using DrinkToDoor.Data.Repositories.Interfaces;
+using DrinkToDoor.Data.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace DrinkToDoor.BLL.Sercvices

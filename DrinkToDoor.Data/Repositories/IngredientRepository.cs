@@ -1,12 +1,12 @@
 
 using DrinkToDoor.Data.Context;
 using DrinkToDoor.Data.Entities;
-using DrinkToDoor.Data.Repositories.Interfaces;
+using DrinkToDoor.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DrinkToDoor.Data.Repositories
 {
-    public class IngredientRepository : IIngredientRepository
+    public class IngredientRepository :  IIngredientRepository
     {
         private readonly DrinkToDoorDbContext _context;
 

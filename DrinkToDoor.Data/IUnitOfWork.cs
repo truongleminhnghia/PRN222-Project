@@ -1,5 +1,5 @@
 
-using DrinkToDoor.Data.Repositories.Interfaces;
+using DrinkToDoor.Data.Interfaces;
 
 namespace DrinkToDoor.Data
 {

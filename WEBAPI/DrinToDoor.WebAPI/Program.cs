@@ -1,4 +1,6 @@
 using DrinkToDoor.Data.Context;
+using DrinkToDoor.Data.Entities;
+using DrinkToDoor.Data.enums;
 using DrinToDoor.WebAPI.Configurations;
 using DrinToDoor.WebAPI.Middlewares;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +54,24 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<DrinkToDoorDbContext>();
+    db.Database.Migrate();
+    bool adminExists = db.Users.Any(u => u.RoleName == EnumRoleName.ROLE_ADMIN);
+    if (!adminExists)
+    {
+        var adminUser = new User
+        {
+            Email = "admin@example.com",
+            Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
+            RoleName = EnumRoleName.ROLE_ADMIN
+        };
+        db.Users.Add(adminUser);
+        db.SaveChanges();
+    }
 }
 
 app.UseMiddleware<ExceptionMiddleware>();

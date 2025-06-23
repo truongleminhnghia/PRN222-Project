@@ -1,9 +1,9 @@
-﻿using DrinkToDoor.Data.Repositories.Interfaces;
-using DrinkToDoor.Data.Repositories;
+﻿using DrinkToDoor.Data.Interfaces;
 using DrinkToDoor.Data;
 using DrinkToDoor.BLL.Interfaces;
 using DrinkToDoor.BLL.Sercvices;
 using DrinkToDoor.BLL.HashPasswords;
+using DrinkToDoor.Data.Repositories;
 
 namespace DrinToDoor.WebAPI.Configurations
 {
@@ -22,7 +22,7 @@ namespace DrinToDoor.WebAPI.Configurations
 
             // repository
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IIngredientRepository, DrinkToDoor.Data.Repositories.IngredientRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
 

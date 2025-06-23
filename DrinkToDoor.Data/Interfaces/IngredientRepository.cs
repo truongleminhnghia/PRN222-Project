@@ -1,7 +1,7 @@
 
 using DrinkToDoor.Data.Entities;
 
-namespace DrinkToDoor.Data.Repositories.Interfaces
+namespace DrinkToDoor.Data.Interfaces
 {
     public interface IngredientRepository
     {

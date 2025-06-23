@@ -4,11 +4,6 @@ using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DrinkToDoor.Business.Services
 {
@@ -23,9 +18,9 @@ namespace DrinkToDoor.Business.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<CategoryResponse>> GetAllAsync(EnumCategoryType? categoryType = null)
+        public async Task<IEnumerable<CategoryResponse>> GetAllAsync(string? name, EnumCategoryType? categoryType = null)
         {
-            var entities = await _unitOfWork.Categories.GetAllAsync(categoryType);
+            var entities = await _unitOfWork.Categories.GetAllAsync(name, categoryType);
             return _mapper.Map<IEnumerable<CategoryResponse>>(entities);
         }
 

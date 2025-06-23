@@ -11,7 +11,7 @@ namespace DrinkToDoor.Business.Services
 {
     public interface ICategoryService
     {
-        Task<IEnumerable<CategoryResponse>> GetAllAsync(EnumCategoryType? categoryType = null);
+        Task<IEnumerable<CategoryResponse>> GetAllAsync(string? name, EnumCategoryType? categoryType = null);
         Task<CategoryResponse?> GetByIdAsync(Guid id);
         Task<Guid> CreateAsync(CategoryRequest request);
         Task<bool> UpdateAsync(Guid id, CategoryRequest request);

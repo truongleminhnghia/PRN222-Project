@@ -4,7 +4,7 @@ using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Business.Services;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Repositories;
-using DrinkToDoor.Data.Repositories.Interfaces;
+using DrinkToDoor.Data.Interfaces;
 
 namespace DrinkToDoor.Web.Configurations
 {
@@ -23,7 +23,7 @@ namespace DrinkToDoor.Web.Configurations
 
             // repository
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IIngredientRepository, IngredientRepository>();
+            services.AddScoped<IIngredientRepository, Data.Repositories.IngredientRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
 

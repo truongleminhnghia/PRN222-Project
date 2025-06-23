@@ -14,42 +14,53 @@ namespace DrinkToDoor.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
-        [Column("name", TypeName = "varchar(300)")]
         [Required]
+        [Column("name", TypeName = "nvarchar(100)")]
         public string Name { get; set; } = string.Empty;
 
-        [Column("description", TypeName = "varchar(1000)")]
-        public string Description { get; set; } = string.Empty;
-
-        [Column("price", TypeName = "decimal(18,2)")]
+        [Column("code", TypeName = "nvarchar(100)")]
         [Required]
-        public decimal Price { get; set; }
+        public string Code { get; set; } = string.Empty;
 
-        [Column("quantity_single", TypeName = "int")]
-        public int? QuantitySingle { get; set; }
-
-        [Column("quantity_per_carton", TypeName = "int")]
-        public int? QuantityPerCarton { get; set; }
+        [Column("description", TypeName = "text")]
+        public string? Description { get; set; }
 
         [Column("status", TypeName = "varchar(300)")]
         [Required]
         [EnumDataType(typeof(EnumStatus))]
         public EnumStatus Status { get; set; }
 
-        [Column("manufacturer", TypeName = "varchar(300)")]
-        public string? Manufacturer { get; set; }
-
-        [Column("weight_per_bag", TypeName = "float")]
+        [Column("price", TypeName = "decimal(12,2)")]
         [Required]
-        public float? WeightPerBag { get; set; }
+        public decimal Price { get; set; }
 
-        [Column("quantity_per_packing_unit", TypeName = "int")]
-        [Required]
-        public int QuantityPerPackingUnit { get; set; }
+        /// <summary>
+        /// Giá nhập mặc định
+        /// </summary>
+        [Column("cost", TypeName = "decimal(12,2)")]
+        public decimal? Cost { get; set; }
 
-        [Column("packing_unit", TypeName = "JSON")]
-        [Required]
-        public string[]? PackingUnit { get; set; }
+        /// <summary>
+        /// Tồn kho tổng (tùy chọn)
+        /// </summary>
+        [Column("stock_qty", TypeName = "int")]
+        public int StockQty { get; set; }
+
+        [Column("supplier_id")]
+        public Guid? SupplierId { get; set; }
+
+        [ForeignKey(nameof(SupplierId))]
+        public Supplier? Supplier { get; set; }
+
+        /// <summary>
+        /// Tùy chọn đóng gói mặc định (FK tới PackagingOptions)
+        /// </summary>
+        [Column("default_packaging_option_id")]
+        public Guid? DefaultPackagingOptionId { get; set; }
+
+        [ForeignKey(nameof(DefaultPackagingOptionId))]
+        [InverseProperty(nameof(PackagingOption.IngredientDefaults))]
+        public PackagingOption? DefaultPackagingOption { get; set; }
 
         [Column("category_id")]
         [Required]
@@ -60,6 +71,8 @@ namespace DrinkToDoor.Data.Entities
         public virtual ICollection<KitIngredient>? KitIngredients { get; set; }
         public virtual ICollection<Image>? Images { get; set; }
 
+        [InverseProperty(nameof(PackagingOption.Ingredient))]
+        public ICollection<PackagingOption>? PackagingOptions { get; set; }
         public virtual ICollection<IngredientProduct>? IngredientProducts { get; set; }
     }
 }

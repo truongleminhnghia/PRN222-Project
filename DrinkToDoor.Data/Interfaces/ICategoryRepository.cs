@@ -2,7 +2,7 @@
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
 
-namespace DrinkToDoor.Data.Repositories.Interfaces
+namespace DrinkToDoor.Data.Interfaces
 {
     public interface ICategoryRepository
     {
