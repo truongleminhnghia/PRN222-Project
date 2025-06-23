@@ -3,19 +3,22 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrinkToDoor.Web", "DrinkToDoor.Web\DrinkToDoor.Web.csproj", "{DA3FF3FE-2EAF-4C22-B3AC-D18E2E825814}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrinkToDoor.Web", "DrinkToDoor.Web\DrinkToDoor.Web.csproj", "{DA3FF3FE-2EAF-4C22-B3AC-D18E2E825814}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrinkToDoor.Business", "DrinkToDoor.Business\DrinkToDoor.Business.csproj", "{9207F156-2B39-4254-AA18-9012D46E84C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrinkToDoor.Business", "DrinkToDoor.Business\DrinkToDoor.Business.csproj", "{9207F156-2B39-4254-AA18-9012D46E84C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrinkToDoor.Data", "DrinkToDoor.Data\DrinkToDoor.Data.csproj", "{FAC21A47-18FA-4EFF-90F7-EBEF56E6FC10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrinkToDoor.Data", "DrinkToDoor.Data\DrinkToDoor.Data.csproj", "{FAC21A47-18FA-4EFF-90F7-EBEF56E6FC10}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WEBAPI", "WEBAPI", "{D48954F0-94C3-45F7-8B07-951CF9C398F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DrinkToDoor.BLL", "WEBAPI\DrinkToDoor.BLL\DrinkToDoor.BLL.csproj", "{C8FB5E7D-C375-4389-A610-8B39879EC61B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DrinToDoor.WebAPI", "WEBAPI\DrinToDoor.WebAPI\DrinToDoor.WebAPI.csproj", "{B5019D9A-4D91-47D3-A55F-32823C865058}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{DA3FF3FE-2EAF-4C22-B3AC-D18E2E825814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -30,5 +33,24 @@ Global
 		{FAC21A47-18FA-4EFF-90F7-EBEF56E6FC10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAC21A47-18FA-4EFF-90F7-EBEF56E6FC10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAC21A47-18FA-4EFF-90F7-EBEF56E6FC10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8FB5E7D-C375-4389-A610-8B39879EC61B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8FB5E7D-C375-4389-A610-8B39879EC61B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8FB5E7D-C375-4389-A610-8B39879EC61B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8FB5E7D-C375-4389-A610-8B39879EC61B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58C9BB9E-9026-4A6C-9047-7C3048AE13C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58C9BB9E-9026-4A6C-9047-7C3048AE13C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58C9BB9E-9026-4A6C-9047-7C3048AE13C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58C9BB9E-9026-4A6C-9047-7C3048AE13C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5019D9A-4D91-47D3-A55F-32823C865058}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5019D9A-4D91-47D3-A55F-32823C865058}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5019D9A-4D91-47D3-A55F-32823C865058}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5019D9A-4D91-47D3-A55F-32823C865058}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C8FB5E7D-C375-4389-A610-8B39879EC61B} = {D48954F0-94C3-45F7-8B07-951CF9C398F8}
+		{B5019D9A-4D91-47D3-A55F-32823C865058} = {D48954F0-94C3-45F7-8B07-951CF9C398F8}
 	EndGlobalSection
 EndGlobal
