@@ -11,7 +11,7 @@ using DrinkToDoor.Data.enums;
 using DrinkToDoor.Data.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace DrinkToDoor.BLL.Sercvices
+namespace DrinkToDoor.BLL.Services
 {
     public class UserService : IUserService
     {

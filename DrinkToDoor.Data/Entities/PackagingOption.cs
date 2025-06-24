@@ -66,6 +66,6 @@ namespace DrinkToDoor.Data.Entities
         public int? StockQty { get; set; }
 
         [InverseProperty(nameof(Ingredient.DefaultPackagingOption))]
-        public ICollection<Ingredient>? IngredientDefaults { get; set; }
+        public virtual ICollection<Ingredient>? IngredientDefaults { get; set; }
     }
 }

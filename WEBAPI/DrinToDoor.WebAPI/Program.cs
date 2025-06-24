@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using DrinkToDoor.Data.Context;
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
@@ -36,6 +37,14 @@ builder.Services.AddDbContext<DrinkToDoorDbContext>(options =>
             )
     );
 });
+
+builder
+    .Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Services.AddProjectDependencies();
 builder.Services.AddAutoMapperConfiguration();

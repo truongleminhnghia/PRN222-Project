@@ -9,7 +9,7 @@ using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
 using Microsoft.Extensions.Logging;
 
-namespace DrinkToDoor.BLL.Sercvices
+namespace DrinkToDoor.BLL.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
