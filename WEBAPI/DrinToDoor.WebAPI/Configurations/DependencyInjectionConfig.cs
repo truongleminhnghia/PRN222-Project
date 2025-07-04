@@ -4,6 +4,7 @@ using DrinkToDoor.BLL.Interfaces;
 using DrinkToDoor.BLL.Services;
 using DrinkToDoor.BLL.HashPasswords;
 using DrinkToDoor.Data.Repositories;
+using DrinkToDoor.BLL.Utils;
 
 namespace DrinToDoor.WebAPI.Configurations
 {
@@ -14,6 +15,7 @@ namespace DrinToDoor.WebAPI.Configurations
             // base
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
+            services.AddScoped<Base>();
 
             // services
             services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -22,6 +24,7 @@ namespace DrinToDoor.WebAPI.Configurations
             services.AddScoped<IPackagingOptionService, PackagingOptionService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IIngredientService, IngredientService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
 
             // repository

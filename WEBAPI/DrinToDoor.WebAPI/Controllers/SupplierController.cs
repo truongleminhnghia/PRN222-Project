@@ -20,7 +20,7 @@ namespace DrinToDoor.WebAPI.Controllers
         public async Task<IActionResult> CreateSupplier([FromBody] SupplierRequest request)
         {
             var result = await _supplierService.CreateSupplier(request);
-            if (result)
+            if (result != null)
             {
                 return Ok(new ApiResponse
                 {

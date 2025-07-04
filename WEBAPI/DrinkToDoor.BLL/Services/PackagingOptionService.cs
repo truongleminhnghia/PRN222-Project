@@ -23,17 +23,54 @@ namespace DrinkToDoor.BLL.Services
             _logger = logger;
         }
 
-        public async Task<bool> Create(PackagingOptionRequest request)
+        // public async Task<bool> Create(PackagingOptionRequest request)
+        // {
+        //     try
+        //     {
+        //         var ingredientExisting = await _unitOfWork.Ingredients.FindById(request.IngredientId);
+        //         if (ingredientExisting == null) throw new AppException(ErrorCode.NOT_FOUND, "Ingredient not found");
+        //         var packagingOption = _mapper.Map<PackagingOption>(request);
+        //         await _unitOfWork.PackagingOptions.Add(packagingOption);
+        //         var result = await _unitOfWork.SaveChangesWithTransactionAsync();
+        //         if (result == 0) return false;
+        //         return true;
+        //     }
+        //     catch (AppException ex)
+        //     {
+        //         _logger.LogWarning(ex, "AppException occurred: {Message}", ex.Message);
+        //         throw;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _logger.LogError(ex, "Exception occurred: {Message}", ex.Message);
+        //         throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error");
+        //     }
+        // }
+
+        public async Task<bool> Add(Guid id, List<PackagingOptionRequest> request)
         {
+            var packages = new List<PackagingOption>();
             try
             {
-                var ingredientExisting = await _unitOfWork.Ingredients.FindById(request.IngredientId);
-                if (ingredientExisting == null) throw new AppException(ErrorCode.NOT_FOUND, "Ingredient not found");
-                var packagingOption = _mapper.Map<PackagingOption>(request);
-                await _unitOfWork.PackagingOptions.Add(packagingOption);
-                var result = await _unitOfWork.SaveChangesWithTransactionAsync();
-                if (result == 0) return false;
-                return true;
+
+                foreach (var item in request)
+                {
+                    var package = new PackagingOption
+                    {
+                        IngredientId = id,
+                        Label = item.Label,
+                        Size = item.Size,
+                        Unit = item.Unit,
+                        Type = item.Type,
+                        Price = item.Price,
+                        Cost = item.Cost,
+                        StockQty = item.StockQty,
+                    };
+                    await _unitOfWork.PackagingOptions.Add(package);
+                    packages.Add(package);
+                }
+                // await _unitOfWork.SaveChangesWithTransactionAsync();
+                return packages.Count > 0;
             }
             catch (AppException ex)
             {
@@ -114,36 +151,36 @@ namespace DrinkToDoor.BLL.Services
             }
         }
 
-        public async Task<bool> Update(Guid id, PackagingOptionRequest request)
-        {
-            try
-            {
-                var packagingOption = await _unitOfWork.PackagingOptions.FindById(id);
-                if (packagingOption == null) throw new AppException(ErrorCode.NOT_FOUND, "Supplier not found");
-                var ingredientExisting = await _unitOfWork.Ingredients.FindById(request.IngredientId);
-                if (ingredientExisting == null) throw new AppException(ErrorCode.NOT_FOUND, "Ingredient not found");
-                if (request.Label != null) packagingOption.Label = request.Label;
-                if (request.Size != null) packagingOption.Size = request.Size;
-                if (request.Unit != null) packagingOption.Unit = request.Unit;
-                if (request.Type != null) packagingOption.Type = request.Type;
-                if (request.Price != null) packagingOption.Price = request.Price;
-                if (request.Cost != null) packagingOption.Cost = request.Cost;
-                if (request.StockQty != null) packagingOption.StockQty = request.StockQty;
-                await _unitOfWork.PackagingOptions.Update(packagingOption);
-                var result = await _unitOfWork.SaveChangesWithTransactionAsync();
-                if (result == 0) return false;
-                return true;
-            }
-            catch (AppException ex)
-            {
-                _logger.LogWarning(ex, "AppException occurred: {Message}", ex.Message);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Exception occurred: {Message}", ex.Message);
-                throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error");
-            }
-        }
+        // public async Task<bool> Update(Guid id, PackagingOptionRequest request)
+        // {
+        //     try
+        //     {
+        //         var packagingOption = await _unitOfWork.PackagingOptions.FindById(id);
+        //         if (packagingOption == null) throw new AppException(ErrorCode.NOT_FOUND, "Supplier not found");
+        //         var ingredientExisting = await _unitOfWork.Ingredients.FindById(request.IngredientId);
+        //         if (ingredientExisting == null) throw new AppException(ErrorCode.NOT_FOUND, "Ingredient not found");
+        //         if (request.Label != null) packagingOption.Label = request.Label;
+        //         if (request.Size != null) packagingOption.Size = request.Size;
+        //         if (request.Unit != null) packagingOption.Unit = request.Unit;
+        //         if (request.Type != null) packagingOption.Type = request.Type;
+        //         if (request.Price != null) packagingOption.Price = request.Price;
+        //         if (request.Cost != null) packagingOption.Cost = request.Cost;
+        //         if (request.StockQty != null) packagingOption.StockQty = request.StockQty;
+        //         await _unitOfWork.PackagingOptions.Update(packagingOption);
+        //         var result = await _unitOfWork.SaveChangesWithTransactionAsync();
+        //         if (result == 0) return false;
+        //         return true;
+        //     }
+        //     catch (AppException ex)
+        //     {
+        //         _logger.LogWarning(ex, "AppException occurred: {Message}", ex.Message);
+        //         throw;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _logger.LogError(ex, "Exception occurred: {Message}", ex.Message);
+        //         throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error");
+        //     }
+        // }
     }
 }

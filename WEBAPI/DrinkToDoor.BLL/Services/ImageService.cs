@@ -62,7 +62,7 @@ namespace DrinkToDoor.BLL.Services
                     await _unitOfWork.Images.AddAsync(image);
                     images.Add(image);
                 }
-                await _unitOfWork.SaveChangesWithTransactionAsync();
+                // await _unitOfWork.SaveChangesWithTransactionAsync();
                 return images.Count > 0;
             }
             catch (AppException ex)

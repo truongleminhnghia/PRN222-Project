@@ -23,20 +23,19 @@ namespace DrinkToDoor.BLL.Services
             _logger = logger;
         }
 
-        public async Task<bool> CreateSupplier(SupplierRequest request)
+        public async Task<Supplier> CreateSupplier(SupplierRequest request)
         {
             try
             {
                 var supplierByEmail = await _unitOfWork.Suppliers.FindByEmail(request.Email);
                 var supplierByPhone = await _unitOfWork.Suppliers.FindByPhone(request.Phone);
                 var supplierByName = await _unitOfWork.Suppliers.FindByName(request.Name);
-                if (supplierByEmail != null || supplierByName != null || supplierByPhone != null)
-                    throw new AppException(ErrorCode.HAS_EXISTED, "Existed");
+
+                if (supplierByEmail != null || supplierByPhone != null || supplierByName != null)
+                    throw new AppException(ErrorCode.HAS_EXISTED, "Supplier already exists.");
                 var supplier = _mapper.Map<Supplier>(request);
-                await _unitOfWork.Suppliers.AddSupplier(supplier);
-                var result = await _unitOfWork.SaveChangesWithTransactionAsync();
-                if (result == 0) return false;
-                return true;
+                var rowsAffected = await _unitOfWork.Suppliers.AddSupplier(supplier);
+                return rowsAffected > 0 ? supplier : null;
             }
             catch (AppException ex)
             {

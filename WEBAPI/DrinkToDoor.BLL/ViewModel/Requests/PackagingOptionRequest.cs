@@ -6,8 +6,6 @@ namespace DrinkToDoor.BLL.ViewModel.Requests
 {
     public class PackagingOptionRequest
     {
-        [Required]
-        public Guid IngredientId { get; set; }
         public string Label { get; set; } = string.Empty;
         public decimal? Size { get; set; }
         public string? Unit { get; set; }
