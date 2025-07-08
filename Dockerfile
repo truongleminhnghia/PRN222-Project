@@ -4,7 +4,6 @@ WORKDIR /app
 
 # Copy solution and restore
 COPY *.sln .
-COPY BE_ModernEstate.WebAPI/BE_ModernEstate.WebAPI.csproj BE_ModernEstate.WebAPI/
 COPY DrinkToDoor.Data/DrinkToDoor.Data.csproj DrinkToDoor.Data/
 COPY WEBAPI/DrinkToDoor.BLL/DrinkToDoor.BLL.csproj DrinkToDoor.BLL/
 COPY WEBAPI/DrinToDoor.WebAPI/DrinToDoor.WebAPI.csproj DrinToDoor.WebAPI/
