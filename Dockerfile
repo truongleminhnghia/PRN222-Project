@@ -3,7 +3,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
 # Copy solution and restore
-COPY *.sln .
+# COPY *.sln .
 COPY DrinkToDoor.Data/DrinkToDoor.Data.csproj DrinkToDoor.Data/
 COPY WEBAPI/DrinkToDoor.BLL/DrinkToDoor.BLL.csproj DrinkToDoor.BLL/
 COPY WEBAPI/DrinToDoor.WebAPI/DrinToDoor.WebAPI.csproj DrinToDoor.WebAPI/
