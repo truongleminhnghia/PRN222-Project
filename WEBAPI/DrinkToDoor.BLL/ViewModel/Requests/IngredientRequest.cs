@@ -11,7 +11,7 @@ namespace DrinkToDoor.BLL.ViewModel.Requests
         public int StockQty { get; set; }
         public SupplierRequest? Supplier { get; set; }
         public CategoryRequest? Category { get; set; }
-        public List<ImageRequest>? Images { get; set; }
+        public List<ImageRequest>? ImagesRequest { get; set; }
         public List<PackagingOptionRequest>? PackagingOptions { get; set; }
     }
 }

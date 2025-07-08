@@ -45,16 +45,16 @@ namespace DrinkToDoor.BLL.Services
                 var ingredient = _mapper.Map<Ingredient>(request);
                 ingredient.Code = Base.GenerateCode('P');
                 await _unitOfWork.Ingredients.AddAsync(ingredient);
-                var supplier = await _unitOfWork.Suppliers.FindByEmail(request.Supplier.Email);
-                if (supplier == null)
-                {
-                    supplier = await _supplierService.CreateSupplier(request.Supplier);
-                }
-                ingredient.SupplierId = supplier.Id;
+                //var supplier = await _unitOfWork.Suppliers.FindByEmail(request.Supplier.Email);
+                //if (supplier == null)
+                //{
+                //    supplier = await _supplierService.CreateSupplier(request.Supplier);
+                //}
+                //ingredient.SupplierId = supplier.Id;
                 var category = await _unitOfWork.Categories.FindByName(request.Category.Name);
                 if (category == null) throw new AppException(ErrorCode.NOT_FOUND, "Category not found with name");
                 ingredient.CategoryId = category.Id;
-                var image = await _imageService.AddImages(ingredient.Id, request.Images);
+                var image = await _imageService.AddImages(ingredient.Id, request.ImagesRequest);
                 var package = await _packagingOptionService.Add(ingredient.Id, request.PackagingOptions);
                 var result = await _unitOfWork.SaveChangesWithTransactionAsync();
                 return result > 0 ? true : false;

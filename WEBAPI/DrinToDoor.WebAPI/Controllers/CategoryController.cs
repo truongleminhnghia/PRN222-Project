@@ -21,7 +21,7 @@ namespace DrinToDoor.WebAPI.Controllers
         public async Task<IActionResult> CreateCategory([FromBody] CategoryRequest request)
         {
             var category = await _categoryService.Create(request);
-            if (category)
+            if (!category)
             {
                 return BadRequest(new ApiResponse
                 {

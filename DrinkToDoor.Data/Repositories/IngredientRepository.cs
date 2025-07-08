@@ -32,9 +32,9 @@ namespace DrinkToDoor.Data.Repositories
             return await _context.Ingredients.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public Task<IEnumerable<Ingredient>> GetAllAsync()
+        public async Task<IEnumerable<Ingredient>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Ingredients.ToListAsync();
         }
 
         public async Task<int> UpdateAsync(Ingredient ingredient)

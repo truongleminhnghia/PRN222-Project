@@ -48,15 +48,15 @@ namespace DrinkToDoor.BLL.Services
             var images = new List<Image>();
             try
             {
-                var ingredient = await _unitOfWork.Ingredients.FindById(id);
-                if (ingredient == null)
-                    throw new AppException(ErrorCode.NOT_FOUND, "Ingredient not found");
+                //var ingredient = await _unitOfWork.Ingredients.FindById(id);
+                //if (ingredient == null)
+                //    throw new AppException(ErrorCode.NOT_FOUND, "Ingredient not found");
 
                 foreach (var item in request)
                 {
                     var image = new Image
                     {
-                        IngredientId = ingredient.Id,
+                        IngredientId = id,
                         Url = item.ImageUrl
                     };
                     await _unitOfWork.Images.AddAsync(image);

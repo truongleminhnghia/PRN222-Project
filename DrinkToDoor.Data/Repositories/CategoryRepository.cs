@@ -36,7 +36,7 @@ namespace DrinkToDoor.Data.Repositories
             {
                 query = query.Where(c => c.Name.Contains(name));
             }
-            if (categoryType.HasValue != null)
+            if (categoryType.HasValue)
             {
                 query = query.Where(c => c.CategoryType == categoryType.Value);
             }

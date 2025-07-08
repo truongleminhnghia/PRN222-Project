@@ -49,6 +49,14 @@ builder
 builder.Services.AddProjectDependencies();
 builder.Services.AddAutoMapperConfiguration();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowExpoApp",
+        policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
+    );
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -88,6 +96,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseCors("AllowExpoApp");
 
 app.MapControllers();
 
