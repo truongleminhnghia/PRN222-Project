@@ -12,6 +12,10 @@ namespace DrinkToDoor.Data
         IImageRepository Images { get; }
         IIngredientRepository Ingredients { get; }
 
+        ICartItemRepository CartItems { get; }
+
+        ICartRepository Carts {  get; }
+
         IPackagingOptionRepository PackagingOptions { get; }
         Task SaveChangesAsync();
         public Task<int> SaveChangesWithTransactionAsync();

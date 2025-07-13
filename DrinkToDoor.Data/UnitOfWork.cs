@@ -15,6 +15,8 @@ namespace DrinkToDoor.Data
         private IPackagingOptionRepository? _packagingOptionRepository;
         private IImageRepository? _imageRepository;
         private IIngredientRepository? _ingredientRepository;
+        private ICartItemRepository? _cartItemRepository;
+        private ICartRepository? _cartRepository;
 
 
         public UnitOfWork(DrinkToDoorDbContext context)
@@ -30,6 +32,10 @@ namespace DrinkToDoor.Data
         public IImageRepository Images => _imageRepository ??= new ImageRepository(_context);
 
         public IIngredientRepository Ingredients => _ingredientRepository ??= new Repositories.IngredientRepository(_context);
+
+        public ICartItemRepository CartItems => _cartItemRepository ??= new CartItemRepository(_context);
+
+        public ICartRepository Carts => _cartRepository ??= new CartRepository(_context);
 
         public async Task SaveChangesAsync()
         {

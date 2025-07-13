@@ -34,6 +34,8 @@ namespace DrinToDoor.WebAPI.Configurations
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IPackagingOptionRepository, PackagingOptionRepository>();
+            services.AddScoped<ICartItemRepository, CartItemRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
 
             return services;
         }
