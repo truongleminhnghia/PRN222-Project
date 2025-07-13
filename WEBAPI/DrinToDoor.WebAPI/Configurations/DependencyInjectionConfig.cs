@@ -28,6 +28,7 @@ namespace DrinToDoor.WebAPI.Configurations
             services.AddScoped<IIngredientProductService, IngredientProductService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IOrderDetailService, OrderDetailService>();
+            services.AddScoped<ICartService, CartService>();
 
             // repository
             services.AddScoped<IUserRepository, UserRepository>();
