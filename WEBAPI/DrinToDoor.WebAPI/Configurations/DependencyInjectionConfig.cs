@@ -27,6 +27,8 @@ namespace DrinToDoor.WebAPI.Configurations
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IIngredientProductService, IngredientProductService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
+
             // repository
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
@@ -39,6 +41,7 @@ namespace DrinToDoor.WebAPI.Configurations
             services.AddScoped<IPackagingOptionRepository, PackagingOptionRepository>();
             services.AddScoped<IIngredientProductRepository, IngredientProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             return services;
         }
     }
