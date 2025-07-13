@@ -1,4 +1,5 @@
 ﻿using DrinkToDoor.BLL.Interfaces;
+using DrinkToDoor.BLL.ViewModel.ApiResponse;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,7 +26,36 @@ namespace DrinToDoor.WebAPI.Controllers
             var result = await _cartService.GetAllWithParamsAsync(
         userId, sortBy, isDescending, pageNumber, pageSize);
 
-            return Ok(result);
+            return Ok(new ApiResponse
+            {
+                Code = StatusCodes.Status200OK,
+                Success = true,
+                Message = "Successful",
+                Data = result
+            });
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateCart([FromQuery] Guid userId)
+        {
+                var result = await _cartService.CreateCartAsync(userId);
+                if (result)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Code = StatusCodes.Status200OK,
+                        Success = true,
+                        Message = "Cart created successfully"
+                    });
+                } else
+                {
+                    return BadRequest(new ApiResponse
+                    {
+                        Code = StatusCodes.Status400BadRequest,
+                        Success = false,
+                        Message = "Cart already exists for this user"
+                    });
+                }           
         }
     }
 }

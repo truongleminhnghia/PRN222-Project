@@ -3,6 +3,7 @@ using DrinkToDoor.BLL.Interfaces;
 using DrinkToDoor.BLL.ViewModel.Pages;
 using DrinkToDoor.BLL.ViewModel.Responses;
 using DrinkToDoor.Data;
+using DrinkToDoor.Data.Entities;
 
 
 
@@ -31,6 +32,24 @@ namespace DrinkToDoor.BLL.Services
             var dtoList = _mapper.Map<List<CartResponse>>(pagedResult);
             return new PageResult<CartResponse>(dtoList, pageSize, pageNumber, result.Count());
 
+        }
+
+        public async Task<bool> CreateCartAsync(Guid userId)
+        {
+            var existingCart = await _unitOfWork.Carts.FindByUserId(userId);
+
+            if (existingCart != null)
+                return false;
+
+            var newCart = new Cart
+            {
+                UserId = userId,
+            };
+
+            var created = await _unitOfWork.Carts.AddAsync(newCart);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
         }
     }
 }

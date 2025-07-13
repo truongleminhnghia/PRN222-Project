@@ -7,5 +7,6 @@ namespace DrinkToDoor.BLL.Interfaces
     public interface ICartService
     {
         Task<PageResult<CartResponse>> GetAllWithParamsAsync(Guid? userId, string? sortBy, bool isDescending, int pageNumber, int pageSize);
+        Task<bool> CreateCartAsync(Guid userId);
     }
 }

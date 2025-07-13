@@ -9,7 +9,7 @@ namespace DrinkToDoor.BLL.Mappers
     {
         public CartMapper()
         {
-            CreateMap<Cart, CartItemResponse>();
+            CreateMap<Cart, CartResponse>();
         }
     }
 }
