@@ -11,7 +11,7 @@ namespace DrinkToDoor.BLL.Mappers
         public SupplierMapper()
         {
             CreateMap<SupplierRequest, Supplier>().ReverseMap();
-            CreateMap<User, SupplierResponse>().ReverseMap();
+            CreateMap<Supplier, SupplierResponse>().ReverseMap();
         }
     }
 }

@@ -61,8 +61,12 @@ namespace DrinkToDoor.BLL.Services
                 user.EnumAccountStatus = EnumAccountStatus.ACTIVE;
                 user.Password = _passwordHasher.HashPassword(request.Password);
                 await _unitOfWork.Users.Add(user);
-                await _unitOfWork.SaveChangesWithTransactionAsync();
-                return true;
+                Cart cart = new Cart { 
+                    UserId = user.Id,
+                };
+                await _unitOfWork.Carts.AddAsync(cart);
+                var result = await _unitOfWork.SaveChangesWithTransactionAsync();
+                return result > 0 ? true : false;
             }
             catch (AppException ex)
             {

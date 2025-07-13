@@ -9,6 +9,8 @@ namespace DrinkToDoor.BLL.ViewModel.Responses
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Code { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
         public string? Description { get; set; }
         [EnumDataType(typeof(EnumStatus))]
         public EnumStatus Status { get; set; }

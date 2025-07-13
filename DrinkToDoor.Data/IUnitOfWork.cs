@@ -11,6 +11,11 @@ namespace DrinkToDoor.Data
         ISupplierRepository Suppliers { get; }
         IImageRepository Images { get; }
         IIngredientRepository Ingredients { get; }
+
+        ICartItemRepository CartItems { get; }
+
+        ICartRepository Carts { get; }
+
         IOrderRepository Orders { get; }
         IOrderDetailRepository OrderDetails { get; }
         IPackagingOptionRepository PackagingOptions { get; }

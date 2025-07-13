@@ -29,12 +29,22 @@ namespace DrinkToDoor.Data.Repositories
 
         public async Task<Ingredient?> FindById(Guid id)
         {
-            return await _context.Ingredients.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Ingredients
+                                    .Include(i => i.Images)
+                                    .Include(i => i.Category)
+                                    .Include(i => i.Supplier)
+                                    .Include(i => i.PackagingOptions)
+                                    .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<IEnumerable<Ingredient>> GetAllAsync()
         {
-            return await _context.Ingredients.ToListAsync();
+            IQueryable<Ingredient> qurey = _context.Ingredients
+                                    .Include(i => i.Images)
+                                    .Include(i => i.Category)
+                                    .Include(i => i.Supplier)
+                                    .Include(i => i.PackagingOptions);
+            return await qurey.OrderByDescending(i => i.CreatedAt).ToListAsync();
         }
 
         public async Task<int> UpdateAsync(Ingredient ingredient)
