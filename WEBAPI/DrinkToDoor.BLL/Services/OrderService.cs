@@ -29,22 +29,27 @@ namespace DrinkToDoor.BLL.Services
             try
             {
                 var order = _mapper.Map<Order>(request);
+                var now = DateTime.UtcNow;
+                order.CreatedAt = now;
+                order.UpdatedAt = now;
                 await _unitOfWork.Orders.AddAsync(order);
-
                 if (request.OrderDetails != null && request.OrderDetails.Any())
                 {
-                    foreach (var d in request.OrderDetails)
+                    foreach (var detailReq in request.OrderDetails)
                     {
-                        var detail = _mapper.Map<OrderDetail>(d);
+                        var detail = _mapper.Map<OrderDetail>(detailReq);
                         detail.OrderId = order.Id;
-                        detail.CreatedAt = DateTime.UtcNow;
-                        detail.UpdatedAt = DateTime.UtcNow;
+                        detail.CreatedAt = now;
+                        detail.UpdatedAt = now;
                         await _unitOfWork.OrderDetails.AddAsync(detail);
                     }
                 }
-
                 var saved = await _unitOfWork.SaveChangesWithTransactionAsync();
                 return saved > 0;
+            }
+            catch (AppException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
