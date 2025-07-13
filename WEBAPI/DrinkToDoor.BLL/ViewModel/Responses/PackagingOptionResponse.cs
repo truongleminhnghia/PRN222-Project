@@ -8,7 +8,6 @@ namespace DrinkToDoor.BLL.ViewModel.Responses
     {
         public Guid Id { get; set; }
         public Guid IngredientId { get; set; }
-        public Ingredient? Ingredient { get; set; }
         public string Label { get; set; } = string.Empty;
         public decimal? Size { get; set; }
         public string? Unit { get; set; }
