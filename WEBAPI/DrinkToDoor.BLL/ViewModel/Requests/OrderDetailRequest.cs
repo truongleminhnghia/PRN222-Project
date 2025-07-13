@@ -12,7 +12,6 @@ namespace DrinkToDoor.BLL.ViewModel.Requests
         public decimal Price { get; set; }
         public decimal TotalPrice { get; set; }
         public Guid OrderId { get; set; }
-        public Guid KitProductId { get; set; }
-        public Guid IngredientProductId { get; set; }
+        public Guid? IngredientProductId { get; set; }
     }
 }

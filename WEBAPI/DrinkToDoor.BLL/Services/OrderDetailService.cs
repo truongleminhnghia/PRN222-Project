@@ -32,6 +32,10 @@ namespace DrinkToDoor.BLL.Services
             try
             {
                 var entity = _mapper.Map<OrderDetail>(request);
+                var now = DateTime.UtcNow;
+                entity.CreatedAt = now;
+                entity.UpdatedAt = now;
+
                 await _unitOfWork.OrderDetails.AddAsync(entity);
                 return (await _unitOfWork.SaveChangesWithTransactionAsync()) > 0;
             }

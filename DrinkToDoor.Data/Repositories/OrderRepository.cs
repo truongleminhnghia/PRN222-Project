@@ -17,6 +17,9 @@ namespace DrinkToDoor.Data.Repositories
 
         public async Task<int> AddAsync(Order entity)
         {
+            var now = DateTime.UtcNow;
+            entity.CreatedAt = now;
+            entity.UpdatedAt = now;
             await _context.Orders.AddAsync(entity);
             return 1;
         }
@@ -54,6 +57,7 @@ namespace DrinkToDoor.Data.Repositories
 
         public async Task<int> UpdateAsync(Order entity)
         {
+            entity.UpdatedAt = DateTime.UtcNow;
             _context.Orders.Update(entity);
             return 1;
         }
