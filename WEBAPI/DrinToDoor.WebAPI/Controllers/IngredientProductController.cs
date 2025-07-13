@@ -10,17 +10,17 @@ namespace DrinToDoor.WebAPI.Controllers
     [Route("api/v1/ingredient-products")]
     public class IngredientProductController : ControllerBase
     {
-        private readonly IIngredientProductService _service;
+        private readonly IIngredientProductService _iingredientProductService;
 
-        public IngredientProductController(IIngredientProductService service)
+        public IngredientProductController(IIngredientProductService iingredientProductService)
         {
-            _service = service;
+            _iingredientProductService = iingredientProductService;
         }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] IngredientProductRequest request)
         {
-            var ok = await _service.Create(request);
+            var ok = await _iingredientProductService.Create(request);
             if (!ok)
                 return BadRequest(
                     new ApiResponse
@@ -44,7 +44,7 @@ namespace DrinToDoor.WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var item = await _service.GetById(id);
+            var item = await _iingredientProductService.GetById(id);
             if (item == null)
                 return BadRequest(
                     new ApiResponse
@@ -73,7 +73,7 @@ namespace DrinToDoor.WebAPI.Controllers
             [FromQuery] int pageSize = 10
         )
         {
-            var result = await _service.GetIngredientProducts(
+            var result = await _iingredientProductService.GetIngredientProducts(
                 name,
                 ingredientId,
                 pageCurrent,
@@ -105,7 +105,7 @@ namespace DrinToDoor.WebAPI.Controllers
             [FromBody] IngredientProductRequest request
         )
         {
-            var ok = await _service.Update(id, request);
+            var ok = await _iingredientProductService.Update(id, request);
             if (!ok)
                 return BadRequest(
                     new ApiResponse
@@ -129,7 +129,7 @@ namespace DrinToDoor.WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var ok = await _service.Delete(id);
+            var ok = await _iingredientProductService.Delete(id);
             if (!ok)
                 return BadRequest(
                     new ApiResponse
