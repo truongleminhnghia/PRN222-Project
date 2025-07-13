@@ -28,13 +28,27 @@ namespace DrinkToDoor.BLL.Services
         {
             try
             {
-                var entity = _mapper.Map<Order>(request);
-                await _unitOfWork.Orders.AddAsync(entity);
-                return (await _unitOfWork.SaveChangesWithTransactionAsync()) > 0;
+                var order = _mapper.Map<Order>(request);
+                await _unitOfWork.Orders.AddAsync(order);
+
+                if (request.OrderDetails != null && request.OrderDetails.Any())
+                {
+                    foreach (var d in request.OrderDetails)
+                    {
+                        var detail = _mapper.Map<OrderDetail>(d);
+                        detail.OrderId = order.Id;
+                        detail.CreatedAt = DateTime.UtcNow;
+                        detail.UpdatedAt = DateTime.UtcNow;
+                        await _unitOfWork.OrderDetails.AddAsync(detail);
+                    }
+                }
+
+                var saved = await _unitOfWork.SaveChangesWithTransactionAsync();
+                return saved > 0;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error creating order: {Message}", ex.Message);
+                _logger.LogError(ex, "Error creating order with details: {Message}", ex.Message);
                 throw new AppException(ErrorCode.INTERNAL_SERVER_ERROR, "Could not create order");
             }
         }
