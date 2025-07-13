@@ -1,4 +1,3 @@
-
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -32,13 +31,14 @@ namespace DrinkToDoor.Data.Entities
         public virtual Order? Order { get; set; }
 
         [Column("kit_product_id")]
-        public Guid KitProductId { get; set; }
+        public Guid? KitProductId { get; set; }
 
         [ForeignKey(nameof(KitProductId))]
         public virtual KitProduct? KitProduct { get; set; }
 
         [Column("ingredient_product_id")]
-        public Guid IngredientProductId { get; set; }
+        public Guid? IngredientProductId { get; set; }
+
         [ForeignKey(nameof(IngredientProductId))]
         public virtual IngredientProduct? IngredientProduct { get; set; }
     }

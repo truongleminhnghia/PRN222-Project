@@ -1,4 +1,3 @@
-
 using DrinkToDoor.Data.Interfaces;
 
 namespace DrinkToDoor.Data
@@ -7,6 +6,7 @@ namespace DrinkToDoor.Data
     {
         IUserRepository Users { get; }
         ICategoryRepository Categories { get; }
+        IIngredientProductRepository IngredientProducts { get; }
 
         ISupplierRepository Suppliers { get; }
         IImageRepository Images { get; }
@@ -14,8 +14,10 @@ namespace DrinkToDoor.Data
 
         ICartItemRepository CartItems { get; }
 
-        ICartRepository Carts {  get; }
+        ICartRepository Carts { get; }
 
+        IOrderRepository Orders { get; }
+        IOrderDetailRepository OrderDetails { get; }
         IPackagingOptionRepository PackagingOptions { get; }
         Task SaveChangesAsync();
         public Task<int> SaveChangesWithTransactionAsync();

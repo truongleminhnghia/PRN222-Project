@@ -1,10 +1,10 @@
-﻿using DrinkToDoor.Data.Interfaces;
-using DrinkToDoor.Data;
+﻿using DrinkToDoor.BLL.HashPasswords;
 using DrinkToDoor.BLL.Interfaces;
 using DrinkToDoor.BLL.Services;
-using DrinkToDoor.BLL.HashPasswords;
-using DrinkToDoor.Data.Repositories;
 using DrinkToDoor.BLL.Utils;
+using DrinkToDoor.Data;
+using DrinkToDoor.Data.Interfaces;
+using DrinkToDoor.Data.Repositories;
 
 namespace DrinToDoor.WebAPI.Configurations
 {
@@ -25,18 +25,26 @@ namespace DrinToDoor.WebAPI.Configurations
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<ICategoryService, CategoryService>();
-
+            services.AddScoped<IIngredientProductService, IngredientProductService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderDetailService, OrderDetailService>();
 
             // repository
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
-            services.AddScoped<IIngredientRepository, DrinkToDoor.Data.Repositories.IngredientRepository>();
+            services.AddScoped<
+                IIngredientRepository,
+                DrinkToDoor.Data.Repositories.IngredientRepository
+            >();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IPackagingOptionRepository, PackagingOptionRepository>();
             services.AddScoped<ICartItemRepository, CartItemRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
 
+            services.AddScoped<IIngredientProductRepository, IngredientProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             return services;
         }
     }
