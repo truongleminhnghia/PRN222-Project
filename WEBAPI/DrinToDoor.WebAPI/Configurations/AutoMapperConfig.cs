@@ -17,6 +17,7 @@ namespace DrinToDoor.WebAPI.Configurations
             services.AddAutoMapper(typeof(IngredientProductMapper));
             services.AddAutoMapper(typeof(OrderMapper));
             services.AddAutoMapper(typeof(OrderDetailMapper));
+            services.AddAutoMapper(typeof(CartMapper));
             return services;
         }
     }

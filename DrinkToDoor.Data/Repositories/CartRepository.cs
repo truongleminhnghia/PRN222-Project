@@ -36,5 +36,27 @@ namespace DrinkToDoor.Data.Repositories
         {
             return await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
         }
+
+        public async Task<IEnumerable<Cart>> GetAllWithParamsAsync(Guid? userId, string? sortBy, bool isDescending, int pageNumber, int pageSize)
+        {
+            var query = _context.Carts
+                .Include(c => c.User)
+                .Include(c => c.CartItems)
+                .AsQueryable();
+            if (userId.HasValue)
+            {
+                query = query.Where(c => c.UserId == userId.Value);
+            }
+
+            query = sortBy?.ToLower() switch
+            {
+                "userid" => isDescending ? query.OrderByDescending(c => c.UserId) : query.OrderBy(c => c.UserId),
+                "id" => isDescending ? query.OrderByDescending(c => c.Id) : query.OrderBy(c => c.Id),
+                _ => isDescending ? query.OrderByDescending(c => c.Id) : query.OrderBy(c => c.Id)
+            };
+
+            return await query.ToListAsync();
+
+        }
     }
 }
