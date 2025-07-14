@@ -30,5 +30,7 @@ namespace DrinkToDoor.Data.Entities
 
         [ForeignKey(nameof(CartId))]
         public virtual Cart? Cart { get; set; }
+        [Column("quantity")]
+        public int Quantity { get; set; } = 1;
     }
 }

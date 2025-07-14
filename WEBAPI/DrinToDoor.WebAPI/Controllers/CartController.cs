@@ -1,6 +1,6 @@
 ﻿using DrinkToDoor.BLL.Interfaces;
+using DrinkToDoor.BLL.Services;
 using DrinkToDoor.BLL.ViewModel.ApiResponse;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DrinToDoor.WebAPI.Controllers
@@ -10,15 +10,17 @@ namespace DrinToDoor.WebAPI.Controllers
     public class CartController : ControllerBase
     {
         private readonly ICartService _cartService;
+        private readonly ICartItemService _cartItemService;
 
-        public CartController(ICartService cartService)
+        public CartController(ICartService cartService, ICartItemService cartItemService)
         {
             _cartService = cartService;
+            _cartItemService = cartItemService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllWithParams(  [FromQuery] Guid? userId,
-                                                            [FromQuery] string? sortBy = "id",
+                                                            [FromQuery] string? sortBy = "createdAt",
                                                             [FromQuery] bool isDescending = false,
                                                             [FromQuery] int pageNumber = 1,
                                                             [FromQuery] int pageSize = 10)
@@ -57,5 +59,7 @@ namespace DrinToDoor.WebAPI.Controllers
                     });
                 }           
         }
+
+
     }
 }

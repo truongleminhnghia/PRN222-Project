@@ -42,6 +42,8 @@ namespace DrinkToDoor.Data.Repositories
             var query = _context.Carts
                 .Include(c => c.User)
                 .Include(c => c.CartItems)
+                    .ThenInclude(ci => ci.IngredientProduct)
+                    .ThenInclude(ip => ip.Ingredient)
                 .AsQueryable();
             if (userId.HasValue)
             {

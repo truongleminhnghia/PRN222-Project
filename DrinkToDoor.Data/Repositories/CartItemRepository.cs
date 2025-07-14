@@ -1,6 +1,8 @@
 ﻿
 using DrinkToDoor.Data.Context;
+using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DrinkToDoor.Data.Repositories
 {
@@ -12,5 +14,7 @@ namespace DrinkToDoor.Data.Repositories
         {
             _context = context;
         }
+
+       
     }
 }

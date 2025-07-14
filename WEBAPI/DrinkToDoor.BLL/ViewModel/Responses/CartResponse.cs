@@ -5,7 +5,7 @@ namespace DrinkToDoor.BLL.ViewModel.Responses
     {
         public Guid Id { get; set; }
         public UserResponse User { get; set; }
-        public List<CartItemResponse> Items { get; set; } = new();
+        public List<CartItemResponse> CartItems { get; set; }
 
     }
 }
