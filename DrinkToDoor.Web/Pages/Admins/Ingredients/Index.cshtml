@@ -1,12 +1,144 @@
 @page
+@using DrinkToDoor.Data.enums
 @model DrinkToDoor.Web.Pages.Admins.Ingredients.IndexModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Nguyên Liệu";
     Layout = "_LayoutAdmin";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="container-xxxl py-4">
 
-<div>
+    <h1>@ViewData["Title"]</h1>
 
+    <!-- nút Tạo mới -->
+    <button class="btn btn-success mb-4" style="margin-top: 20px;" data-bs-toggle="modal"
+        data-bs-target="#createUserModal">
+        <i class="bi bi-plus-circle me-1"></i> Tạo Sản Phẩm Mới
+    </button>
+
+    <!-- Filter form -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row gx-3 gy-2 align-items-end">
+                <div class="col-sm-6 col-md-3">
+                    <label class="form-label">Search</label>
+                    <input name="Name" class="form-control" value="@(Model.IngredientParams?.Description ?? "")" />
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <label class="form-label">Tên</label>
+                    <input name="Name" class="form-control" value="@(Model.IngredientParams?.Name ?? "")" />
+                </div>
+                <div class="col-sm-6 col-md-2">
+                    <label class="form-label">Trạng thái</label>
+                    <select asp-for="IngredientParams.Status"
+                        class="form-select"
+                        asp-items="Html.GetEnumSelectList<EnumStatus>()">
+                        <option value="">— Chọn Trạng Thái —</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary me-2">
+                        <i class="bi bi-funnel-fill me-1"></i> Filter
+                    </button>
+                    <a asp-page="./Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="text-center">STT</th>
+                        <th class="text-center">Code</th>
+                        <th>Tên</th>
+                        <th class="text-center">Trạng thái</th>
+                        <th>Giá</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-center">Nhà cung cấp</th>
+                        <th class="text-center">Loại</th>
+                        <th class="text-center">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.IngredientResponses.Select((u, idx) => new { u, idx }))
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @((Model.PageCurrent - 1) * Model.PageSize + item.idx + 1)
+                            </td>
+                            <td class="text-center link-primary">
+                                @item.u.Code
+                            </td>
+                            <td>@item.u.Name</td>
+                            <td class="text-center">
+                                @{
+                                    var status = item.u.Status;
+                                    var badge = status == Data.enums.EnumStatus.ACTIVE
+                                    ? "bg-success"
+                                    : "bg-danger";
+                                }
+                                <span class="badge @badge">@status</span>
+                            </td>
+                            <td class="text-center">@item.u.Price</td>
+                            <td>@item.u.StockQty</td>
+                            <td class="text-center">@item.u.Supplier?.Name</td>
+                            <td class="text-center">
+                                @item.u.Category?.Name
+                            </td>
+                            <td class="text-center">
+                                <a asp-page="Edit" asp-route-id="@item.u.Id" class="btn btn-sm btn-warning me-1">Edit</a>
+                                <a asp-page="Detail" asp-route-id="@item.u.Id" class="btn btn-sm btn-info me-1">Detail</a>
+                                <form method="post" asp-page-handler="Delete" asp-route-id="@item.u.Id"
+                                    onsubmit="return confirm('Bạn có chắc chắn xóa?');" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white">
+            <nav aria-label="Trang">
+                <ul class="pagination pagination-sm mb-0 justify-content-start">
+                    <li class="page-item @(Model.PageCurrent == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-page="./Index" asp-route-PageCurrent="@(Model.PageCurrent - 1)"
+                            asp-route-PageSize="@Model.PageSize">
+                            &lsaquo;
+                        </a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageCurrent ? "active" : "")">
+                            <a class="page-link" asp-page="./Index" asp-route-PageCurrent="@i"
+                                asp-route-PageSize="@Model.PageSize">
+                                @i
+                            </a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageCurrent == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-page="./Index" asp-route-PageCurrent="@(Model.PageCurrent + 1)"
+                            asp-route-PageSize="@Model.PageSize">
+                            &rsaquo;
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>
+
+@* @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        if (@Model.ShowCreateModal.ToString().ToLower()) {
+            new bootstrap.Modal('#createUserModal').show();
+        }
+    </script>
+} *@

@@ -61,10 +61,10 @@ namespace DrinkToDoor.Web.Pages
             claimsPrincipal,
             new AuthenticationProperties { IsPersistent = false }
             );
-            // if (user.RoleName == EnumRoleName.ROLE_ADMIN)
-            // {
-            //     return RedirectToPage("/admins/games/index");
-            // }
+            if (user.RoleName == EnumRoleName.ROLE_ADMIN)
+            {
+                return RedirectToPage("/Admins/Dashboard");
+            }
             return RedirectToPage("/Index");
         }
     }
