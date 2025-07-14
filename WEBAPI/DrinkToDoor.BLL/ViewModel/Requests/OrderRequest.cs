@@ -12,5 +12,6 @@ namespace DrinkToDoor.BLL.ViewModel.Requests
         public string PhoneShipping { get; set; } = string.Empty;
         public string FullNameShipping { get; set; } = string.Empty;
         public Guid UserId { get; set; }
+        public List<OrderDetailRequest>? OrderDetails { get; set; }
     }
 }
