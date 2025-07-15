@@ -4,6 +4,7 @@ using DrinkToDoor.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrinkToDoor.Data.Migrations
 {
     [DbContext(typeof(DrinkToDoorDbContext))]
-    partial class DrinkToDoorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250714031131_updateDataBaseV4")]
+    partial class updateDataBaseV4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -367,39 +370,6 @@ namespace DrinkToDoor.Data.Migrations
                     b.HasIndex(new[] { "KitId" }, "IX_KitProduct_KitId");
 
                     b.ToTable("kit_product");
-                });
-
-            modelBuilder.Entity("DrinkToDoor.Data.Entities.Message", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("message_id");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("varchar(500)")
-                        .HasColumnName("message");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("Readed")
-                        .HasColumnType("tinyint(1)")
-                        .HasColumnName("readed");
-
-                    b.Property<Guid>("SenderId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("sender_id");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("message");
                 });
 
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Order", b =>
@@ -829,17 +799,6 @@ namespace DrinkToDoor.Data.Migrations
                     b.Navigation("Kit");
                 });
 
-            modelBuilder.Entity("DrinkToDoor.Data.Entities.Message", b =>
-                {
-                    b.HasOne("DrinkToDoor.Data.Entities.User", "Sender")
-                        .WithMany("Messages")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Sender");
-                });
-
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Order", b =>
                 {
                     b.HasOne("DrinkToDoor.Data.Entities.User", "User")
@@ -956,8 +915,6 @@ namespace DrinkToDoor.Data.Migrations
             modelBuilder.Entity("DrinkToDoor.Data.Entities.User", b =>
                 {
                     b.Navigation("Carts");
-
-                    b.Navigation("Messages");
 
                     b.Navigation("Orders");
 

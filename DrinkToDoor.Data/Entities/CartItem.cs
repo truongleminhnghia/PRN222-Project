@@ -13,7 +13,7 @@ namespace DrinkToDoor.Data.Entities
         public Guid Id { get; set; }
 
         [Column("ingredient_product_id")]
-        public Guid? IngredientProductId { get; set; }
+        public Guid IngredientProductId { get; set; }
 
         [ForeignKey(nameof(IngredientProductId))]
         public IngredientProduct? IngredientProduct { get; set; }
@@ -30,5 +30,7 @@ namespace DrinkToDoor.Data.Entities
 
         [ForeignKey(nameof(CartId))]
         public virtual Cart? Cart { get; set; }
+        [Column("quantity")]
+        public int Quantity { get; set; } = 1;
     }
 }

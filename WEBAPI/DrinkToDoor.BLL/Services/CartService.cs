@@ -30,6 +30,15 @@ namespace DrinkToDoor.BLL.Services
                 .Take(pageSize)
                 .ToList();
             var dtoList = _mapper.Map<List<CartResponse>>(pagedResult);
+            if (sortBy?.ToLower() == "createdat")
+            {
+                foreach (var cart in dtoList)
+                {
+                    cart.CartItems = isDescending
+                        ? cart.CartItems.OrderByDescending(i => i.CreatedAt).ToList()
+                        : cart.CartItems.OrderBy(i => i.CreatedAt).ToList();
+                }
+            }
             return new PageResult<CartResponse>(dtoList, pageSize, pageNumber, result.Count());
 
         }
