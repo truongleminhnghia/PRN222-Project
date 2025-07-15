@@ -4,6 +4,7 @@ using DrinkToDoor.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrinkToDoor.Data.Migrations
 {
     [DbContext(typeof(DrinkToDoorDbContext))]
-    partial class DrinkToDoorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250714034004_updateDatabaseV5")]
+    partial class updateDatabaseV5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,10 +64,6 @@ namespace DrinkToDoor.Data.Migrations
                     b.Property<Guid?>("KitProductId")
                         .HasColumnType("char(36)")
                         .HasColumnName("kit_product_id");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");

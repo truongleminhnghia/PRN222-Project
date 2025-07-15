@@ -1,8 +1,13 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace DrinkToDoor.Data.enums
 {
     public enum EnumStatus
     {
-        ACTIVE,
-        INACTIVE
+        [Display(Name = "Hoạt động")]
+        ACTIVE = 1,
+
+        [Display(Name = "Tạm dừng")]
+        INACTIVE = 2,
     }
 }

@@ -9,7 +9,8 @@ namespace DrinkToDoor.BLL.Mappers
     {
         public OrderMapper()
         {
-            CreateMap<OrderRequest, Order>().ReverseMap();
+            CreateMap<OrderRequest, Order>()
+                .ForMember(dest => dest.OrderDetails, opt => opt.Ignore());
             CreateMap<Order, OrderResponse>().ReverseMap();
         }
     }

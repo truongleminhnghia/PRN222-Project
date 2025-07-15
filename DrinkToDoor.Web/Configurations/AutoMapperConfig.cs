@@ -10,6 +10,10 @@ namespace DrinkToDoor.Web.Configurations
         )
         {
             services.AddAutoMapper(typeof(UserMapper));
+            services.AddAutoMapper(typeof(IngredientMapper));
+            services.AddAutoMapper(typeof(ImageMapper));
+            services.AddAutoMapper(typeof(SupplierMapper));
+            services.AddAutoMapper(typeof(PackageOptionMapper));
             return services;
         }
     }
