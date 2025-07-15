@@ -8,8 +8,9 @@ namespace DrinkToDoor.BLL.ViewModel.Requests
 {
     public class CartItemRequest
     {
-        public Guid IngredientProductId { get; set; }
+        public Guid IngredientId { get; set; }
         public Guid CartId { get; set; }
+        public int Quantity { get; set; } = 1;
 
     }
 }
