@@ -36,7 +36,7 @@ namespace DrinkToDoor.BLL.Services
                 Price = ingredient.Price,
                 TotalAmount = ingredient.Price * request.Quantity,
                 QuantityPackage = request.Quantity,
-                UnitPackage = "Bịch",
+                UnitPackage = request.EnumPackageType.ToString(),
                 IngredientId = ingredient.Id
             };
             await _unitOfWork.IngredientProducts.AddAsync(ingredientProduct);
