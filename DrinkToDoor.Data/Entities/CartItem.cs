@@ -13,7 +13,7 @@ namespace DrinkToDoor.Data.Entities
         public Guid Id { get; set; }
 
         [Column("ingredient_product_id")]
-        public Guid? IngredientProductId { get; set; }
+        public Guid IngredientProductId { get; set; }
 
         [ForeignKey(nameof(IngredientProductId))]
         public IngredientProduct? IngredientProduct { get; set; }
