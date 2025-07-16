@@ -34,7 +34,12 @@ namespace DrinkToDoor.Data.Repositories
 
         public async Task<Cart?> FindByUserId(Guid userId)
         {
-            return await _context.Carts.FirstOrDefaultAsync(c => c.UserId == userId);
+            return await _context.Carts
+                .Include(c => c.User)
+                .Include(c => c.CartItems)
+                    .ThenInclude(ci => ci.IngredientProduct)
+                    .ThenInclude(ip => ip.Ingredient)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
         }
 
         public async Task<IEnumerable<Cart>> GetAllWithParamsAsync(Guid? userId, string? sortBy, bool isDescending, int pageNumber, int pageSize)

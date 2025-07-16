@@ -60,5 +60,14 @@ namespace DrinkToDoor.BLL.Services
 
             return true;
         }
+
+        public async Task<CartResponse?> GetCartByUserIdAsync(Guid id)
+        {
+            var cart = await _unitOfWork.Carts.FindByUserId(id);
+            if (cart == null)
+                return null;
+            var cartResponse = _mapper.Map<CartResponse>(cart);
+            return cartResponse;
+        }
     }
 }
