@@ -39,6 +39,31 @@ namespace DrinToDoor.WebAPI.Controllers
             });
         }
 
+        [HttpGet("getByUserId")]
+        public async Task<IActionResult> GetCartByUserId([FromQuery] Guid userId)
+        {
+            var result = await _cartService.GetCartByUserIdAsync(userId);
+            if (result != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Code = StatusCodes.Status200OK,
+                    Success = true,
+                    Message = "Cart retrieved successfully",
+                    Data = result
+                });
+            }
+            else
+            {
+                return NotFound(new ApiResponse
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Success = false,
+                    Message = "Cart not found for this user"
+                });
+            }
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> CreateCart([FromQuery] Guid userId)
         {

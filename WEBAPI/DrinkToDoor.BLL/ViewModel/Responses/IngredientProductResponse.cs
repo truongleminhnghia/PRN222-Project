@@ -14,7 +14,8 @@ namespace DrinkToDoor.BLL.ViewModel.Responses
         public decimal TotalAmount { get; set; }
         public int QuantityPackage { get; set; }
         public string UnitPackage { get; set; } = string.Empty;
-        public Guid IngredientId { get; set; }
         public string IngredientName { get; set; } = string.Empty;
+        public IngredientResponse Ingredient { get; set; }
+        
     }
 }
