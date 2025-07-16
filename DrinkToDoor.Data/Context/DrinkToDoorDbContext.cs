@@ -28,6 +28,7 @@ namespace DrinkToDoor.Data.Context
         public DbSet<IngredientProduct> IngredientProducts { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<PackagingOption> PackagingOptions { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
 
         private static readonly TimeZoneInfo _vnZone =
