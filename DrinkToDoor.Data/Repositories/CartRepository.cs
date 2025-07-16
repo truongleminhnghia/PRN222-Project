@@ -39,6 +39,7 @@ namespace DrinkToDoor.Data.Repositories
                 .Include(c => c.CartItems)
                     .ThenInclude(ci => ci.IngredientProduct)
                     .ThenInclude(ip => ip.Ingredient)
+                        .ThenInclude(i => i.Images)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
         }
 
