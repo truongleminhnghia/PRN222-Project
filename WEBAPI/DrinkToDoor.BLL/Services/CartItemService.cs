@@ -19,22 +19,35 @@ namespace DrinkToDoor.BLL.Services
         }
         public async Task<bool> CreateCartItemAsync(CartItemRequest request)
         {
-            var cartItem = _mapper.Map<CartItem>(request);
-
             var cart = await _unitOfWork.Carts.FindById(request.CartId);
             if (cart == null)
             {
                 throw new ApplicationException("Cart not found");
             }
 
-            var ingredientProduct = await _unitOfWork.IngredientProducts.FindById(request.IngredientProductId);
-            if (ingredientProduct == null)
+            var ingredient = await _unitOfWork.Ingredients.FindById(request.IngredientId);
+            if (ingredient == null)
             {
-                throw new ApplicationException("Ingredient product not found");
+                throw new ApplicationException("Ingredient not found");
             }
 
-            cartItem.Quantity = ingredientProduct.QuantityPackage; 
+            var ingredientProduct = new IngredientProduct
+            {
+                Name = ingredient.Name,
+                Price = ingredient.Price,
+                TotalAmount = ingredient.Price * request.Quantity,
+                QuantityPackage = request.Quantity,
+                UnitPackage = request.EnumPackageType.ToString(),
+                IngredientId = ingredient.Id
+            };
+            await _unitOfWork.IngredientProducts.AddAsync(ingredientProduct);
 
+            var cartItem = new CartItem
+            {
+                IngredientProductId = ingredientProduct.Id,
+                CartId = request.CartId,
+                Quantity = request.Quantity
+            };
             var result = await _unitOfWork.CartItems.CreateAsync(cartItem);
             await _unitOfWork.SaveChangesAsync();
             if (result)

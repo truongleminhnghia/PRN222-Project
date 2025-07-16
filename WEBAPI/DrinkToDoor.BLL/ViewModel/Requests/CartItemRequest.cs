@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DrinkToDoor.Data.enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,10 @@ namespace DrinkToDoor.BLL.ViewModel.Requests
 {
     public class CartItemRequest
     {
-        public Guid IngredientProductId { get; set; }
+        public Guid IngredientId { get; set; }
         public Guid CartId { get; set; }
+        public EnumPackageType EnumPackageType { get; set; }
+        public int Quantity { get; set; } = 1;
 
     }
 }
