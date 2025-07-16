@@ -19,7 +19,7 @@ namespace DrinkToDoor.BLL.Services
         }
         public async Task<bool> CreateCartItemAsync(CartItemRequest request)
         {
-            var cart = await _unitOfWork.Carts.FindById(request.CartId);
+            var cart = await _unitOfWork.Carts.FindByUserId(request.UserId);
             if (cart == null)
             {
                 throw new ApplicationException("Cart not found");
@@ -45,7 +45,7 @@ namespace DrinkToDoor.BLL.Services
             var cartItem = new CartItem
             {
                 IngredientProductId = ingredientProduct.Id,
-                CartId = request.CartId,
+                CartId = cart.Id,
                 Quantity = request.Quantity
             };
             var result = await _unitOfWork.CartItems.CreateAsync(cartItem);
