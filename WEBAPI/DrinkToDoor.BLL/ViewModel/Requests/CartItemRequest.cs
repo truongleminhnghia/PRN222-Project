@@ -10,7 +10,7 @@ namespace DrinkToDoor.BLL.ViewModel.Requests
     public class CartItemRequest
     {
         public Guid IngredientId { get; set; }
-        public Guid CartId { get; set; }
+        public Guid UserId { get; set; }
         public EnumPackageType EnumPackageType { get; set; }
         public int Quantity { get; set; } = 1;
 

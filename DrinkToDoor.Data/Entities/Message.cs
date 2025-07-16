@@ -17,6 +17,11 @@ namespace DrinkToDoor.Data.Entities
         [ForeignKey(nameof(SenderId))]
         public virtual User? Sender { get; set; }
 
+        [Column("receiver_id")]
+        public Guid RecerverId { get; set; }
+        [ForeignKey(nameof(RecerverId))]
+        public virtual User? Receiver { get; set; }
+
         [Column("message", TypeName = "varchar(500)")]
         [Required]
         public string Content { get; set; } = string.Empty;
