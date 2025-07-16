@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DrinkToDoor.BLL.Interfaces;
 using DrinkToDoor.BLL.ViewModel.Requests;
+using DrinkToDoor.BLL.ViewModel.Responses;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Entities;
 
