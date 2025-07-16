@@ -61,6 +61,8 @@ namespace DrinkToDoor.Data.Entities
         public virtual ICollection<Order>? Orders { get; set; }
         public virtual ICollection<Cart>? Carts { get; set; }
         public virtual ICollection<Payment>? Payments { get; set; }
-        public virtual ICollection<Message>? Messages { get; set; }
+        public virtual ICollection<Message> SentMessages { get; set; }
+        public virtual ICollection<Message> ReceivedMessages { get; set; }
+
     }
 }
