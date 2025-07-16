@@ -19,6 +19,7 @@ namespace DrinkToDoor.Data.Entities
 
         [Column("receiver_id")]
         public Guid ReceiverId { get; set; }
+        
         [ForeignKey(nameof(ReceiverId))]
         public virtual User? Receiver { get; set; }
 
