@@ -45,7 +45,7 @@ namespace DrinkToDoor.BLL.Services
             var cartItem = new CartItem
             {
                 IngredientProductId = ingredientProduct.Id,
-                CartId = request.CartId,
+                CartId = cart.Id,
                 Quantity = request.Quantity
             };
             var result = await _unitOfWork.CartItems.CreateAsync(cartItem);
