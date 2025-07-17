@@ -20,7 +20,8 @@ namespace DrinToDoor.WebAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] OrderRequest req)
         {
-            if (!await _orderService.Create(req))
+            var response = await _orderService.Create(req);
+            if (response == null)
                 return BadRequest(
                     new ApiResponse
                     {
@@ -35,6 +36,7 @@ namespace DrinToDoor.WebAPI.Controllers
                     Code = 200,
                     Message = "Order created",
                     Success = true,
+                    Data = response
                 }
             );
         }

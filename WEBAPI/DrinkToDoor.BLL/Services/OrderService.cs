@@ -24,7 +24,7 @@ namespace DrinkToDoor.BLL.Services
             _logger = logger;
         }
 
-        public async Task<bool> Create(OrderRequest request)
+        public async Task<OrderResponse> Create(OrderRequest request)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace DrinkToDoor.BLL.Services
                     }
                 }
                 var saved = await _unitOfWork.SaveChangesWithTransactionAsync();
-                return saved > 0;
+                return saved > 0 ? _mapper.Map<OrderResponse>(order) : null;
             }
             catch (AppException)
             {

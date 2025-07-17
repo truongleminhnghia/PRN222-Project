@@ -12,7 +12,7 @@ namespace DrinkToDoor.BLL.Interfaces
 {
     public interface IOrderService
     {
-        Task<bool> Create(OrderRequest request);
+        Task<OrderResponse> Create(OrderRequest request);
         Task<OrderResponse?> GetById(Guid id);
         Task<PageResult<OrderResponse>> GetOrders(
             Guid? userId,
