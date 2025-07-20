@@ -1,0 +1,145 @@
+@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DrinkToDoor.Web.Pages.Admins.Ingredients.Create
+@{
+    ViewData["Title"] = "Tạo sản phẩm mới";
+    Layout = "_LayoutAdmin";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container-xxxl py-4">
+    <form method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="IngredientRequest.Name" class="form-label">Tên nguyên liệu</label>
+                <input asp-for="IngredientRequest.Name" class="form-control" />
+                <span asp-validation-for="IngredientRequest.Name" class="text-danger"></span>
+            </div>
+            @* <div class="col-md-6 mb-3">
+            <label asp-for="IngredientRequest.Code" class="form-label">Mã</label>
+            <input asp-for="Input.Code" class="form-control" />
+            <span asp-validation-for="Input.Code" class="text-danger"></span>
+        </div> *@
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="IngredientRequest.Description" class="form-label">Mô tả</label>
+            <textarea asp-for="IngredientRequest.Description" class="form-control" rows="3"></textarea>
+            <span asp-validation-for="IngredientRequest.Description" class="text-danger"></span>
+        </div>
+
+        <div class="row">
+            @* <div class="col-md-4 mb-3">
+            <label asp-for="Input.Status" class="form-label">Trạng thái</label>
+            <select asp-for="Input.Status" class="form-select" asp-items="Html.GetEnumSelectList<EnumStatus>()">
+                <option value="">— Chọn Trạng Thái —</option>
+            </select>
+            <span asp-validation-for="Input.Status" class="text-danger"></span>
+        </div> *@
+            <div class="col-md-4 mb-3">
+                <label asp-for="IngredientRequest.Price" class="form-label">Giá bán</label>
+                <input asp-for="IngredientRequest.Price" class="form-control" />
+                <span asp-validation-for="IngredientRequest.Price" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="IngredientRequest.Cost" class="form-label">Giá nhập</label>
+                <input asp-for="IngredientRequest.Cost" class="form-control" />
+                <span asp-validation-for="IngredientRequest.Cost" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label asp-for="IngredientRequest.StockQty" class="form-label">Tồn kho</label>
+                <input asp-for="IngredientRequest.StockQty" class="form-control" />
+                <span asp-validation-for="IngredientRequest.StockQty" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="IngredientRequest.Category.Name" class="form-label">Danh mục</label>
+                <select asp-for="IngredientRequest.Category.Name" class="form-select">
+                    <option value="">— Chọn Danh Mục —</option>
+                </select>
+                <span asp-validation-for="IngredientRequest.Category.Name" class="text-danger"></span>
+            </div>
+            @* <div class="col-md-4 mb-3">
+            <label asp-for="Input.SupplierId" class="form-label">Nhà cung cấp</label>
+            <select asp-for="Input.SupplierId" class="form-select" asp-items="Model.Suppliers">
+                <option value="">— Chọn Nhà Cung Cấp —</option>
+            </select>
+            <span asp-validation-for="Input.SupplierId" class="text-danger"></span>
+        </div> *@
+        </div>
+
+        @* <div class="mb-3">
+        <label asp-for="Input.DefaultPackagingOptionId" class="form-label">Đóng gói mặc định</label>
+        <select asp-for="Input.DefaultPackagingOptionId" class="form-select" asp-items="Model.PackagingOptions">
+            <option value="">— Chọn Đóng Gói —</option>
+        </select>
+        <span asp-validation-for="Input.DefaultPackagingOptionId" class="text-danger"></span>
+    </div> *@
+        <div class="mb-3">
+            <label class="form-label">Hình ảnh</label>
+            <div id="imagePreview" class="d-flex flex-wrap gap-2 position-relative">
+                <!-- Upload card -->
+                <label for="imageInput" id="uploadTile"
+                    class="card border-dashed d-flex align-items-center justify-content-center"
+                    style="width:120px;height:120px;cursor:pointer;">
+                    <span class="fs-4">+ Upload</span>
+                </label>
+            </div>
+            <input asp-for="IngredientRequest.ImagesRequest" id="imageInput" type="file" class="d-none" multiple
+                accept="image/*" />
+            <span asp-validation-for="IngredientRequest.ImagesRequest" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Tạo mới</button>
+        <a asp-page="Index" class="btn btn-secondary ms-2">Hủy</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const preview = document.getElementById('imagePreview');
+        const uploadTile = document.getElementById('uploadTile');
+
+        uploadTile.addEventListener('click', () => imageInput.click());
+
+        imageInput.addEventListener('change', function () {
+            Array.from(this.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'card position-relative';
+                    wrapper.style.width = '120px';
+                    wrapper.style.height = '120px';
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.objectFit = 'cover';
+                    img.style.width = '100%';
+                    img.style.height = '100%';
+                    wrapper.appendChild(img);
+
+                    const delIcon = document.createElement('i');
+                    delIcon.className = 'bi bi-x-lg position-absolute';
+                    delIcon.style.top = '4px';
+                    delIcon.style.right = '4px';
+                    delIcon.style.color = 'red';
+                    delIcon.style.fontSize = '1.2rem';
+                    delIcon.style.cursor = 'pointer';
+                    delIcon.addEventListener('click', () => wrapper.remove());
+                    wrapper.appendChild(delIcon);
+                    preview.insertBefore(wrapper, uploadTile);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+    </script>
+}

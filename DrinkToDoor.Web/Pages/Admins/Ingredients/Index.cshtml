@@ -11,10 +11,46 @@
     <h1>@ViewData["Title"]</h1>
 
     <!-- nút Tạo mới -->
-    <button class="btn btn-success mb-4" style="margin-top: 20px;" data-bs-toggle="modal"
-        data-bs-target="#createUserModal">
+    @* <button class="btn btn-success mb-4" style="margin-top: 20px;" data-bs-toggle="modal"
+        data-bs-target="#createIngredientModalLabel">
         <i class="bi bi-plus-circle me-1"></i> Tạo Sản Phẩm Mới
-    </button>
+    </button> *@
+
+    <a class="btn btn-success mb-4" style="margin-top: 20px;" asp-page="Create">
+        Tạo Sản Phẩm Mới
+    </a>
+
+    @* <div class="modal fade" id="createIngredientModalLabel" tabindex="-1" aria-labelledby="createIngredientModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createIngredientModalLabel">Tạo Sản phẩm mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createUserForm" method="post">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="col mb-3">
+                            <label asp-for="IngredientRequest.Name" class="form-label">Tên sản phẩm</label>
+                            <input asp-for="IngredientRequest.Name" class="form-control" placeholder="Nhập tên">
+                            <span asp-validation-for="IngredientRequest.Name" class="text-danger"></span>
+                        </div>
+                        <div class="col mb-3">
+                            <label asp-for="IngredientRequest.Description" class="form-label">Mô tả</label>
+                            <input asp-for="IngredientRequest.Description" class="form-control" placeholder="Mô tả">
+                            <span asp-validation-for="IngredientRequest.Description" class="text-danger"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> *@
+
 
     <!-- Filter form -->
     <div class="card mb-4">
@@ -30,8 +66,7 @@
                 </div>
                 <div class="col-sm-6 col-md-2">
                     <label class="form-label">Trạng thái</label>
-                    <select asp-for="IngredientParams.Status"
-                        class="form-select"
+                    <select asp-for="IngredientParams.Status" class="form-select"
                         asp-items="Html.GetEnumSelectList<EnumStatus>()">
                         <option value="">— Chọn Trạng Thái —</option>
                     </select>

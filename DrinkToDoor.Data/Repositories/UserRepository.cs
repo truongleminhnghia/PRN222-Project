@@ -38,16 +38,18 @@ namespace DrinkToDoor.Data.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<IEnumerable<User>> FindToList(string? lastName, string? firstName, EnumRoleName? roleName, EnumAccountStatus? status, EnumGender? gender)
+        public async Task<IEnumerable<User>> FindToList(string? keyword, EnumRoleName? roleName, EnumAccountStatus? status, EnumGender? gender)
         {
             IQueryable<User> query = _context.Users;
-            if (!string.IsNullOrEmpty(lastName))
+            if (!string.IsNullOrEmpty(keyword))
             {
-                query = query.Where(u => u.LastName != null && u.LastName.Contains(lastName));
-            }
-            if (!string.IsNullOrEmpty(firstName))
-            {
-                query = query.Where(u => u.FirstName != null && u.FirstName.Contains(firstName));
+                query = query.Where(u =>
+                    (u.FirstName != null && u.FirstName.Contains(keyword)) ||
+                    (u.LastName != null && u.LastName.Contains(keyword)) ||
+                    (u.Email != null && u.Email.Contains(keyword)) ||
+                    (u.Phone != null && u.Phone.Contains(keyword)) ||
+                    (u.Address != null && u.Address.Contains(keyword))
+                );
             }
             if (gender.HasValue)
             {

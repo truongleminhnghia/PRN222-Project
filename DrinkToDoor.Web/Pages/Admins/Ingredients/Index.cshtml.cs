@@ -1,5 +1,6 @@
 
 using DrinkToDoor.Business.Dtos.ParamSearchs;
+using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Business.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,8 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
         }
 
         public IEnumerable<IngredientResponse> IngredientResponses { get; set; }
+
+        public IngredientRequest IngredientRequest { get; set; } = new IngredientRequest();
         public int TotalPages { get; set; }
         [BindProperty(SupportsGet = true)]
         public int PageSize { get; set; } = 10;

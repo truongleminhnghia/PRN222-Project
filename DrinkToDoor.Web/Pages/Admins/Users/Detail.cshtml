@@ -28,9 +28,6 @@
         </div>
         <div class="col-md-8">
           <dl class="row">
-            <dt class="col-sm-4 text-muted">ID</dt>
-            <dd class="col-sm-8 mb-3">@Model.UserResponse.Id</dd>
-
             <dt class="col-sm-4 text-muted">Email</dt>
             <dd class="col-sm-8 mb-3">@Model.UserResponse.Email</dd>
 
@@ -63,7 +60,7 @@
 
             <dt class="col-sm-4 text-muted">Ngày sinh</dt>
             <dd class="col-sm-8 mb-3">
-              @Model.UserResponse.DateOfBirth?.ToString("dd/MM/yyyy") ?? "-"
+              @Model.UserResponse.DateOfBirth?.ToString("dd/MM/yyyy")
             </dd>
           </dl>
         </div>

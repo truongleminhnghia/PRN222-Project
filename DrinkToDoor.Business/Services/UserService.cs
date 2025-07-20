@@ -87,12 +87,12 @@ namespace DrinkToDoor.Business.Services
             }
         }
 
-        public async Task<Tuple<IEnumerable<UserResponse>, int>> GetAsync(string? lastName, string? firstName, EnumRoleName? roleName, EnumAccountStatus? status,
+        public async Task<Tuple<IEnumerable<UserResponse>, int>> GetAsync(string? keyword, EnumRoleName? roleName, EnumAccountStatus? status,
                                                                     EnumGender? gender, int pageCurrent, int pageSize)
         {
             try
             {
-                var result = await _unitOfWork.Users.FindToList(lastName, firstName, roleName, status, gender);
+                var result = await _unitOfWork.Users.FindToList(keyword, roleName, status, gender);
                 if (result == null)
                 {
                     throw new ArgumentException("Danh sách rỗng");
