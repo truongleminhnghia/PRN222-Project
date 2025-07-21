@@ -1,3 +1,5 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Business.Services;
 using DrinkToDoor.Data.Context;
@@ -8,6 +10,7 @@ using DrinkToDoor.Data.Repositories;
 using DrinkToDoor.Web.Configurations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -51,7 +54,19 @@ builder.Services.AddProjectDependencies();
 builder.Services.AddAutoMapperConfiguration();
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
+{
+    ProgressBar = true,
+    Timeout = 5000,
+    Theme = "mint",
+    Layout = "topRight"
+});
+
+builder.Services.AddNotyf(options =>
+{
+    options.DurationInSeconds = 5;
+    options.Position = NotyfPosition.TopRight;
+});
 
 var app = builder.Build();
 
@@ -82,11 +97,16 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseNotyf();
+
+app.UseNToastNotify();
 
 app.MapRazorPages();
 

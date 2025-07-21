@@ -2,28 +2,27 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Data.enums;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NToastNotify;
 
 namespace DrinkToDoor.Web.Pages
 {
     public class LoginModel : PageModel
     {
         private readonly IAuthService _service;
+        private readonly INotyfService _toastNotification;
 
-        public LoginModel(IAuthService service)
+        public LoginModel(IAuthService service, INotyfService notyfService)
         {
             _service = service;
+            _toastNotification = notyfService;
         }
-
-        [TempData]
-        public string ToastMessage { get; set; }
-        [TempData]
-        public string ToastType { get; set; }
 
         [BindProperty]
         [Required(ErrorMessage = "Bạn phải nhập email")]
@@ -66,8 +65,7 @@ namespace DrinkToDoor.Web.Pages
             claimsPrincipal,
             new AuthenticationProperties { IsPersistent = false }
             );
-            ToastMessage = "Đăng nhập thành công!";
-            ToastType = "success";
+            _toastNotification.Success("Đăng nhập thành công", 5);
             if (user.RoleName == EnumRoleName.ROLE_ADMIN)
             {
                 return RedirectToPage("/Admins/Dashboard");
