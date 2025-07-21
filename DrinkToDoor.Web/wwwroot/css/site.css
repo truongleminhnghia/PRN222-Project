@@ -37,3 +37,33 @@ table th {
   white-space: nowrap;
   overflow: hidden;
 }
+
+/* Kéo button chiếm 100% chiều cao carousel */
+#propertyCarousel .carousel-control-prev,
+#propertyCarousel .carousel-control-next {
+  width: 60px;               /* bạn có thể chỉnh rộng hẹp */
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  opacity: 1;                /* để icon luôn rõ */
+  transition: background .2s;
+}
+
+/* Ẩn background mặc định */
+#propertyCarousel .carousel-control-prev-icon,
+#propertyCarousel .carousel-control-next-icon {
+  filter: invert(100%);      /* icon trắng trong suốt */
+}
+
+/* Khi hover: nền đen mờ full height */
+#propertyCarousel .carousel-control-prev:hover,
+#propertyCarousel .carousel-control-next:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Giữ icon nổi lên trên lớp nền */
+#propertyCarousel .carousel-control-prev:hover .carousel-control-prev-icon,
+#propertyCarousel .carousel-control-next:hover .carousel-control-next-icon {
+  filter: invert(100%) drop-shadow(0 0 2px #000);
+}
+

@@ -1,0 +1,118 @@
+@page
+@model DrinkToDoor.Web.Pages.Admins.Ingredients.Detail
+@using DrinkToDoor.Data.enums;
+@using System.Globalization
+@{
+    ViewData["Title"] = "Chi tiết nguyên liệu";
+    Layout = "_LayoutAdmin";
+}
+
+
+<div class="container-xxxl py-4">
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="row g-4 bg-white">
+        <!-- Ảnh & Carousel -->
+        <div class="col-lg-8">
+            <div id="propertyCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+                <div class="carousel-inner rounded">
+                    @foreach (var item in Model.IngredientResponse.Images
+                                        .Select((img, idx) => new { img, idx }))
+                    {
+                        <div class="carousel-item @(item.idx == 0 ? "active" : "")">
+                            <img src="@item.img.Url" class="d-block mx-auto"
+                                style="height: 500px; width: auto; object-fit: cover;" alt="Image @item.idx" />
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#propertyCarousel">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#propertyCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+
+            <div id="propertyThumbnails" class="d-flex gap-2">
+                @foreach (var item in Model.IngredientResponse.Images
+                                .Select((img, idx) => new { img, idx }))
+                {
+                    <img src="@item.img.Url" class="img-thumbnail thumbnail @(item.idx == 0 ? "active" : "")"
+                        style="width:80px; height:80px; cursor:pointer;" data-bs-target="#propertyCarousel"
+                        data-bs-slide-to="@item.idx" aria-label="Slide @item.idx" />
+                }
+            </div>
+        </div>
+
+        <!-- Thông tin chi tiết -->
+        <div class="col-lg-4">
+            <h2 class="mb-2">@Model.IngredientResponse.Name</h2>
+            <div>
+                <span>Mã nguyên liệu</span>
+                <span class="text-primary">@Model.IngredientResponse.Code</span>
+            </div>
+            <!-- Giá bán -->
+            <div class="bg-light p-3 rounded mb-4">
+                <div class="row">
+                    <div class="col-6">
+                        <span class="text-secondary">Giá bán</span>
+                        <h4 class="text-primary mt-2">
+                            @Model.IngredientResponse.Price
+                            <span> VNĐ</span>
+                        </h4>
+                    </div>
+                    <div class="col-6">
+                        <span class="text-secondary">Giá Nhập</span>
+                        <h4 class="text-secondary mt-2">
+                            @Model.IngredientResponse.Cost
+                            <span> VNĐ</span>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <span>Trạng thái</span>
+                <span
+                    class="badge @(Model.IngredientResponse.Status == EnumStatus.ACTIVE ? "bg-success" : "bg-secondary")">
+                    @(Model.IngredientResponse.Status == EnumStatus.ACTIVE ? "Đang hoạt động" : "Ngừng hoạt động")
+            </div>
+            <div>
+                <span>Số lượng tồn kho</span>
+                <span class="text-primary">@Model.IngredientResponse.StockQty</span>
+            </div>
+            <div>
+                <span>Nhà sản xuất</span>
+                <span class="text-primary">@Model.IngredientResponse.Supplier.Name</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var carouselEl = document.getElementById('propertyCarousel');
+            var thumbnails = document.querySelectorAll('#propertyThumbnails .thumbnail');
+            // Khi slide xong, di chuyển class active
+            carouselEl.addEventListener('slid.bs.carousel', function (e) {
+                thumbnails.forEach(t => t.classList.remove('active'));
+                thumbnails[e.to].classList.add('active');
+            });
+            // Click thumbnail cũng điều khiển carousel
+            thumbnails.forEach((thumb, idx) => {
+                thumb.addEventListener('click', function () {
+                    var carousel = bootstrap.Carousel.getInstance(carouselEl);
+                    carousel.to(idx);
+                });
+            });
+        });
+    </script>
+    <style>
+        /* Hiển thị thumbnail active rõ hơn */
+        #propertyThumbnails .thumbnail.active {
+            border: 2px solid #0d6efd;
+        }
+    </style>
+}
