@@ -9,7 +9,7 @@ namespace DrinkToDoor.Business.Interfaces
         Task<bool> CreateAsync(IngredientRequest request);
         Task<IngredientResponse?> GetByIdAsync(Guid id);
         Task<Tuple<IEnumerable<IngredientResponse>, int>> GetAsync(string? name, int pageCurrent, int pageSize);
-        Task<bool> UpdateAsync(Guid id, IngredientResponse response);
+        Task<bool> UpdateAsync(Guid id, IngredientUpdateRequest request);
         Task<bool> DeleteAsync(Guid id);
     }
 }

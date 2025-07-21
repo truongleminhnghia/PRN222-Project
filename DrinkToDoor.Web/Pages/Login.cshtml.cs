@@ -20,6 +20,11 @@ namespace DrinkToDoor.Web.Pages
             _service = service;
         }
 
+        [TempData]
+        public string ToastMessage { get; set; }
+        [TempData]
+        public string ToastType { get; set; }
+
         [BindProperty]
         [Required(ErrorMessage = "Bạn phải nhập email")]
         [EmailAddress(ErrorMessage = "Email không hợp lệ")]
@@ -61,6 +66,8 @@ namespace DrinkToDoor.Web.Pages
             claimsPrincipal,
             new AuthenticationProperties { IsPersistent = false }
             );
+            ToastMessage = "Đăng nhập thành công!";
+            ToastType = "success";
             if (user.RoleName == EnumRoleName.ROLE_ADMIN)
             {
                 return RedirectToPage("/Admins/Dashboard");

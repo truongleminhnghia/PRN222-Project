@@ -1,0 +1,109 @@
+@page
+@using DrinkToDoor.Data.enums
+@model DrinkToDoor.Web.Pages.Admins.Ingredients.EditModel
+@{
+    ViewData["Title"] = "Chỉnh sửa nguyên liệu";
+    Layout = "_LayoutAdmin";
+}
+
+@section Styles {
+    <style>
+        .text-14 {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .text-16 {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .text-20 {
+            font-size: 20px;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
+        }
+
+        .mt-4 {
+            margin-top: 1.5rem;
+        }
+    </style>
+}
+
+<div class="container-xxxl py-4">
+    <h1 class="text-20 text-primary fw-bold mb-4">@ViewData["Title"]</h1>
+    <form method="post" class="row g-4" id="editForm">
+        <input type="hidden" asp-for="IngredientUpdateRequest.Id" />
+        <div class="col-md-6">
+            <label asp-for="IngredientUpdateRequest.Name" class="form-label text-16">Tên nguyên liệu</label>
+            <input asp-for="IngredientUpdateRequest.Name" data-original="@Model.IngredientUpdateRequest.Name"
+                class="form-control text-14" />
+            <span asp-validation-for="IngredientUpdateRequest.Name" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="IngredientUpdateRequest.Code" class="form-label text-16">Mã nguyên liệu</label>
+            <input asp-for="IngredientUpdateRequest.Code" data-original="@Model.IngredientUpdateRequest.Code"
+                class="form-control text-14" readonly />
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="IngredientUpdateRequest.Status" class="form-label text-16">Trạng thái</label>
+            <select asp-for="IngredientUpdateRequest.Status" data-original="@Model.IngredientUpdateRequest.Status"
+                class="form-select text-14" asp-items="Html.GetEnumSelectList<EnumStatus>()"></select>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="IngredientUpdateRequest.Price" class="form-label text-16">Giá bán (VNĐ)</label>
+            <input asp-for="IngredientUpdateRequest.Price" data-original="@Model.IngredientUpdateRequest.Price"
+                class="form-control text-14" />
+            <span asp-validation-for="IngredientUpdateRequest.Price" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="IngredientUpdateRequest.Cost" class="form-label text-16">Giá nhập (VNĐ)</label>
+            <input asp-for="IngredientUpdateRequest.Cost" data-original="@Model.IngredientUpdateRequest.Cost"
+                class="form-control text-14" />
+            <span asp-validation-for="IngredientUpdateRequest.Cost" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-4">
+            <label asp-for="IngredientUpdateRequest.StockQty" class="form-label text-16">Số lượng tồn kho</label>
+            <input asp-for="IngredientUpdateRequest.StockQty" data-original="@Model.IngredientUpdateRequest.StockQty"
+                class="form-control text-14" />
+            <span asp-validation-for="IngredientUpdateRequest.StockQty" class="text-danger"></span>
+        </div>
+
+        <div class="col-12">
+            <label asp-for="IngredientUpdateRequest.Description" class="form-label text-16">Mô tả</label>
+            <textarea asp-for="IngredientUpdateRequest.Description"
+                data-original="@Model.IngredientUpdateRequest.Description" class="form-control text-14"
+                rows="4"></textarea>
+            <span asp-validation-for="IngredientUpdateRequest.Description" class="text-danger"></span>
+        </div>
+
+        <div class="col-12 d-flex justify-content-end mt-4">
+            <a asp-page="Index" class="btn btn-secondary me-2">Hủy</a>
+            <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @* <partial name="_ValidationScriptsPartial" /> *@
+    <script>
+        document.getElementById('editForm').addEventListener('submit', function (e) {
+            this.querySelectorAll('[data-original]').forEach(function (el) {
+                var original = el.getAttribute('data-original') || '';
+                var current = el.value || '';
+                if (current === original) {
+                    el.disabled = true;
+                }
+            });
+        });
+    </script>
+}

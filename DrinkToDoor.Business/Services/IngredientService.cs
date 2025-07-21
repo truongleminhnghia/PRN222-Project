@@ -142,9 +142,34 @@ namespace DrinkToDoor.Business.Services
             }
         }
 
-        public Task<bool> UpdateAsync(Guid id, IngredientResponse response)
+        public async Task<bool> UpdateAsync(Guid id, IngredientUpdateRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    throw new ArgumentException("Id không được bỏ trống");
+                }
+                var ingredient = await _unitOfWork.Ingredients.FindById(id);
+                if (ingredient == null)
+                {
+                    throw new ArgumentException($"Nguyên liệu không tồn tại với ID {id}");
+                }
+                if (request.Name != null) ingredient.Name = request.Name;
+                if (request.Description != null) ingredient.Description = request.Description;
+                if (request.Status != null) ingredient.Status = request.Status.Value;
+                if (request.Price != null) ingredient.Price = request.Price.Value;
+                if (request.Cost != null) ingredient.Cost = request.Cost.Value;
+                if (request.StockQty != null) ingredient.StockQty = request.StockQty.Value;
+                await _unitOfWork.Ingredients.UpdateAsync(ingredient);
+                var result = await _unitOfWork.SaveChangesWithTransactionAsync();
+                return result > 0 ? true : false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
         }
     }
 }
