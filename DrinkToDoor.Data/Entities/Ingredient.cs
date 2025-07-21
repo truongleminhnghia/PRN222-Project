@@ -33,16 +33,8 @@ namespace DrinkToDoor.Data.Entities
         [Column("price", TypeName = "decimal(12,2)")]
         [Required]
         public decimal Price { get; set; }
-
-        /// <summary>
-        /// Giá nhập mặc định
-        /// </summary>
         [Column("cost", TypeName = "decimal(12,2)")]
         public decimal? Cost { get; set; }
-
-        /// <summary>
-        /// Tồn kho tổng (tùy chọn)
-        /// </summary>
         [Column("stock_qty", TypeName = "int")]
         public int StockQty { get; set; }
 
@@ -51,10 +43,6 @@ namespace DrinkToDoor.Data.Entities
 
         [ForeignKey(nameof(SupplierId))]
         public Supplier? Supplier { get; set; }
-
-        /// <summary>
-        /// Tùy chọn đóng gói mặc định (FK tới PackagingOptions)
-        /// </summary>
         [Column("default_packaging_option_id")]
         public Guid? DefaultPackagingOptionId { get; set; }
 

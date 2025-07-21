@@ -3,7 +3,9 @@ using AutoMapper;
 using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Business.Interfaces;
+using DrinkToDoor.Business.Utils;
 using DrinkToDoor.Data;
+using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
 using Microsoft.Extensions.Logging;
 
@@ -13,18 +15,59 @@ namespace DrinkToDoor.Business.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IImageService _imageService;
         private readonly ILogger<IngredientService> _logger;
+        private readonly IPackagingOptionService _packagingOptionService;
 
-        public IngredientService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<IngredientService> logger)
+        public IngredientService(IUnitOfWork unitOfWork, IMapper mapper,
+                                ILogger<IngredientService> logger,
+                                IImageService imageService, IPackagingOptionService packagingOptionService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+            _imageService = imageService;
+            _packagingOptionService = packagingOptionService;
         }
 
-        public Task<bool> CreateAsync(IngredientRequest request)
+        public async Task<bool> CreateAsync(IngredientRequest request)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (request.CategoryId == null || request.CategoryId == Guid.Empty)
+                {
+                    throw new ArgumentException("CategoryId không được bỏ trống");
+                }
+                var cateogry = await _unitOfWork.Categories.FindById(request.CategoryId.Value);
+                if (cateogry == null)
+                {
+                    throw new ArgumentException($"Danh mục không tồn tại với ID {request.CategoryId}");
+                }
+                if (request.SupplierId == null || request.SupplierId == Guid.Empty)
+                {
+                    throw new ArgumentException("SupplierId không được bỏ trống");
+                }
+                var supplier = await _unitOfWork.Suppliers.FindById(request.SupplierId.Value);
+                if (supplier == null)
+                {
+                    throw new ArgumentException($"Nhà cung cấp không tồn tại với ID {request.SupplierId}");
+                }
+                var ingredient = _mapper.Map<Ingredient>(request);
+                ingredient.Code = Base.GenerateCode('P');
+                ingredient.Status = EnumStatus.ACTIVE;
+                ingredient.CategoryId = cateogry.Id;
+                ingredient.SupplierId = supplier.Id;
+                await _unitOfWork.Ingredients.AddAsync(ingredient);
+                var image = await _imageService.AddImages(ingredient.Id, request.ImagesRequest);
+                var package = await _packagingOptionService.Add(ingredient.Id, request.PackagingOptions);
+                var result = await _unitOfWork.SaveChangesWithTransactionAsync();
+                return result > 0 ? true : false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
         }
 
         public async Task<bool> DeleteAsync(Guid id)

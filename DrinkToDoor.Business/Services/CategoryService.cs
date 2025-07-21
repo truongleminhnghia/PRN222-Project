@@ -4,6 +4,7 @@ using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
+using Microsoft.Extensions.Logging;
 
 namespace DrinkToDoor.Business.Services
 {
@@ -11,11 +12,13 @@ namespace DrinkToDoor.Business.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ILogger<CategoryService> _logger;
 
-        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper)
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<CategoryService> logger)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<CategoryResponse>> GetAllAsync(string? name, EnumCategoryType? categoryType = null)
@@ -64,6 +67,25 @@ namespace DrinkToDoor.Business.Services
             await _unitOfWork.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<IEnumerable<CategoryResponse>> GetAll()
+        {
+            try
+            {
+                var categories = await _unitOfWork.Categories.FindAll();
+                if (categories == null || !categories.Any())
+                {
+                    _logger.LogWarning("No categories found.");
+                    return Enumerable.Empty<CategoryResponse>();
+                }
+                return _mapper.Map<IEnumerable<CategoryResponse>>(categories);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
         }
     }
 }

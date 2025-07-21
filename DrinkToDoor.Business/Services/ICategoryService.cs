@@ -16,5 +16,6 @@ namespace DrinkToDoor.Business.Services
         Task<Guid> CreateAsync(CategoryRequest request);
         Task<bool> UpdateAsync(Guid id, CategoryRequest request);
         Task<bool> DeleteAsync(Guid id);
+        Task<IEnumerable<CategoryResponse>> GetAll();
     }
 }

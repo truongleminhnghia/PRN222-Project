@@ -95,7 +95,7 @@ namespace DrinkToDoor.BLL.Services
         {
             try
             {
-                var result = await _unitOfWork.Suppliers.FindAll(name, contactPerson);
+                var result = await _unitOfWork.Suppliers.FindAllParams(name, contactPerson);
                 if (result == null) throw new AppException(ErrorCode.LIST_EMPTY, "List empty");
                 var pagedResult = result.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
                 var total = result.Count();

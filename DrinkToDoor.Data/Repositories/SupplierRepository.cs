@@ -26,7 +26,7 @@ namespace DrinkToDoor.Data.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<Supplier>>? FindAll(string? name, string? contactPerson)
+        public async Task<IEnumerable<Supplier>>? FindAllParams(string? name, string? contactPerson)
         {
             IQueryable<Supplier> query = _context.Suppliers;
 
@@ -65,6 +65,11 @@ namespace DrinkToDoor.Data.Repositories
         {
             _context.Suppliers.Update(supplier);
             return 1;
+        }
+
+        public async Task<IEnumerable<Supplier>>? FindAll()
+        {
+            return await _context.Suppliers.ToListAsync();
         }
     }
 }

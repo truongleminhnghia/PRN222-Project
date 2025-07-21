@@ -59,5 +59,10 @@ namespace DrinkToDoor.Data.Repositories
         {
             return await _context.Categories.FirstOrDefaultAsync(c => c.Name == name);
         }
+
+        public async Task<IEnumerable<Category>> FindAll()
+        {
+            return await _context.Categories.ToListAsync();
+        }
     }
 }

@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Data.Entities;
 
@@ -10,6 +11,7 @@ namespace DrinkToDoor.Business.Mappers
      public PackageOptionMapper()
      {
             CreateMap<PackagingOption, PackagingOptionResponse>().ReverseMap();
+            CreateMap<PackagingOptionRequest, PackagingOption>().ReverseMap();
      }
     }
 }

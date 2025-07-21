@@ -6,7 +6,8 @@ namespace DrinkToDoor.Data.Interfaces
     {
         Task<int> AddSupplier(Supplier supplier);
         Task<Supplier?> FindById(Guid id);
-        Task<IEnumerable<Supplier>>? FindAll(string? name, string? contactPerson);
+        Task<IEnumerable<Supplier>>? FindAll();
+        Task<IEnumerable<Supplier>>? FindAllParams(string? name, string? contactPerson);
         Task<Supplier?> FindByEmail(string email);
         Task<Supplier?> FindByPhone(string phone);
         Task<Supplier?> FindByName(string name);
