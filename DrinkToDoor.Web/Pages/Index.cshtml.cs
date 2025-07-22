@@ -1,4 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
+
+using DrinkToDoor.BLL.ViewModel.Responses;
+using DrinkToDoor.Business.Dtos.Responses;
+using DrinkToDoor.Business.Interfaces;
+using DrinkToDoor.Data.Entities;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DrinkToDoor.Web.Pages;
@@ -6,14 +11,24 @@ namespace DrinkToDoor.Web.Pages;
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
+    private readonly IBannerService _bannerService;
+    private readonly IIngredientService _ingredientService;
 
-    public IndexModel(ILogger<IndexModel> logger)
+    public IndexModel(ILogger<IndexModel> logger, IBannerService bannerService, IIngredientService ingredientService)
     {
+        _bannerService = bannerService;
         _logger = logger;
+        _ingredientService = ingredientService;
     }
 
-    public void OnGet()
-    {
+    public IList<BannerResponse> Banners { get; set; } = new List<BannerResponse>();
 
+    public IEnumerable<IngredientResponse> Ingredients { get; set; }
+
+    public async Task OnGet()
+    {
+        Banners = await _bannerService.GetAllBannersAsync();
+        var listIngredient = await _ingredientService.GetAsync(null, 1, 10);
+        Ingredients = listIngredient.Item1;
     }
 }

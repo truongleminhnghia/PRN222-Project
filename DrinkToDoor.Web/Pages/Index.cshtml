@@ -1,10 +1,156 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Trang chủ";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section Styles {
+    <style>
+        .text-14 {
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .text-16 {
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .text-18 {
+            font-size: 18px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .text-20 {
+            font-size: 20px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .text-24 {
+            font-size: 24px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .pl-8 {
+            padding-left: 8px;
+        }
+
+        .pl-16 {
+            padding-left: 16px;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: brightness(0);
+        }
+
+        .thumb {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform .2s;
+        }
+
+        .thumb.active {
+            border: 2px solid #0d6efd;
+            transform: scale(1.1);
+        }
+
+        swiper-slide {
+            display: flex;
+        }
+
+        swiper-slide .card {
+            flex: 1;
+        }
+    </style>
+}
+
+
+<div class="container-xxxl">
+    <div id="ingredientCarousel" class="carousel slide mb-3 mt-4" data-bs-ride="carousel">
+        <div class="carousel-inner rounded overflow-hidden">
+            @foreach (var (img, idx) in Model.Banners.Select((img, idx) => (img, idx)))
+            {
+                <div class="carousel-item @(idx == 0 ? "active" : "")">
+                    <img src="@img.Url" class="d-block w-100" style="height: 450px; object-fit: cover;" alt="Slide @idx" />
+                </div>
+            }
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#ingredientCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#ingredientCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    <div class="shadow-sm bg-white p-4 mt-4 rounded">
+        <h2 class="mb-4 text-24">Sản phẩm mới</h2>
+        <swiper-container slides-per-view="4" space-between="24" speed="500" loop="true" css-mode="true" autoplay="true"
+            autoplay-delay="3000" disable-on-interaction="false">
+            @foreach (var (item, idx) in Model.Ingredients.Select((item, idx) => (item, idx)))
+            {
+                <swiper-slide>
+                    <div class="card h-100 shadow-sm">
+                        <img src="@item.Images?.FirstOrDefault()?.Url" class="img-fluid mb-3"
+                            style="height: auto; object-fit: cover;" alt="@item.Name" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-18 mb-2">@item.Name</h5>
+                            <p class="card-text text-16 text-muted mt-auto">@item.Price.ToString("C0")</p>
+                        </div>
+                    </div>
+                </swiper-slide>
+            }
+        </swiper-container>
+    </div>
+
+    <div class="shadow-sm bg-white p-4 mt-4 rounded">
+        <h2 class="mb-4 text-24">Combo nguyên liệu</h2>
+        <swiper-container slides-per-view="4" space-between="24" speed="500" loop="true" css-mode="true" autoplay="true"
+            autoplay-delay="3000" disable-on-interaction="false">
+            @foreach (var (item, idx) in Model.Ingredients.Select((item, idx) => (item, idx)))
+            {
+                <swiper-slide>
+                    <div class="card h-100 shadow-sm">
+                        <img src="@item.Images?.FirstOrDefault()?.Url" class="img-fluid mb-3"
+                            style="height: auto; object-fit: cover;" alt="@item.Name" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-18 mb-2">@item.Name</h5>
+                            <p class="card-text text-16 text-muted mt-auto">@item.Price.ToString("C0")</p>
+                        </div>
+                    </div>
+                </swiper-slide>
+            }
+        </swiper-container>
+    </div>
+
+    <div class="shadow-sm bg-white p-4 mt-4 rounded">
+        <swiper-container slides-per-view="4" space-between="24" speed="500" loop="true" css-mode="true" autoplay="true"
+            autoplay-delay="3000" disable-on-interaction="false">
+            @foreach (var (item, idx) in Model.Ingredients.Select((item, idx) => (item, idx)))
+            {
+                <swiper-slide>
+                    <div class="card h-100 shadow-sm">
+                        <img src="@item.Images?.FirstOrDefault()?.Url" class="img-fluid mb-3"
+                            style="height: auto; object-fit: cover;" alt="@item.Name" />
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-18 mb-2">@item.Name</h5>
+                            <p class="card-text text-16 text-muted mt-auto">@item.Price.ToString("C0")</p>
+                        </div>
+                    </div>
+                </swiper-slide>
+            }
+        </swiper-container>
+    </div>
+
+
 </div>

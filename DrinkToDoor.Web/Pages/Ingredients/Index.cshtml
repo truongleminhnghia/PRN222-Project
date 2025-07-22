@@ -1,0 +1,91 @@
+@page
+@model DrinkToDoor.Web.Pages.Ingredients.Index
+@{
+    ViewData["Title"] = "Index";
+}
+
+@section Styles {
+    <style>
+        .text-14 {
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .text-16 {
+            font-size: 16px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .text-18 {
+            font-size: 18px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .text-20 {
+            font-size: 20px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .text-24 {
+            font-size: 24px;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .pl-8 {
+            padding-left: 8px;
+        }
+
+        .pl-16 {
+            padding-left: 16px;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: brightness(0);
+        }
+
+        .thumb {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform .2s;
+        }
+
+        .thumb.active {
+            border: 2px solid #0d6efd;
+            transform: scale(1.1);
+        }
+    </style>
+}
+
+<div class="container-xxxl mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent px-0">
+            <li class="breadcrumb-item"><a href="/Index">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Danh sách nguyên liệu</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        @foreach (var item in Model.Ingredients)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card h-100" role="button"
+                    onclick="location.href='@Url.Page("/Ingredients/Detail", new { id = item.Id })'">
+                    <img src="@item.Images?.FirstOrDefault()?.Url ?? \" /images/placeholder.png\""
+                        class="card-img-top thumb" alt="@item.Name" />
+                    <div class="card-body">
+                        <h5 class="card-title text-20">@item.Name</h5>
+                        <p class="card-text text-16">@item.Price.ToString("C0")</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
