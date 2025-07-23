@@ -1,0 +1,185 @@
+@page
+@using DrinkToDoor.Data.enums
+@model DrinkToDoor.Web.Pages.Ingredients.Detail
+@{
+    ViewData["Title"] = "Chi tiết nguyên liệu";
+}
+
+@section Styles {
+    <style>
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: brightness(0);
+        }
+
+        .thumb-btn img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            transition: transform .2s, border-color .2s;
+        }
+
+        .thumb-btn.active img {
+            border: 2px solid #0d6efd;
+            transform: scale(1.1);
+        }
+    </style>
+}
+
+<div class="container-xxl mt-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb bg-transparent px-0">
+            <li class="breadcrumb-item"><a href="/Ingredients/Index">Nguyên liệu</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.IngredientResponse.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row gx-5 gy-4">
+        <!-- Carousel Column -->
+        <div class="col-12 col-lg-7">
+            <div id="ingredientCarousel" class="carousel slide mb-3" data-bs-ride="carousel">
+                <div class="carousel-inner rounded overflow-hidden">
+                    @foreach (var (img, idx) in Model.IngredientResponse.Images.Select((img, idx) => (img, idx)))
+                    {
+                        <div class="carousel-item @(idx == 0 ? "active" : "")">
+                            <img src="@img.Url" class="d-block w-100" style="height:450px; object-fit:cover;"
+                                alt="Slide @idx" />
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#ingredientCarousel"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#ingredientCarousel"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+            <div class="d-flex justify-content-center gap-2">
+                @foreach (var (img, idx) in Model.IngredientResponse.Images.Select((img, idx) => (img, idx)))
+                {
+                    <button type="button" class="thumb-btn btn p-0 @(idx == 0 ? "active" : "")"
+                        data-bs-target="#ingredientCarousel" data-bs-slide-to="@idx" aria-label="Slide @idx">
+                        <img src="@img.Url" alt="Thumbnail @idx" />
+                    </button>
+                }
+            </div>
+        </div>
+
+        <!-- Details Column -->
+        <div class="col-12 col-lg-5">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title text-primary mb-4">@Model.IngredientResponse.Name</h3>
+
+                    <dl class="row mb-4">
+                        <dt class="col-sm-4 text-muted">Mã NL:</dt>
+                        <dd class="col-sm-8">@Model.IngredientResponse.Code</dd>
+
+                        <dt class="col-sm-4 text-muted">Tồn kho:</dt>
+                        <dd class="col-sm-8">@Model.IngredientResponse.StockQty</dd>
+
+                        <dt class="col-sm-4 text-muted">Giá bán:</dt>
+                        <dd class="col-sm-8 text-success fw-semibold">@Model.IngredientResponse.Price.ToString("C0")
+                        </dd>
+
+                        <dt class="col-sm-4 text-muted">Nhà sản xuất:</dt>
+                        <dd class="col-sm-8">@Model.IngredientResponse?.Supplier?.Name</dd>
+
+                        <dt class="col-sm-4 text-muted">Loại:</dt>
+                        <dd class="col-sm-8">@Model.IngredientResponse?.Category?.Name</dd>
+
+                        <dt class="col-sm-4 text-muted">Trạng thái:</dt>
+                        <dd class="col-sm-8">
+                            <span
+                                class="badge @(Model.IngredientResponse?.Status == EnumStatus.ACTIVE ? "bg-success" : "bg-secondary")">
+                                @(Model.IngredientResponse?.Status == EnumStatus.ACTIVE ? "Còn hàng" : "Hết hàng")
+                            </span>
+                        </dd>
+                    </dl>
+
+                    <form method="post" id="orderForm">
+                        <input type="hidden" name="id" value="@Model.IngredientResponse.Id" />
+                        <div class="mb-4">
+                            <label class="form-label">Loại đóng gói:</label>
+                            @foreach (var (pkg, idx) in Model.IngredientResponse.PackagingOptions.Select((p, i) => (p,
+                                                        i)))
+                            {
+                                <input class="btn-check" type="radio" id="pkg_@idx" name="PackagingOption" value="@idx"
+                                    autocomplete="off" />
+                                <label class="btn btn-secondary" for="pkg_@idx">
+                                    @pkg.Type
+                                </label>
+                            }
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label mb-2">Số lượng:</label>
+                            <div class="input-group" style="max-width:160px;">
+                                <button class="btn btn-outline-secondary" type="button" id="decQty">-</button>
+                                <input type="text" class="form-control text-center" id="inputQty" name="Quantity"
+                                    value="1" readonly />
+                                <button class="btn btn-outline-secondary" type="button" id="incQty">+</button>
+                            </div>
+                        </div>
+
+                        @* 4. Hai nút submit với 2 chức năng khác nhau *@
+                        <div class="mt-auto d-grid gap-2">
+                            <!-- submit đến Cart/Add -->
+                            @* <button type="submit" class="btn btn-primary btn-lg" asp-page-handler="AddToCart"
+                                formaction="@Url.Page("/Cart/Add", new { id = Model.IngredientResponse.Id })">
+                                Thêm vào giỏ hàng
+                            </button> *@
+
+                            <button type="submit" class="btn btn-primary btn-lg" asp-page-handler="AddToCart">
+                                Thêm vào giỏ hàng
+                            </button>
+
+                            <!-- submit đến Checkout -->
+                            <button type="submit" class="btn btn-outline-primary btn-lg" asp-page-handler="BuyNow"
+                                formaction="@Url.Page("/Checkout")">
+                                Mua ngay
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const carouselEl = document.getElementById('ingredientCarousel');
+        const thumbs = document.querySelectorAll('.thumb-btn');
+        carouselEl.addEventListener('slid.bs.carousel', e => {
+            thumbs.forEach(t => t.classList.remove('active'));
+            thumbs[e.to].classList.add('active');
+        });
+        thumbs.forEach((btn, idx) => btn.addEventListener('click', () => bootstrap.Carousel.getInstance(carouselEl).to(idx)));
+
+        const input = document.getElementById('inputQty');
+        document.getElementById('incQty').addEventListener('click', () => input.value = +input.value + 1);
+        document.getElementById('decQty').addEventListener('click', () => {
+            if (+input.value > 1) input.value = +input.value - 1;
+        });
+
+        const decBtn = document.getElementById('decQty');
+        const incBtn = document.getElementById('incQty');
+        const qtyInput = document.getElementById('inputQty');
+
+        decBtn.addEventListener('click', () => {
+            let v = parseInt(qtyInput.value, 10);
+            if (v > 1) qtyInput.value = v - 1;
+        });
+
+        incBtn.addEventListener('click', () => {
+            let v = parseInt(qtyInput.value, 10);
+            qtyInput.value = v + 1;
+        });
+    </script>
+}

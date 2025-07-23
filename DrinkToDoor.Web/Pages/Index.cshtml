@@ -1,5 +1,5 @@
 ﻿@page
-@model IndexModel
+@model Index
 @{
     ViewData["Title"] = "Trang chủ";
 }
@@ -134,6 +134,7 @@
     </div>
 
     <div class="shadow-sm bg-white p-4 mt-4 rounded">
+        <h2 class="mb-4 text-24">Nhà sản xuất</h2>
         <swiper-container slides-per-view="4" space-between="24" speed="500" loop="true" css-mode="true" autoplay="true"
             autoplay-delay="3000" disable-on-interaction="false">
             @foreach (var (item, idx) in Model.Ingredients.Select((item, idx) => (item, idx)))

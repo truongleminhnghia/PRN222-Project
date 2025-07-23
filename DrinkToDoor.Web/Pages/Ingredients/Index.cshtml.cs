@@ -1,5 +1,6 @@
 using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Business.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DrinkToDoor.Web.Pages.Ingredients
@@ -17,10 +18,17 @@ namespace DrinkToDoor.Web.Pages.Ingredients
 
         public IEnumerable<IngredientResponse> Ingredients { get; set; }
 
+        public int TotalPages { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int PageSize { get; set; } = 10;
+        [BindProperty(SupportsGet = true)]
+        public int PageCurrent { get; set; } = 1;
+
         public async Task OnGet()
         {
-            var listIngredient = await _ingredientService.GetAsync(null, 1, 10);
+            var listIngredient = await _ingredientService.GetAsync(null, PageCurrent, PageSize);
             Ingredients = listIngredient.Item1;
+            TotalPages = (int)Math.Ceiling(listIngredient.Item2 / (double)PageSize);
         }
     }
 }

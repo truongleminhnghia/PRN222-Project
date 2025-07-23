@@ -14,6 +14,10 @@ using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services
+       .AddRazorPages()
+       .AddRazorRuntimeCompilation();
+
 var dbSection = builder.Configuration.GetSection("Database");
 var server = dbSection["Server"];
 var port = dbSection["Port"];
