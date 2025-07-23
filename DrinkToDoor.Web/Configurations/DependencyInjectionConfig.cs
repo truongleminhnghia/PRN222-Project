@@ -25,6 +25,7 @@ namespace DrinkToDoor.Web.Configurations
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IPackagingOptionService, PackagingOptionService>();
             services.AddScoped<IBannerService, BannerService>();
+            services.AddScoped<ICartService, CartService>();
 
 
             // repository

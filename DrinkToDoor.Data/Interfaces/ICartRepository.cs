@@ -9,6 +9,7 @@ namespace DrinkToDoor.Data.Interfaces
         Task<Cart?> FindById(Guid cartId);
         Task<Cart?> FindByUserId(Guid userId);
         Task<bool> Delete(Cart cart);
+        Task<IEnumerable<Cart>> FindAll();
         Task<IEnumerable<Cart>> GetAllWithParamsAsync(Guid? userId, string? sortBy, bool isDescending, int pageNumber, int pageSize);
 
     }

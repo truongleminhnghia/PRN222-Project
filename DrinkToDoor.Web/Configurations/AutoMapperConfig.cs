@@ -14,6 +14,9 @@ namespace DrinkToDoor.Web.Configurations
             services.AddAutoMapper(typeof(ImageMapper));
             services.AddAutoMapper(typeof(SupplierMapper));
             services.AddAutoMapper(typeof(PackageOptionMapper));
+            services.AddAutoMapper(typeof(CartMapper));
+            services.AddAutoMapper(typeof(CartItemMapper));
+            services.AddAutoMapper(typeof(IngredientProductMapper));
             return services;
         }
     }
