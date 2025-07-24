@@ -1,0 +1,121 @@
+@page
+@model DrinkToDoor.Web.Pages.Carts.Index
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (Model.CartItemResponses?.Any() ?? false)
+{
+    <form method="post" asp-page-handler="ProcessSelection">
+        <table class="table align-middle" id="cartTable">
+            <thead class="table-light">
+                <tr>
+                    <th>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="checkAll">
+                            <label class="form-check-label" for="checkAll">Chọn tất cả</label>
+                        </div>
+                    </th>
+                    <th>Sản phẩm</th>
+                    <th>Giá</th>
+                    <th>Số lượng</th>
+                    <th>Tổng tiền</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItemResponses)
+                {
+                    <tr>
+                        <td>
+                            <input type="checkbox" class="form-check-input cart-checkbox" name="SelectedIds" value="@item.Id"
+                                data-price="@item.IngredientProduct.Price" data-quantity="@item.Quantity" />
+                        </td>
+                        <td>
+                            <img style="width:100px;height:100px;object-fit:cover;"
+                                src="@item.IngredientProduct.Ingredient.Images.FirstOrDefault()?.Url"
+                                alt="@item.IngredientProduct.Name" />
+                            <strong style="font-size:16px;color:#000;">
+                                @item.IngredientProduct.Name
+                            </strong>
+                        </td>
+                        <td>@item.IngredientProduct.Price.ToString("C0")</td>
+                        <td>@item.Quantity</td>
+                        <td>@(item.Quantity* item.IngredientProduct.Price)</td>
+                        <td>
+                            <form method="post" asp-page-handler="Remove" asp-route-id="@item.Id" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Xóa
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="position-sticky" style="bottom:0; z-index:1020;">
+            <div class="bg-white border-top py-2">
+                <div class="container d-flex align-items-center">
+                    <div class="form-check me-3">
+                        <input id="checkAll" class="form-check-input" type="checkbox" />
+                        <label class="form-check-label" for="checkAll">
+                            Chọn tất cả (@Model.CartItemResponses.Count())
+                        </label>
+                    </div>
+
+                    <button type="submit" name="action" value="saveFavorite" class="btn btn-link me-auto">
+                        <i class="bi bi-heart"></i> Lưu vào Đã thích
+                    </button>
+
+                    <div class="me-4">
+                        <span id="selectedCount">0 sản phẩm</span> |
+                        <span id="selectedTotal">0 VNĐ</span>
+                    </div>
+
+                    <button type="submit" name="action" value="buy" class="btn btn-danger px-4">
+                        Mua hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+}
+else
+{
+    <div class="alert alert-info">Giỏ hàng của bạn đang trống.</div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkAlls = document.querySelectorAll('#checkAll');
+            const items = document.querySelectorAll('.cart-checkbox');
+            const countEl = document.getElementById('selectedCount');
+            const totalEl = document.getElementById('selectedTotal');
+
+            function updateSummary() {
+                const checked = Array.from(items).filter(i => i.checked);
+                const sum = checked.reduce((s, i) =>
+                    s + parseFloat(i.dataset.price) * parseInt(i.dataset.quantity)
+                    , 0);
+                countEl.textContent = `${checked.length} sản phẩm`;
+                totalEl.textContent = `${sum.toLocaleString('vi-VN')} VNĐ`;
+                checkAlls.forEach(ca => ca.checked = checked.length === items.length);
+            }
+
+            checkAlls.forEach(ca => {
+                ca.addEventListener('change', () => {
+                    items.forEach(i => i.checked = ca.checked);
+                    updateSummary();
+                });
+            });
+
+            items.forEach(i => i.addEventListener('change', updateSummary));
+
+            updateSummary();
+        });
+    </script>
+}
