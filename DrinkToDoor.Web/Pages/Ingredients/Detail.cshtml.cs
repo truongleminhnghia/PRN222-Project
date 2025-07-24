@@ -1,6 +1,7 @@
 
 using System.Threading.Tasks;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Data.enums;
@@ -13,18 +14,24 @@ namespace DrinkToDoor.Web.Pages.Ingredients
     {
         private readonly ILogger<Detail> _logger;
         private readonly IIngredientService _ingredientService;
+        private readonly ICartService _cartService;
         private readonly INotyfService _toastNotification;
 
-        public Detail(ILogger<Detail> logger, IIngredientService ingredientService, INotyfService notyfService)
+        public Detail(ILogger<Detail> logger, IIngredientService ingredientService, INotyfService notyfService,
+                        ICartService cartService)
         {
             _logger = logger;
             _ingredientService = ingredientService;
             _toastNotification = notyfService;
+            _cartService = cartService;
         }
 
         public IEnumerable<PackagingOptionResponse> PackagingOptions { get; set; }
 
         public IngredientResponse IngredientResponse { get; set; } = new IngredientResponse();
+
+        [BindProperty]
+        public CartRequest CartRequest { get; set; } = new CartRequest();
 
         [BindProperty]
         public EnumPackageType SelectedPackage { get; set; }
@@ -58,10 +65,42 @@ namespace DrinkToDoor.Web.Pages.Ingredients
 
         public async Task<IActionResult> OnPostAddToCart(Guid id)
         {
-            if (!await LoadIngredientAsync(id))
-                return NotFound("Ingredient not found.");
-            _toastNotification.Success("Thêm giỏ hàng", 5);
-            return Page();
+            try
+            {
+                if (!await LoadIngredientAsync(id))
+                    return NotFound("Ingredient not found.");
+                var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+                if (userIdClaim == null)
+                {
+                    return RedirectToPage("/Login");
+                }
+                if (!Guid.TryParse(userIdClaim.Value, out var userId))
+                {
+                    return BadRequest("Invalid user ID.");
+                }
+                CartRequest.UnitPackage = EnumPackageType.BỊCH.ToString();
+                CartRequest.UserId = userId;
+                CartRequest.IngredientId = id;
+                if (CartRequest == null)
+                {
+                    _toastNotification.Error("Thêm giỏ hàng thất bại", 5);
+                }
+                var result = await _cartService.AddToCart(CartRequest);
+                if (result)
+                {
+                    _toastNotification.Success("Thêm giỏ hàng thành công", 5);
+                }
+                else
+                {
+                    _toastNotification.Error("Thêm giỏ hàng thất bại", 5);
+                }
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: ", ex.Message);
+                return null;
+            }
         }
 
         public IActionResult OnPostBuyNow()

@@ -20,6 +20,12 @@ namespace DrinkToDoor.Data.Repositories
             return 1;
         }
 
+        public async Task<IngredientProduct> Create(IngredientProduct entity)
+        {
+            await _context.IngredientProducts.AddAsync(entity);
+            return entity;
+        }
+
         public async Task<bool> DeleteAsync(IngredientProduct entity)
         {
             _context.IngredientProducts.Remove(entity);

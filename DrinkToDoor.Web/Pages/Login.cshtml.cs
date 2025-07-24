@@ -54,6 +54,7 @@ namespace DrinkToDoor.Web.Pages
             //creating the scurity context
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.RoleName.ToString()),
             };

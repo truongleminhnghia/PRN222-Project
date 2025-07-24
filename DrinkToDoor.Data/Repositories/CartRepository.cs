@@ -27,6 +27,11 @@ namespace DrinkToDoor.Data.Repositories
             return true;
         }
 
+        public Task<IEnumerable<Cart>> FindAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Cart?> FindById(Guid cartId)
         {
             return await _context.Carts.FirstOrDefaultAsync(c => c.Id == cartId);

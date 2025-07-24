@@ -64,11 +64,11 @@ namespace DrinToDoor.WebAPI.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetAll([FromQuery] string? lastName, [FromQuery] string? firstName, [FromQuery] EnumRoleName? roleName,
+        public async Task<IActionResult> GetAll([FromQuery] string? keyword, [FromQuery] EnumRoleName? roleName,
                                                 [FromQuery] EnumAccountStatus? status, [FromQuery] EnumGender? gender,
                                                 [FromQuery] int pageCurrent = 1, [FromQuery] int pageSize = 10)
         {
-            var result = await _userService.GetUsers(lastName, firstName, roleName, status, gender, pageCurrent, pageSize);
+            var result = await _userService.GetUsers(keyword, roleName, status, gender, pageCurrent, pageSize);
             if (result != null)
             {
                 return Ok(new ApiResponse

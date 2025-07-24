@@ -121,8 +121,8 @@
                             <label class="form-label mb-2">Số lượng:</label>
                             <div class="input-group" style="max-width:160px;">
                                 <button class="btn btn-outline-secondary" type="button" id="decQty">-</button>
-                                <input type="text" class="form-control text-center" id="inputQty" name="Quantity"
-                                    value="1" readonly />
+                                <input asp-asp-for="@Model.CartRequest.Quantity" type="text" class="form-control text-center" id="inputQty" name="Quantity"
+                                    value="1"  />
                                 <button class="btn btn-outline-secondary" type="button" id="incQty">+</button>
                             </div>
                         </div>

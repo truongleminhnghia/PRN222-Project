@@ -27,8 +27,8 @@ namespace DrinkToDoor.Business.Services
         {
             try
             {
-                var userExisting = await _unitOfWork.Users.FindById(requst.userId);
-                if (userExisting == null) throw new Exception($"Người dùng không tồn tại với {requst.userId}");
+                var userExisting = await _unitOfWork.Users.FindById(requst.UserId);
+                if (userExisting == null) throw new Exception($"Người dùng không tồn tại với {requst.UserId}");
                 var cartExisting = await _unitOfWork.Carts.FindByUserId(userExisting.Id);
                 if (cartExisting == null)
                 {
@@ -46,17 +46,21 @@ namespace DrinkToDoor.Business.Services
                     Price = ingredientExisting.Price,
                     TotalAmount = requst.Quantity * ingredientExisting.Price,
                     QuantityPackage = requst.Quantity,
-                    UnitPac\
-                    kage = requst.UnitPackage,
+                    UnitPackage = requst.UnitPackage,
                     IngredientId = ingredientExisting.Id
                 };
-                var ingredientProduct = await _unitOfWork.IngredientProducts.AddAsync(product);
+                var ingredientProduct = await _unitOfWork.IngredientProducts.Create(product);
                 if (ingredientProduct == null) throw new Exception("Lỗi khi tạo ingredient product");
                 var cartItem = new CartItem
                 {
                     CartId = cartExisting.Id,
-                    IngredientProductId = ingredientProduct.
-                }
+                    IngredientProductId = ingredientProduct.Id,
+                    Quantity = requst.Quantity
+                };
+                var newCartItem = await _unitOfWork.CartItems.CreateAsync(cartItem);
+                if (newCartItem == null) throw new Exception("Lỗi khi tạo ingredient product");
+                var result = await _unitOfWork.SaveChangesWithTransactionAsync();
+                return result > 0 ? true : false;
             }
             catch (Exception ex)
             {
