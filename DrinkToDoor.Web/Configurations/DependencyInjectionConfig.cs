@@ -26,6 +26,9 @@ namespace DrinkToDoor.Web.Configurations
             services.AddScoped<IPackagingOptionService, PackagingOptionService>();
             services.AddScoped<IBannerService, BannerService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<ICartItemService, CartItemService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IPaymentService, PaymentService>();
 
 
             // repository
@@ -38,6 +41,7 @@ namespace DrinkToDoor.Web.Configurations
             services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
             services.AddScoped<IPackagingOptionRepository, PackagingOptionRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
 
             return services;
         }

@@ -10,6 +10,7 @@ using DrinkToDoor.Data.Repositories;
 using DrinkToDoor.Web.Configurations;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Net.payOS;
 using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +54,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.LoginPath = "/Login";
 });
 
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddProjectDependencies();
 builder.Services.AddAutoMapperConfiguration();
@@ -72,6 +75,18 @@ builder.Services.AddNotyf(options =>
     options.Position = NotyfPosition.TopRight;
 });
 
+var PayOS = builder.Configuration.GetSection("PAYOS");
+var ClientId = PayOS["CLIENT_ID"];
+var APILEY = PayOS["API_KEY"];
+var CHECKSUMKEY = PayOS["CHECKSUM_KEY"];
+
+PayOS payOS = new PayOS(ClientId,
+                    APILEY,
+                    CHECKSUMKEY);
+payOS.confirmWebhook("https://localhost:7153/Payments/Verify");
+
+builder.Services.AddSingleton(payOS);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -86,7 +101,9 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DrinkToDoorDbContext>();
     db.Database.Migrate();
-    bool adminExists = db.Users.Any(u => u.RoleName == EnumRoleName.ROLE_ADMIN);
+
+    bool adminExists = db.Users.Any(u => u.Email == "admin@example.com");
+
     if (!adminExists)
     {
         var adminUser = new User
@@ -95,6 +112,7 @@ using (var scope = app.Services.CreateScope())
             Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
             RoleName = EnumRoleName.ROLE_ADMIN
         };
+
         db.Users.Add(adminUser);
         db.SaveChanges();
     }

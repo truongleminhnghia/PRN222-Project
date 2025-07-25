@@ -19,6 +19,7 @@ namespace DrinkToDoor.Data
         private IIngredientProductRepository? _ingredientProductRepository;
         private IOrderRepository? _orderRepository;
         private IOrderDetailRepository? _orderDetailRepository;
+        private IPaymentRepository? _paymentRepository;
         private IMessageRepository? _messageRepository;
 
         public UnitOfWork(DrinkToDoorDbContext context)
@@ -48,11 +49,14 @@ namespace DrinkToDoor.Data
         public ICartItemRepository CartItems =>
             _cartItemRepository ??= new CartItemRepository(_context);
 
-        public ICartRepository Carts => 
+        public ICartRepository Carts =>
             _cartRepository ??= new CartRepository(_context);
 
-        public IMessageRepository Messages => 
+        public IMessageRepository Messages =>
             _messageRepository ??= new MessageRepository(_context);
+
+        public IPaymentRepository Payments => _paymentRepository ??= new PaymentRepository(_context);
+
         public async Task SaveChangesAsync()
         {
             try

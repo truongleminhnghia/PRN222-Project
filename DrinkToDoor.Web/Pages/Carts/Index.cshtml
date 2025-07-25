@@ -1,5 +1,5 @@
 @page
-@model DrinkToDoor.Web.Pages.Carts.Index
+@model DrinkToDoor.Web.Pages.Carts.IndexModel
 @{
     ViewData["Title"] = "Giỏ hàng";
 }
@@ -8,7 +8,7 @@
 
 @if (Model.CartItemResponses?.Any() ?? false)
 {
-    <form method="post" asp-page-handler="ProcessSelection">
+    <form method="post">
         <table class="table align-middle" id="cartTable">
             <thead class="table-light">
                 <tr>
@@ -19,7 +19,7 @@
                         </div>
                     </th>
                     <th>Sản phẩm</th>
-                    <th>Giá</th>
+                    <th>Đơn giá</th>
                     <th>Số lượng</th>
                     <th>Tổng tiền</th>
                     <th>Thao tác</th>
@@ -30,26 +30,24 @@
                 {
                     <tr>
                         <td>
-                            <input type="checkbox" class="form-check-input cart-checkbox" name="SelectedIds" value="@item.Id"
+                            <input type="checkbox" name="SelectedIds" value="@item.Id" class="form-check-input cart-checkbox"
                                 data-price="@item.IngredientProduct.Price" data-quantity="@item.Quantity" />
                         </td>
                         <td>
-                            <img style="width:100px;height:100px;object-fit:cover;"
-                                src="@item.IngredientProduct.Ingredient.Images.FirstOrDefault()?.Url"
-                                alt="@item.IngredientProduct.Name" />
-                            <strong style="font-size:16px;color:#000;">
+                            <img src="@item.IngredientProduct.Ingredient.Images.FirstOrDefault()?.Url"
+                                style="width:100px;height:100px;object-fit:cover;" alt="@item.IngredientProduct.Name" />
+                            <strong style="font-size:16px;color:#000;margin-left:8px;">
                                 @item.IngredientProduct.Name
                             </strong>
                         </td>
                         <td>@item.IngredientProduct.Price.ToString("C0")</td>
                         <td>@item.Quantity</td>
-                        <td>@(item.Quantity* item.IngredientProduct.Price)</td>
+                        <td>@(item.Quantity* item.IngredientProduct.Price).ToString("C0")</td>
                         <td>
-                            <form method="post" asp-page-handler="Remove" asp-route-id="@item.Id" class="d-inline">
-                                <button type="submit" class="btn btn-sm btn-danger">
-                                    Xóa
-                                </button>
-                            </form>
+                            <button type="submit" class="btn btn-sm btn-danger" asp-page-handler="Remove"
+                                asp-route-id="@item.Id">
+                                Xóa
+                            </button>
                         </td>
                     </tr>
                 }
@@ -66,16 +64,16 @@
                         </label>
                     </div>
 
-                    <button type="submit" name="action" value="saveFavorite" class="btn btn-link me-auto">
+                    @* <button type="submit" asp-page-handler="ProcessSelection" class="btn btn-link me-auto">
                         <i class="bi bi-heart"></i> Lưu vào Đã thích
-                    </button>
+                    </button> *@
 
                     <div class="me-4">
                         <span id="selectedCount">0 sản phẩm</span> |
                         <span id="selectedTotal">0 VNĐ</span>
                     </div>
 
-                    <button type="submit" name="action" value="buy" class="btn btn-danger px-4">
+                    <button type="submit" asp-page-handler="Buy" class="btn btn-danger px-4">
                         Mua hàng
                     </button>
                 </div>
@@ -99,8 +97,8 @@ else
             function updateSummary() {
                 const checked = Array.from(items).filter(i => i.checked);
                 const sum = checked.reduce((s, i) =>
-                    s + parseFloat(i.dataset.price) * parseInt(i.dataset.quantity)
-                    , 0);
+                    s + parseFloat(i.dataset.price) * parseInt(i.dataset.quantity), 0
+                );
                 countEl.textContent = `${checked.length} sản phẩm`;
                 totalEl.textContent = `${sum.toLocaleString('vi-VN')} VNĐ`;
                 checkAlls.forEach(ca => ca.checked = checked.length === items.length);

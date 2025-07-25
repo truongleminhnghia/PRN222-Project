@@ -14,5 +14,6 @@ namespace DrinkToDoor.Data.enums
         GOOGLE_PAY,
         BITCOIN,
         CRYPTOCURRENCY,
+        PAY_OS
     }
 }

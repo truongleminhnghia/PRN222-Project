@@ -54,7 +54,7 @@ namespace DrinkToDoor.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid?>("IngredientProductId")
+                    b.Property<Guid>("IngredientProductId")
                         .HasColumnType("char(36)")
                         .HasColumnName("ingredient_product_id");
 
@@ -388,6 +388,10 @@ namespace DrinkToDoor.Data.Migrations
                         .HasColumnType("tinyint(1)")
                         .HasColumnName("readed");
 
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("receiver_id");
+
                     b.Property<Guid>("SenderId")
                         .HasColumnType("char(36)")
                         .HasColumnName("sender_id");
@@ -396,6 +400,8 @@ namespace DrinkToDoor.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderId");
 
@@ -569,6 +575,11 @@ namespace DrinkToDoor.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)")
+                        .HasColumnName("currency");
+
                     b.Property<Guid>("OrderId")
                         .HasColumnType("char(36)")
                         .HasColumnName("order_id");
@@ -586,6 +597,10 @@ namespace DrinkToDoor.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(200)")
                         .HasColumnName("status");
+
+                    b.Property<string>("TransactionCode")
+                        .HasColumnType("varchar(150)")
+                        .HasColumnName("transaction_code");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -726,7 +741,9 @@ namespace DrinkToDoor.Data.Migrations
 
                     b.HasOne("DrinkToDoor.Data.Entities.IngredientProduct", "IngredientProduct")
                         .WithMany()
-                        .HasForeignKey("IngredientProductId");
+                        .HasForeignKey("IngredientProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("DrinkToDoor.Data.Entities.KitProduct", "KitProduct")
                         .WithMany()
@@ -831,11 +848,19 @@ namespace DrinkToDoor.Data.Migrations
 
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Message", b =>
                 {
-                    b.HasOne("DrinkToDoor.Data.Entities.User", "Sender")
-                        .WithMany("Messages")
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.HasOne("DrinkToDoor.Data.Entities.User", "Receiver")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("DrinkToDoor.Data.Entities.User", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
 
                     b.Navigation("Sender");
                 });
@@ -957,11 +982,13 @@ namespace DrinkToDoor.Data.Migrations
                 {
                     b.Navigation("Carts");
 
-                    b.Navigation("Messages");
-
                     b.Navigation("Orders");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("SentMessages");
                 });
 #pragma warning restore 612, 618
         }

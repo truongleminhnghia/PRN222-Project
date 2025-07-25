@@ -1,4 +1,6 @@
 
+using System.Security.Claims;
+using System.Text.Json;
 using AspNetCoreHero.ToastNotification.Abstractions;
 using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Business.Interfaces;
@@ -7,91 +9,98 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DrinkToDoor.Web.Pages.Carts
 {
-    public class Index : PageModel
+    public class IndexModel : PageModel
     {
-        private readonly ILogger<Index> _logger;
+        private readonly ILogger<IndexModel> _logger;
         private readonly ICartService _cartService;
         private readonly IUserService _userService;
-        private readonly INotyfService _toastNotification;
+        private readonly INotyfService _toast;
 
-        public Index(ILogger<Index> logger, ICartService cartService, IUserService userService,
-                    INotyfService toastNotification)
+        public IndexModel(
+            ILogger<IndexModel> logger,
+            ICartService cartService,
+            IUserService userService,
+            INotyfService toastNotification)
         {
             _logger = logger;
             _cartService = cartService;
             _userService = userService;
-            _toastNotification = toastNotification;
+            _toast = toastNotification;
         }
-
-        public CartResponse CartResponse { get; set; } = new CartResponse();
 
         public IEnumerable<CartItemResponse> CartItemResponses { get; set; }
 
         [BindProperty]
         public List<Guid> SelectedIds { get; set; } = new();
 
-        [BindProperty]
-        public string Action { get; set; }
-
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return RedirectToPage("/Login");
-            }
-            if (!Guid.TryParse(userIdClaim.Value, out var userId))
-            {
-                return BadRequest("Invalid user ID.");
-            }
-            return await LoadData(userId);
-        }
-
-        private async Task<IActionResult> LoadData(Guid userId)
-        {
-            var userExisting = await _userService.GetByIdAsync(userId);
-            if (userExisting == null)
-            {
-                _toastNotification.Warning("User không tồn tại hoặc chưa đăng nhập");
-                return RedirectToPage("/Login");
-            }
-            var cartExisting = await _cartService.GetByUser(userExisting.Id);
-            if (cartExisting == null)
-            {
-                await _cartService.CreateCart(userExisting.Id);
-                cartExisting = await _cartService.GetByUser(userExisting.Id);
-            }
-            CartItemResponses = cartExisting.CartItems;
+            var userId = GetUserIdOrRedirect();
+            await EnsureCartExists(userId);
             return Page();
         }
 
         public async Task<IActionResult> OnPostProcessSelectionAsync()
         {
-            var userIdClaim = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                return RedirectToPage("/Login");
-            }
-            if (!Guid.TryParse(userIdClaim.Value, out var userId))
-            {
-                return BadRequest("Invalid user ID.");
-            }
-
+            var userId = GetUserIdOrRedirect();
             if (SelectedIds == null || !SelectedIds.Any())
             {
-                TempData["Error"] = "Bạn chưa chọn sản phẩm nào.";
+                _toast.Warning("Bạn chưa chọn sản phẩm nào.");
                 return RedirectToPage();
             }
-            else if (Action == "buy")
+
+            // await _cartService.SaveFavoritesAsync(userId, SelectedIds);
+            _toast.Success("Đã lưu vào mục Đã thích.");
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnPostBuyAsync()
+        {
+            var userId = GetUserIdOrRedirect();
+            if (SelectedIds == null || !SelectedIds.Any())
             {
-                // VD: tạo order từ các cartItemId
-                // var orderId = await _cartService.CreateOrderFromCartAsync(userId, SelectedIds);
-                // return RedirectToPage("/Orders/Detail", new { id = orderId });
-                Console.WriteLine("cart item id: ", SelectedIds);
-                return null;
+                _toast.Warning("Bạn chưa chọn sản phẩm nào để mua.");
+                return RedirectToPage();
+            }
+            TempData["SelectedIds"] = JsonSerializer.Serialize(SelectedIds);
+            return RedirectToPage("/Orders/Create");
+            // return RedirectToPage("/Carts/Index");
+        }
+
+        public async Task<IActionResult> OnPostRemoveAsync(Guid id)
+        {
+            var userId = GetUserIdOrRedirect();
+            // await _cartService.RemoveFromCartAsync(userId, id);
+            _toast.Success("Đã xóa sản phẩm khỏi giỏ hàng.");
+            return RedirectToPage();
+        }
+
+        private async Task EnsureCartExists(Guid userId)
+        {
+            var user = await _userService.GetByIdAsync(userId);
+            if (user == null)
+            {
+                _toast.Warning("User không tồn tại hoặc chưa đăng nhập.");
+                RedirectToPage("/Login");
             }
 
-            return RedirectToPage();
+            var cart = await _cartService.GetByUser(userId);
+            if (cart == null)
+            {
+                await _cartService.CreateCart(userId);
+            }
+
+            CartItemResponses = (await _cartService.GetByUser(userId)).CartItems;
+        }
+
+        private Guid GetUserIdOrRedirect()
+        {
+            var str = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!Guid.TryParse(str, out var userId))
+            {
+                throw new InvalidOperationException("User ID không hợp lệ");
+            }
+            return userId;
         }
     }
 }

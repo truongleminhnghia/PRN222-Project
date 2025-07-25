@@ -11,5 +11,7 @@ namespace DrinkToDoor.Data.enums
         CANCELLED,
         REFUNDED,
         RETURNED,
+        WAITING_DELIVER,
+        PAYMENT_FAILED
     }
 }

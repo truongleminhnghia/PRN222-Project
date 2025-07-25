@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrinkToDoor.Data.Migrations
 {
     [DbContext(typeof(DrinkToDoorDbContext))]
-    [Migration("20250609100856_updateDataBaseV2")]
-    partial class updateDataBaseV2
+    [Migration("20250725110509_database_v1")]
+    partial class database_v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,9 +61,13 @@ namespace DrinkToDoor.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("ingredient_product_id");
 
-                    b.Property<Guid>("KitProductId")
+                    b.Property<Guid?>("KitProductId")
                         .HasColumnType("char(36)")
                         .HasColumnName("kit_product_id");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int")
+                        .HasColumnName("quantity");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -148,60 +152,58 @@ namespace DrinkToDoor.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("category_id");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("code");
+
+                    b.Property<decimal?>("Cost")
+                        .HasColumnType("decimal(12,2)")
+                        .HasColumnName("cost");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("varchar(1000)")
-                        .HasColumnName("description");
+                    b.Property<Guid?>("DefaultPackagingOptionId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("default_packaging_option_id");
 
-                    b.Property<string>("Manufacturer")
-                        .HasColumnType("varchar(300)")
-                        .HasColumnName("manufacturer");
+                    b.Property<string>("Description")
+                        .HasColumnType("text")
+                        .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("varchar(300)")
+                        .HasColumnType("nvarchar(100)")
                         .HasColumnName("name");
 
-                    b.Property<string>("PackingUnit")
-                        .IsRequired()
-                        .HasColumnType("JSON")
-                        .HasColumnName("packing_unit");
-
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)")
+                        .HasColumnType("decimal(12,2)")
                         .HasColumnName("price");
-
-                    b.Property<int?>("QuantityPerCarton")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity_per_carton");
-
-                    b.Property<int>("QuantityPerPackingUnit")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity_per_packing_unit");
-
-                    b.Property<int?>("QuantitySingle")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity_single");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("varchar(300)")
                         .HasColumnName("status");
 
+                    b.Property<int>("StockQty")
+                        .HasColumnType("int")
+                        .HasColumnName("stock_qty");
+
+                    b.Property<Guid?>("SupplierId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("supplier_id");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<float?>("WeightPerBag")
-                        .IsRequired()
-                        .HasColumnType("float")
-                        .HasColumnName("weight_per_bag");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("DefaultPackagingOptionId");
+
+                    b.HasIndex("SupplierId");
 
                     b.ToTable("ingredient");
                 });
@@ -370,6 +372,45 @@ namespace DrinkToDoor.Data.Migrations
                     b.ToTable("kit_product");
                 });
 
+            modelBuilder.Entity("DrinkToDoor.Data.Entities.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("message_id");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("message");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("Readed")
+                        .HasColumnType("tinyint(1)")
+                        .HasColumnName("readed");
+
+                    b.Property<Guid>("ReceiverId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("receiver_id");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("sender_id");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("message");
+                });
+
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -437,11 +478,11 @@ namespace DrinkToDoor.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<Guid>("IngredientProductId")
+                    b.Property<Guid?>("IngredientProductId")
                         .HasColumnType("char(36)")
                         .HasColumnName("ingredient_product_id");
 
-                    b.Property<Guid>("KitProductId")
+                    b.Property<Guid?>("KitProductId")
                         .HasColumnType("char(36)")
                         .HasColumnName("kit_product_id");
 
@@ -475,6 +516,54 @@ namespace DrinkToDoor.Data.Migrations
                     b.ToTable("order_detail");
                 });
 
+            modelBuilder.Entity("DrinkToDoor.Data.Entities.PackagingOption", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("packaging_option_id");
+
+                    b.Property<decimal?>("Cost")
+                        .HasColumnType("decimal(12,2)")
+                        .HasColumnName("cost");
+
+                    b.Property<Guid>("IngredientId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("ingredient_id");
+
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("label");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(12,2)")
+                        .HasColumnName("price");
+
+                    b.Property<decimal?>("Size")
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("size");
+
+                    b.Property<int?>("StockQty")
+                        .HasColumnType("int")
+                        .HasColumnName("stock_qty");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(300)")
+                        .HasColumnName("type");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("unit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IngredientId");
+
+                    b.ToTable("packagin_options");
+                });
+
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Payment", b =>
                 {
                     b.Property<Guid>("Id")
@@ -488,6 +577,11 @@ namespace DrinkToDoor.Data.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("varchar(10)")
+                        .HasColumnName("currency");
 
                     b.Property<Guid>("OrderId")
                         .HasColumnType("char(36)")
@@ -507,6 +601,10 @@ namespace DrinkToDoor.Data.Migrations
                         .HasColumnType("varchar(200)")
                         .HasColumnName("status");
 
+                    b.Property<string>("TransactionCode")
+                        .HasColumnType("varchar(150)")
+                        .HasColumnName("transaction_code");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -523,6 +621,38 @@ namespace DrinkToDoor.Data.Migrations
                     b.HasIndex(new[] { "PaymentMethod", "Status" }, "IX_Payment_Method_Status");
 
                     b.ToTable("payment");
+                });
+
+            modelBuilder.Entity("DrinkToDoor.Data.Entities.Supplier", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("supplier_id");
+
+                    b.Property<string>("ContactPerson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("contact_person");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("email");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("phone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("supplier");
                 });
 
             modelBuilder.Entity("DrinkToDoor.Data.Entities.User", b =>
@@ -620,9 +750,7 @@ namespace DrinkToDoor.Data.Migrations
 
                     b.HasOne("DrinkToDoor.Data.Entities.KitProduct", "KitProduct")
                         .WithMany()
-                        .HasForeignKey("KitProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("KitProductId");
 
                     b.Navigation("Cart");
 
@@ -654,7 +782,19 @@ namespace DrinkToDoor.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("DrinkToDoor.Data.Entities.PackagingOption", "DefaultPackagingOption")
+                        .WithMany("IngredientDefaults")
+                        .HasForeignKey("DefaultPackagingOptionId");
+
+                    b.HasOne("DrinkToDoor.Data.Entities.Supplier", "Supplier")
+                        .WithMany("Ingredients")
+                        .HasForeignKey("SupplierId");
+
                     b.Navigation("Category");
+
+                    b.Navigation("DefaultPackagingOption");
+
+                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("DrinkToDoor.Data.Entities.IngredientProduct", b =>
@@ -709,6 +849,25 @@ namespace DrinkToDoor.Data.Migrations
                     b.Navigation("Kit");
                 });
 
+            modelBuilder.Entity("DrinkToDoor.Data.Entities.Message", b =>
+                {
+                    b.HasOne("DrinkToDoor.Data.Entities.User", "Receiver")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DrinkToDoor.Data.Entities.User", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Order", b =>
                 {
                     b.HasOne("DrinkToDoor.Data.Entities.User", "User")
@@ -724,15 +883,11 @@ namespace DrinkToDoor.Data.Migrations
                 {
                     b.HasOne("DrinkToDoor.Data.Entities.IngredientProduct", "IngredientProduct")
                         .WithMany()
-                        .HasForeignKey("IngredientProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IngredientProductId");
 
                     b.HasOne("DrinkToDoor.Data.Entities.KitProduct", "KitProduct")
                         .WithMany()
-                        .HasForeignKey("KitProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("KitProductId");
 
                     b.HasOne("DrinkToDoor.Data.Entities.Order", "Order")
                         .WithMany("OrderDetails")
@@ -745,6 +900,17 @@ namespace DrinkToDoor.Data.Migrations
                     b.Navigation("KitProduct");
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("DrinkToDoor.Data.Entities.PackagingOption", b =>
+                {
+                    b.HasOne("DrinkToDoor.Data.Entities.Ingredient", "Ingredient")
+                        .WithMany("PackagingOptions")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Ingredient");
                 });
 
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Payment", b =>
@@ -785,6 +951,8 @@ namespace DrinkToDoor.Data.Migrations
                     b.Navigation("IngredientProducts");
 
                     b.Navigation("KitIngredients");
+
+                    b.Navigation("PackagingOptions");
                 });
 
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Kit", b =>
@@ -803,6 +971,16 @@ namespace DrinkToDoor.Data.Migrations
                     b.Navigation("Payments");
                 });
 
+            modelBuilder.Entity("DrinkToDoor.Data.Entities.PackagingOption", b =>
+                {
+                    b.Navigation("IngredientDefaults");
+                });
+
+            modelBuilder.Entity("DrinkToDoor.Data.Entities.Supplier", b =>
+                {
+                    b.Navigation("Ingredients");
+                });
+
             modelBuilder.Entity("DrinkToDoor.Data.Entities.User", b =>
                 {
                     b.Navigation("Carts");
@@ -810,6 +988,10 @@ namespace DrinkToDoor.Data.Migrations
                     b.Navigation("Orders");
 
                     b.Navigation("Payments");
+
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("SentMessages");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,121 @@
+@page
+@using System.Reflection;
+@using System.ComponentModel.DataAnnotations
+@using DrinkToDoor.Data.enums
+@model DrinkToDoor.Web.Pages.Orders.Create
+@{
+    ViewData["Title"] = "Thông tin đơn hàng";
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<div class="container-xxl">
+    <form method="post">
+        <div class="row gx-4">
+            <div class="col-md-8 shadow-sm bg-white rounded p-3">
+                <div class="d-flex border-bottom py-2 fw-bold bg-light px-2 rounded-top">
+                    <div class="flex-grow-1 pe-3">Sản phẩm</div>
+                    <div class="text-center" style="width: 120px;">Đơn giá</div>
+                    <div class="text-center" style="width: 120px;">Số lượng</div>
+                    <div class="text-center" style="width: 120px;">Thành tiền</div>
+                </div>
+
+                @foreach (var item in Model.SelectedCartItems)
+                {
+                    <div class="d-flex align-items-center py-3 border-bottom px-2">
+                        <div class="d-flex flex-grow-1 pe-3">
+                            <img src="@item.IngredientProduct?.Ingredient?.Images?.FirstOrDefault()?.Url"
+                                alt="@item.IngredientProduct?.Name" class="me-3 rounded"
+                                style="width: 100px; height: 100px; object-fit: cover;" />
+                            <div>
+                                <p class="mb-1 fw-semibold">@item.IngredientProduct?.Name</p>
+                                <p class="mb-0 text-muted">
+                                    <span class="fw-normal">Loại:</span>
+                                    @item.IngredientProduct?.Ingredient?.Category?.Name
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="text-center" style="width: 120px;">
+                            @String.Format("{0:N0}", item.IngredientProduct?.Price) <strong>VNĐ</strong>
+                        </div>
+                        <div class="text-center" style="width: 120px;">
+                            @item.IngredientProduct?.QuantityPackage
+                        </div>
+                        <div class="text-center" style="width: 120px;">
+                            @String.Format("{0:N0}", item.IngredientProduct?.TotalAmount) <strong>VNĐ</strong>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="col-md-4 shadow-sm bg-white rounded p-4">
+                <h5 class="mb-3">Thông tin nhận hàng</h5>
+
+                <div class="form-group mb-3">
+                    <label asp-for="TotalPrice" class="form-label">Tổng Tiền</label>
+                    <input type="text" asp-for="TotalPrice" class="form-control" readonly />
+                    <span asp-validation-for="TotalPrice" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="PaymentMethod" class="form-label">Phương Thức Thanh Toán</label>
+                    <select asp-for="PaymentMethod" class="form-select"
+                        asp-items="Html.GetEnumSelectList<EnumPaymentMethod>()">
+                        <option value="">— Chọn phương thức Thanh toán —</option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="UserResponse.FirstName" class="form-label">Tên</label>
+                    <input type="text" asp-for="UserResponse.FirstName" class="form-control" />
+                    <span asp-validation-for="UserResponse.FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="UserResponse.LastName" class="form-label">Họ</label>
+                    <input type="text" asp-for="UserResponse.LastName" class="form-control" />
+                    <span asp-validation-for="UserResponse.LastName" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="UserResponse.Email" class="form-label">Email</label>
+                    <input type="email" asp-for="UserResponse.Email" class="form-control" />
+                    <span asp-validation-for="UserResponse.Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="UserResponse.Phone" class="form-label">Số điện thoại</label>
+                    <input type="text" asp-for="UserResponse.Phone" class="form-control" />
+                    <span asp-validation-for="UserResponse.Phone" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="UserResponse.Address" class="form-label">Địa chỉ giao hàng</label>
+                    <input type="text" asp-for="UserResponse.Address" class="form-control" />
+                    <span asp-validation-for="UserResponse.Address" class="text-danger"></span>
+                </div>
+
+                <button type="submit" asp-page-handler="BuyOrder" class="btn btn-primary w-100">
+                    Đặt hàng
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@functions {
+    private string GetDisplayName(Enum value)
+    {
+        var member = value.GetType().GetMember(value.ToString()).FirstOrDefault();
+        if (member != null)
+        {
+            var attr = member.GetCustomAttribute<DisplayAttribute>();
+            if (attr != null)
+            {
+                return attr.GetName();
+            }
+        }
+        return value.ToString();
+    }
+}
