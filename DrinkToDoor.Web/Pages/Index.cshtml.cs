@@ -11,26 +11,22 @@ public class Index : PageModel
     private readonly ILogger<Index> _logger;
     private readonly IBannerService _bannerService;
     private readonly IIngredientService _ingredientService;
-    private readonly ISupplierService _supplierService;
 
-    public Index(ILogger<Index> logger, IBannerService bannerService, IIngredientService ingredientService, ISupplierService supplierService)
+    public Index(ILogger<Index> logger, IBannerService bannerService, IIngredientService ingredientService)
     {
         _bannerService = bannerService;
         _logger = logger;
         _ingredientService = ingredientService;
-        _supplierService = supplierService;
     }
 
     public IList<BannerResponse> Banners { get; set; } = new List<BannerResponse>();
 
     public IEnumerable<IngredientResponse>? Ingredients { get; set; }
-    public IEnumerable<SupplierResponse>? Suppliers { get; set; }
 
     public async Task OnGet()
     {
         Banners = await _bannerService.GetAllBannersAsync();
         var listIngredient = await _ingredientService.GetAsync(null, 1, 10);
         Ingredients = listIngredient.Item1;
-        Suppliers = await _supplierService.GetAll();
     }
 }

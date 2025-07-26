@@ -43,23 +43,13 @@ namespace DrinkToDoor.Business.Services
                 {
                     throw new ArgumentException($"Danh mục không tồn tại với ID {request.CategoryId}");
                 }
-                if (request.SupplierId == null || request.SupplierId == Guid.Empty)
-                {
-                    throw new ArgumentException("SupplierId không được bỏ trống");
-                }
-                var supplier = await _unitOfWork.Suppliers.FindById(request.SupplierId.Value);
-                if (supplier == null)
-                {
-                    throw new ArgumentException($"Nhà cung cấp không tồn tại với ID {request.SupplierId}");
-                }
                 var ingredient = _mapper.Map<Ingredient>(request);
                 ingredient.Code = Base.GenerateCode('P');
                 ingredient.Status = EnumStatus.ACTIVE;
                 ingredient.CategoryId = cateogry.Id;
-                ingredient.SupplierId = supplier.Id;
                 await _unitOfWork.Ingredients.AddAsync(ingredient);
                 var image = await _imageService.AddImages(ingredient.Id, request.ImagesRequest);
-                var package = await _packagingOptionService.Add(ingredient.Id, request.PackagingOptions);
+                var package = await _packagingOptionService.Add(ingredient.Id, request.PackagingOptionsRequest);
                 var result = await _unitOfWork.SaveChangesWithTransactionAsync();
                 return result > 0 ? true : false;
             }

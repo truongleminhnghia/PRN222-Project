@@ -14,16 +14,14 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
         private readonly ILogger<Create> _logger;
         private readonly IIngredientService _ingredientService;
         private readonly ICategoryService _categoryService;
-        private readonly ISupplierService _supplierService;
         private readonly IWebHostEnvironment _env;
 
         public Create(ILogger<Create> logger, IIngredientService ingredientService,
-                      ICategoryService categoryService, ISupplierService supplierService,
+                      ICategoryService categoryService,
                       IWebHostEnvironment env)
         {
             _ingredientService = ingredientService;
             _categoryService = categoryService;
-            _supplierService = supplierService;
             _logger = logger;
             _env = env;
         }
@@ -32,7 +30,6 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
         public IngredientRequest IngredientRequest { get; set; } = new IngredientRequest();
 
         public SelectList Categories { get; set; }
-        public SelectList Suppliers { get; set; }
 
         public ImageRequest ImageRequest { get; set; } = new ImageRequest();
 
@@ -43,8 +40,6 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
 
         public async Task<IActionResult> OnGet()
         {
-            var supplier = await _supplierService.GetAll();
-            Suppliers = new SelectList(supplier, "Id", "Name");
             var categories = await _categoryService.GetAll();
             Categories = new SelectList(categories, "Id", "Name");
             return Page();
@@ -54,8 +49,6 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
         {
             if (!ModelState.IsValid)
             {
-                var supplier = await _supplierService.GetAll();
-                Suppliers = new SelectList(supplier, "Id", "Name");
                 var categories = await _categoryService.GetAll();
                 Categories = new SelectList(categories, "Id", "Name");
                 return Page();
@@ -89,7 +82,7 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
                     }
                     IngredientRequest.ImagesRequest = savedPaths.Select(url => new ImageRequest { ImageUrl = url }).ToList();
                 }
-                IngredientRequest.PackagingOptions.Add(PackagingOptionRequest);
+                IngredientRequest.PackagingOptionsRequest.Add(PackagingOptionRequest);
                 await _ingredientService.CreateAsync(IngredientRequest);
                 return RedirectToPage("Index");
             }

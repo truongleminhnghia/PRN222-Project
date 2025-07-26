@@ -87,5 +87,26 @@ namespace DrinkToDoor.Business.Services
                 throw new Exception("Server Error");
             }
         }
+
+        public async Task<Tuple<IEnumerable<CategoryResponse>, int>> GetParams(string? name, int pageCurrent, int pageSize, EnumCategoryType? categoryType = null)
+        {
+            try
+            {
+                var result = await _unitOfWork.Categories.GetAllAsync(name, categoryType);
+                if (result == null)
+                {
+                    throw new ArgumentException("Danh sách rỗng");
+                }
+                var total = result.Count();
+                var paged = result.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
+                var pagedResponses = _mapper.Map<List<CategoryResponse>>(paged);
+                return Tuple.Create<IEnumerable<CategoryResponse>, int>(pagedResponses, total);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
+        }
     }
 }

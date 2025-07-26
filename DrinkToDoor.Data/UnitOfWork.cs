@@ -10,7 +10,6 @@ namespace DrinkToDoor.Data
         private readonly DrinkToDoorDbContext _context;
         private IUserRepository? _userRepository;
         private ICategoryRepository? _categoryRepository;
-        private ISupplierRepository? _supplierRepository;
         private IPackagingOptionRepository? _packagingOptionRepository;
         private IImageRepository? _imageRepository;
         private IIngredientRepository? _ingredientRepository;
@@ -30,8 +29,6 @@ namespace DrinkToDoor.Data
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);
         public ICategoryRepository Categories =>
             _categoryRepository ??= new CategoryRepository(_context);
-        public ISupplierRepository Suppliers =>
-            _supplierRepository ??= new SupplierRepository(_context);
         public IPackagingOptionRepository PackagingOptions =>
             _packagingOptionRepository ??= new PackagingOptionRepository(_context);
 

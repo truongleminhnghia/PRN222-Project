@@ -20,12 +20,11 @@ namespace DrinkToDoor.BLL.Services
         private readonly ILogger<IngredientService> _logger;
         private readonly Base _utils;
         private readonly IImageService _imageService;
-        private readonly ISupplierService _supplierService;
         private readonly ICategoryService _categoryService;
         private readonly IPackagingOptionService _packagingOptionService;
 
         public IngredientService(IUnitOfWork unitOfWork, IMapper mapper, ILogger<IngredientService> logger
-                                , Base utils, IImageService imageService, ISupplierService supplierService,
+                                , Base utils, IImageService imageService, 
                                 ICategoryService categoryService, IPackagingOptionService packagingOptionService)
         {
             _unitOfWork = unitOfWork;
@@ -33,7 +32,6 @@ namespace DrinkToDoor.BLL.Services
             _logger = logger;
             _utils = utils;
             _imageService = imageService;
-            _supplierService = supplierService;
             _categoryService = categoryService;
             _packagingOptionService = packagingOptionService;
         }

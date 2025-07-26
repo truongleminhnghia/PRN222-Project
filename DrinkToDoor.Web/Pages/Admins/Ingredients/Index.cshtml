@@ -2,22 +2,50 @@
 @using DrinkToDoor.Data.enums
 @model DrinkToDoor.Web.Pages.Admins.Ingredients.IndexModel
 @{
-    ViewData["Title"] = "Nguyên Liệu";
-    Layout = "_LayoutAdmin";
+  ViewData["Title"] = "Nguyên Liệu";
+  Layout = "_LayoutAdmin";
 }
 
 @section Styles {
-    <style>
-        /* Font & spacing utils */
-        .text-14 { font-size: 14px; line-height: 1.5; }
-        .text-16 { font-size: 16px; line-height: 1.5; }
-        .text-20 { font-size: 20px; line-height: 1.4; font-weight: 600; }
-        .py-5 { padding: 3rem 0; }
-        .mb-4 { margin-bottom: 1.5rem; }
-        .me-1 { margin-right: .25rem; }
-        .table-hover tbody tr:hover { background-color: rgba(0, 123, 255, .05); }
-        .pagination-sm .page-link { padding: .25rem .5rem; font-size: .875rem; }
-    </style>
+  <style>
+    /* Font & spacing utils */
+    .text-14 {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .text-16 {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .text-20 {
+      font-size: 20px;
+      line-height: 1.4;
+      font-weight: 600;
+    }
+
+    .py-5 {
+      padding: 3rem 0;
+    }
+
+    .mb-4 {
+      margin-bottom: 1.5rem;
+    }
+
+    .me-1 {
+      margin-right: .25rem;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: rgba(0, 123, 255, .05);
+    }
+
+    .pagination-sm .page-link {
+      padding: .25rem .5rem;
+      font-size: .875rem;
+    }
+  </style>
 }
 
 <div class="container-xxxl py-5">
@@ -35,11 +63,13 @@
       <form method="get" class="row gx-3 gy-2 align-items-end">
         <div class="col-sm-6 col-md-3">
           <label class="form-label text-14">Mã hoặc Tên</label>
-          <input name="Name" value="@(Model.IngredientParams?.Name ?? "")" class="form-control text-14" placeholder="Nhập mã hoặc tên..." />
+          <input name="Name" value="@(Model.IngredientParams?.Name ?? "")" class="form-control text-14"
+            placeholder="Nhập mã hoặc tên..." />
         </div>
         <div class="col-sm-6 col-md-3">
           <label class="form-label text-14">Trạng thái</label>
-          <select asp-for="IngredientParams.Status" class="form-select text-14" asp-items="Html.GetEnumSelectList<EnumStatus>()">
+          <select asp-for="IngredientParams.Status" class="form-select text-14"
+            asp-items="Html.GetEnumSelectList<EnumStatus>()">
             <option value="">— Tất cả —</option>
           </select>
         </div>
@@ -67,39 +97,39 @@
             <th class="text-center" style="width:10%">Trạng thái</th>
             <th class="text-end" style="width:10%">Giá</th>
             <th class="text-center" style="width:10%">Số lượng</th>
-            <th class="text-start" style="width:15%">Nhà cung cấp</th>
             <th class="text-start" style="width:15%">Loại</th>
             <th class="text-center" style="width:10%">Hành động</th>
           </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model.IngredientResponses.Select((u, idx) => new { u, idx })) {
-          <tr class="text-14">
-            <td class="text-center">@((Model.PageCurrent - 1) * Model.PageSize + item.idx + 1)</td>
-            <td class="text-center link-primary">@item.u.Code</td>
-            <td>@item.u.Name</td>
-            <td class="text-center">
-              @{ var badge = item.u.Status == EnumStatus.ACTIVE ? "bg-success" : "bg-danger"; }
-              <span class="badge @badge">@item.u.Status</span>
-            </td>
-            <td class="text-end">@item.u.Price VNĐ</td>
-            <td class="text-center">@item.u.StockQty</td>
-            <td>@item.u.Supplier?.Name</td>
-            <td>@item.u.Category?.Name</td>
-            <td class="text-center">
-              <div class="btn-group btn-group-sm" role="group">
-                <a asp-page="Edit" asp-route-id="@item.u.Id" class="btn btn-warning text-white me-1">Sửa</a>
-                <a asp-page="Detail" asp-route-id="@item.u.Id" class="btn btn-info text-white me-1">Xem</a>
-                <!-- Trigger delete modal -->
-                <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal"
-                        data-bs-target="#deleteIngredientModal"
-                        data-id="@item.u.Id" data-name="@item.u.Name">
-                  Xóa
-                </button>
-              </div>
-            </td>
-          </tr>
-        }
+          @foreach (var item in Model.IngredientResponses.Select((u, idx) => new { u, idx }))
+          {
+            <tr class="text-14">
+              <td class="text-center">@((Model.PageCurrent - 1) * Model.PageSize + item.idx + 1)</td>
+              <td class="text-center link-primary">@item.u.Code</td>
+              <td>@item.u.Name</td>
+              <td class="text-center">
+                @{
+                  var badge = item.u.Status == EnumStatus.ACTIVE ? "bg-success" : "bg-danger";
+                }
+                <span class="badge @badge">@item.u.Status</span>
+              </td>
+              <td class="text-end">@item.u.Price VNĐ</td>
+              <td class="text-center">@item.u.StockQty</td>
+              <td>@item.u.Category?.Name</td>
+              <td class="text-center">
+                <div class="btn-group btn-group-sm" role="group">
+                  <a asp-page="Edit" asp-route-id="@item.u.Id" class="btn btn-warning text-white me-1">Sửa</a>
+                  <a asp-page="Detail" asp-route-id="@item.u.Id" class="btn btn-info text-white me-1">Xem</a>
+                  <!-- Trigger delete modal -->
+                  <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal"
+                    data-bs-target="#deleteIngredientModal" data-id="@item.u.Id" data-name="@item.u.Name">
+                    Xóa
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
         </tbody>
       </table>
     </div>
@@ -108,15 +138,18 @@
       <nav aria-label="Trang">
         <ul class="pagination pagination-sm mb-0 justify-content-start">
           <li class="page-item @(Model.PageCurrent == 1 ? "disabled" : "")">
-            <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent - 1)" asp-route-PageSize="@Model.PageSize">&lsaquo;</a>
+            <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent - 1)"
+              asp-route-PageSize="@Model.PageSize">&lsaquo;</a>
           </li>
-          @for (int i = 1; i <= Model.TotalPages; i++) {
+          @for (int i = 1; i <= Model.TotalPages; i++)
+          {
             <li class="page-item @(i == Model.PageCurrent ? "active" : "")">
               <a class="page-link" asp-route-PageCurrent="@i" asp-route-PageSize="@Model.PageSize">@i</a>
             </li>
           }
           <li class="page-item @(Model.PageCurrent == Model.TotalPages ? "disabled" : "")">
-            <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent + 1)" asp-route-PageSize="@Model.PageSize">&rsaquo;</a>
+            <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent + 1)"
+              asp-route-PageSize="@Model.PageSize">&rsaquo;</a>
           </li>
         </ul>
       </nav>
@@ -125,7 +158,8 @@
 </div>
 
 <!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteIngredientModal" tabindex="-1" aria-labelledby="deleteIngredientModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteIngredientModal" tabindex="-1" aria-labelledby="deleteIngredientModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">

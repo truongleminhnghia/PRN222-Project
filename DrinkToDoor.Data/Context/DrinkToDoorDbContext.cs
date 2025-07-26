@@ -26,7 +26,6 @@ namespace DrinkToDoor.Data.Context
         public DbSet<Payment> Payments { get; set; }
         public DbSet<KitProduct> KitProducts { get; set; }
         public DbSet<IngredientProduct> IngredientProducts { get; set; }
-        public DbSet<Supplier> Suppliers { get; set; }
         public DbSet<PackagingOption> PackagingOptions { get; set; }
         public DbSet<Message> Messages { get; set; }
 

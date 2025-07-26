@@ -7,8 +7,6 @@ namespace DrinkToDoor.Data
         IUserRepository Users { get; }
         ICategoryRepository Categories { get; }
         IIngredientProductRepository IngredientProducts { get; }
-
-        ISupplierRepository Suppliers { get; }
         IImageRepository Images { get; }
         IIngredientRepository Ingredients { get; }
 

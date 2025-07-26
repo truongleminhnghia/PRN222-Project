@@ -43,12 +43,18 @@
                     </select>
                     <span asp-validation-for="IngredientRequest.CategoryId" class="text-danger"></span>
                 </div>
+            </div>
+            <div class="row">
                 <div class="col-md-4 mb-3">
-                    <label asp-for="IngredientRequest.SupplierId" class="form-label">Nhà cung cấp</label>
-                    <select asp-for="IngredientRequest.SupplierId" class="form-select" asp-items="Model.Suppliers">
-                        <option value="">— Chọn Nhà Cung Cấp —</option>
-                    </select>
-                    <span asp-validation-for="IngredientRequest.SupplierId" class="text-danger"></span>
+                    <label asp-for="IngredientRequest.Trademark" class="form-label">Thương hiệu</label>
+                    <input asp-for="IngredientRequest.Trademark" class="form-control" />
+                    <span asp-validation-for="IngredientRequest.Trademark" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label asp-for="IngredientRequest.Origin" class="form-label">Xuất xứ</label>
+                    <input asp-for="IngredientRequest.Origin" class="form-control" />
+                    <span asp-validation-for="IngredientRequest.Origin" class="text-danger"></span>
                 </div>
             </div>
             <div class="row">

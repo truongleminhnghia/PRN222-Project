@@ -32,7 +32,6 @@ namespace DrinkToDoor.Data.Repositories
             return await _context.Ingredients
                                     .Include(i => i.Images)
                                     .Include(i => i.Category)
-                                    .Include(i => i.Supplier)
                                     .Include(i => i.PackagingOptions)
                                     .FirstOrDefaultAsync(u => u.Id == id);
         }
@@ -42,7 +41,6 @@ namespace DrinkToDoor.Data.Repositories
             IQueryable<Ingredient> qurey = _context.Ingredients
                                     .Include(i => i.Images)
                                     .Include(i => i.Category)
-                                    .Include(i => i.Supplier)
                                     .Include(i => i.PackagingOptions);
             return await qurey.OrderByDescending(i => i.CreatedAt).ToListAsync();
         }
