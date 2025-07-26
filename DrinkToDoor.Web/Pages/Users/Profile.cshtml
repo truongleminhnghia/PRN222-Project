@@ -1,0 +1,49 @@
+@page
+@model DrinkToDoor.Web.Pages.Users.Profile
+@{
+    ViewData["Title"] = "Thông tin cá nhân";
+}
+
+<div class="container my-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-4 mb-md-0">
+                    <img src="@Model.UserResponse?.Avatar" alt="Avatar" class="img-thumbnail rounded-circle shadow"
+                        style="width: 150px; height: 150px; object-fit: cover;" />
+                </div>
+                <div class="col-md-9">
+                    <h4 class="mb-3">Thông tin cá nhân</h4>
+
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Họ và tên:</dt>
+                        <dd class="col-sm-8">@Model.UserResponse?.LastName @Model.UserResponse?.FirstName</dd>
+
+                        <dt class="col-sm-4">Email:</dt>
+                        <dd class="col-sm-8">@Model.UserResponse?.Email</dd>
+
+                        <dt class="col-sm-4">Số điện thoại:</dt>
+                        <dd class="col-sm-8">@Model.UserResponse?.Phone</dd>
+
+                        <dt class="col-sm-4">Địa chỉ:</dt>
+                        <dd class="col-sm-8">@Model.UserResponse?.Address</dd>
+
+                        <dt class="col-sm-4">Ngày sinh:</dt>
+                        <dd class="col-sm-8">@Model.UserResponse?.DateOfBirth?.ToString("dd/MM/yyyy")</dd>
+
+                        <dt class="col-sm-4">Giới tính:</dt>
+                        <dd class="col-sm-8">
+                            @Model.UserResponse?.Gender
+                        </dd>
+                    </dl>
+
+                    <div class="mt-4">
+                        <a asp-page="/Users/EditProfile" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Chỉnh sửa thông tin
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

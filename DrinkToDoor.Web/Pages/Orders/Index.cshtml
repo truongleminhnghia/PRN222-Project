@@ -1,11 +1,137 @@
 @page
+@using DrinkToDoor.Data.enums
 @model DrinkToDoor.Web.Pages.Orders.Index
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách đơn hàng";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h2 class="my-4">@ViewData["Title"]</h2>
 
-<div>
-    
+@{
+    var selectedStatus = Model.Status?.ToString() ?? "ALL";
+    var enumStatuses = Enum.GetNames(typeof(EnumOrderStatus)).ToList();
+    var statuses = new List<string> { "ALL" };
+    statuses.AddRange(enumStatuses);
+
+    var statusLabels = new Dictionary<string, string>
+    {
+        { "ALL", "Tất cả" },
+        { "PEDING", "Đang xử lý" },
+        { "WAITING_DELIVER", "Chờ giao" },
+        { "DELIVERING", "Đang giao" },
+        { "DELIVERED", "Đã giao" },
+        { "PAYMENT_FAILED", "Thanh toán không thành công" },
+        { "CANCELED", "Đã hủy" },
+        { "REFUNDED", "Hoàn trả" },
+    };
+}
+<ul class="nav nav-tabs mb-4">
+    @foreach (var status in statuses)
+    {
+        var isActive = status == selectedStatus ? "active" : "";
+        var label = statusLabels.ContainsKey(status) ? statusLabels[status] : status;
+        <li class="nav-item">
+            <a class="nav-link @isActive"
+               asp-for="@Model.Status"
+               asp-page="/Orders/Index"
+               asp-route-Status="@status"
+               asp-route-PageCurrent="1"
+               asp-route-PageSize="@Model.PageSize">
+                @label
+            </a>
+        </li>
+    }
+</ul>
+
+@if (Model.Orders != null && Model.Orders.Any())
+{
+    foreach (var item in Model.Orders)
+    {
+        <div class="card mb-4 shadow-sm p-3">
+            <div class="d-flex justify-content-between mb-2">
+                <span>Trạng thái đơn hàng:
+                    <span class="badge @GetStatusBadgeClass(item.Status)">@item.Status</span>
+                </span>
+                <a href="#" class="text-decoration-none">Đánh giá</a>
+            </div>
+
+            @foreach (var detail in item.OrderDetails)
+            {
+                <div class="row border-bottom py-2">
+                    <div class="col-md-2">
+                        <img src="@detail.IngredientProduct?.Ingredient?.Images?.FirstOrDefault()?.Url"
+                             alt="@detail.IngredientProduct?.Ingredient?.Name"
+                             class="img-fluid rounded shadow-sm" />
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-1"><strong>Sản phẩm:</strong> @detail.IngredientProduct?.Ingredient?.Name</p>
+                        <p class="mb-1"><strong>Đóng gói:</strong> @detail.IngredientProduct?.UnitPackage</p>
+                        <p class="mb-1"><strong>Số lượng:</strong> @detail.IngredientProduct?.QuantityPackage</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <p class="mb-0"><strong>Giá tiền:</strong> @String.Format("{0:N0} đ", detail.IngredientProduct?.TotalAmount ?? 0)</p>
+                    </div>
+                </div>
+            }
+
+            <div class="text-end mt-3">
+                <h5>Tổng tiền: <span class="text-danger">@String.Format("{0:N0} đ", item.TotalAmount)</span></h5>
+            </div>
+
+            <div class="d-flex gap-2 mt-3 justify-content-end">
+                <button type="button" class="btn btn-outline-danger">
+                    <i class="bi bi-cart-plus"></i> Mua lại
+                </button>
+                <button type="button" class="btn btn-outline-primary">
+                    <i class="bi bi-chat-left-text"></i> Liên hệ
+                </button>
+                <button type="button" class="btn btn-outline-success">
+                    <i class="bi bi-star"></i> Xem đánh giá
+                </button>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="alert alert-info">Chưa có đơn hàng nào.</div>
+}
+
+<div class="card-footer bg-white">
+        <nav aria-label="Trang" class="d-flex justify-content-center">
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(Model.PageCurrent == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent - 1)"
+                        asp-route-PageSize="@Model.PageSize">&lsaquo;</a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageCurrent ? "active" : "")">
+                        <a class="page-link" asp-route-PageCurrent="@i" asp-route-PageSize="@Model.PageSize">@i</a>
+                    </li>
+                }
+                <li class="page-item @(Model.PageCurrent == Model.TotalPages ? "disabled" : "")">
+                    <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent + 1)"
+                        asp-route-PageSize="@Model.PageSize">&rsaquo;</a>
+                </li>
+            </ul>
+        </nav>
 </div>
+
+
+@functions {
+    public string GetStatusBadgeClass(EnumOrderStatus status)
+    {
+        return status switch
+        {
+            EnumOrderStatus.DELIVERED => "bg-success",
+            EnumOrderStatus.PEDING => "bg-warning text-dark",
+            EnumOrderStatus.REFUNDED => "bg-warning text-dark",
+            EnumOrderStatus.CANCELED => "bg-danger",
+            EnumOrderStatus.PAYMENT_FAILED => "bg-danger",
+            EnumOrderStatus.DELIVERING => "bg-primary",
+            EnumOrderStatus.WAITING_DELIVER => "bg-secondary",
+            _ => "bg-light text-dark"
+        };
+    }
+}

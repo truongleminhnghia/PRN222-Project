@@ -83,23 +83,14 @@ namespace DrinkToDoor.Business.Services
             }
         }
 
-        public async Task<bool> VerifyPaymentAsync(WebhookType type)
+        public async Task<bool> VerifyPaymentAsync(string code, string status, string orderCode, bool Paid)
         {
             try
             {
-                var data = _payOS.verifyPaymentWebhookData(type);
-                var payment = await _unitOfWork.Payments.FindByCode(data.orderCode.ToString());
-                if (payment == null)
+                var payment = await _unitOfWork.Payments.FindByCode(orderCode.ToString());
+                if (code == "00" && status == "PAID" && Paid)
                 {
-                    _logger.LogWarning(
-                                   "No transaction found for order code {OrderCode}, skipping webhook processing.",
-                                   data.orderCode
-                               );
-                    return true;
-                }
-                if (data.code == "00")
-                {
-                    _logger.LogInformation("Payment verified successfully: {Code}", data.code);
+                    _logger.LogInformation("Payment verified successfully: {code}", code);
                     payment.Status = EnumPaymentStatus.SUCCESS;
                     if (payment?.OrderId == null) throw new Exception("id đơn hàng không được null.");
                     var orderExisting = await _unitOfWork.Orders.FindById(payment.OrderId);
@@ -109,7 +100,7 @@ namespace DrinkToDoor.Business.Services
                 }
                 else
                 {
-                    _logger.LogWarning("Payment failed or canceled: {Code}", data.code);
+                    _logger.LogWarning("Payment failed or canceled: {code}", code);
                     payment.Status = EnumPaymentStatus.FAILED;
                     if (payment?.OrderId == null) throw new Exception("id đơn hàng không được null.");
                     var orderExisting = await _unitOfWork.Orders.FindById(payment.OrderId);
@@ -120,7 +111,7 @@ namespace DrinkToDoor.Business.Services
 
                 await _unitOfWork.Payments.Update(payment);
                 var result = await _unitOfWork.SaveChangesWithTransactionAsync();
-                return true;
+                return result > 0 ? true : false;
             }
             catch (Exception ex)
             {

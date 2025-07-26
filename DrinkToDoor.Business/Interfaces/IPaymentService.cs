@@ -6,6 +6,6 @@ namespace DrinkToDoor.Business.Interfaces
     public interface IPaymentService
     {
         Task<string> CreatePaymentAsync(PaymentRequest request);
-        Task<bool> VerifyPaymentAsync(WebhookType type);
+        Task<bool> VerifyPaymentAsync(string code, string status, string orderCode, bool cancel);
     }
 }

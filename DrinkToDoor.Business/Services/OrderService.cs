@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using DrinkToDoor.Business.Dtos.Requests;
+using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Entities;
@@ -43,6 +44,39 @@ namespace DrinkToDoor.Business.Services
                 }
                 var result = await _unitOfWork.SaveChangesWithTransactionAsync();
                 return result > 0 ? order.Id : Guid.Empty;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
+        }
+
+        public async Task<OrderResponse?> GetById(Guid id)
+        {
+            try
+            {
+                var orderExisting = await _unitOfWork.Orders.FindById(id);
+                if (orderExisting == null) throw new Exception("Đơn hàng không tồn tại");
+                return _mapper.Map<OrderResponse>(orderExisting);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
+        }
+
+        public async Task<Tuple<IEnumerable<OrderResponse>, int>> GetWithParams(Guid? userId, EnumOrderStatus? status, int pageCurrent, int pageSize)
+        {
+            try
+            {
+                var orders = await _unitOfWork.Orders.GetAllAsync(userId, status);
+                if (orders == null) return null;
+                var total = orders.Count();
+                var paged = orders.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
+                var pagedResponses = _mapper.Map<List<OrderResponse>>(paged);
+                return Tuple.Create<IEnumerable<OrderResponse>, int>(pagedResponses, total);
             }
             catch (Exception ex)
             {

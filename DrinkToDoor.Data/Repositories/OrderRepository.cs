@@ -32,10 +32,13 @@ namespace DrinkToDoor.Data.Repositories
 
         public async Task<IEnumerable<Order>> GetAllAsync(Guid? userId, EnumOrderStatus? status)
         {
-            IQueryable<Order> query = _context
-                .Orders.Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .Include(o => o.Payments);
+            IQueryable<Order> query = _context.Orders
+                                                .Include(o => o.User)
+                                                .Include(o => o.OrderDetails)
+                                                    .ThenInclude(od => od.IngredientProduct)
+                                                    .ThenInclude(od => od.Ingredient)
+                                                    .ThenInclude(od => od.Images)
+                                                .Include(o => o.Payments);
 
             if (userId.HasValue)
                 query = query.Where(o => o.UserId == userId.Value);

@@ -1,11 +1,45 @@
 @page
 @model DrinkToDoor.Web.Pages.Payments.Failed
 @{
-    ViewData["Title"] = "Failed";
+    ViewData["Title"] = "Thanh toán không thành công";
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="container mt-5">
+    <div class="card border-danger shadow">
+        <div class="card-header bg-danger text-white">
+            <h2 class="mb-0">@ViewData["Title"]</h2>
+        </div>
 
-<div>
-    
+        <div class="card-body">
+            <div class="alert alert-danger d-flex align-items-center" role="alert">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:">
+                    <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div>
+                    ❌ Giao dịch không thành công hoặc đã bị hủy.
+                </div>
+            </div>
+
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item">
+                    <strong>Mã đơn hàng:</strong> <span class="text-danger">@Model.Code</span>
+                </li>
+                <li class="list-group-item">
+                    <strong>ID giao dịch:</strong> @Model.Id
+                </li>
+                <li class="list-group-item">
+                    <strong>Trạng thái:</strong>
+                    <span class="badge bg-secondary">@Model.Status</span>
+                </li>
+                <li class="list-group-item">
+                    <strong>Mã đơn hệ thống:</strong> @Model.OrderCode
+                </li>
+            </ul>
+
+            <div class="mt-3 d-flex gap-2">
+                <a href="/" class="btn btn-outline-secondary">🔙 Quay lại trang chủ</a>
+                <a href="/Payments/Retry" class="btn btn-danger">🔁 Thử lại thanh toán</a>
+            </div>
+        </div>
+    </div>
 </div>
