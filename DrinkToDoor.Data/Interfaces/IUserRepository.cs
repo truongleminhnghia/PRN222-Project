@@ -14,5 +14,7 @@ namespace DrinkToDoor.Data.Interfaces
         Task<bool> Delete(User user);
         Task<User?> FindByEmail(string email);
         Task<int> TotalUser();
+        Task<bool> EmailExistsAsync(string email);
+
     }
 }

@@ -79,5 +79,11 @@ namespace DrinkToDoor.Data.Repositories
             _context.Users.Update(user);
             return 1;
         }
+
+        public async Task<bool> EmailExistsAsync(string email)
+        {
+            return await _context.Users.AnyAsync(u => u.Email == email);
+        }
+
     }
 }

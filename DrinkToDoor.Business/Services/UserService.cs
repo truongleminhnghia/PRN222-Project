@@ -1,5 +1,6 @@
 
 using AutoMapper;
+using Azure.Core;
 using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Business.HashPassword;
@@ -7,6 +8,7 @@ using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace DrinkToDoor.Business.Services
@@ -134,6 +136,40 @@ namespace DrinkToDoor.Business.Services
         public Task<bool> UpdateAsync(Guid id, UserResponse response)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<ServiceResult> RegisterAsync(RegisterRequest request)
+        {
+            var existingUser = await _unitOfWork.Users.FindByEmail(request.Email);
+            if (existingUser != null)
+            {
+                return ServiceResult.Fail("Email đã được sử dụng.");
+            }
+
+            var user = new User
+            {
+                Email = request.Email,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
+                Phone = request.Phone,
+                Address = request.Address,
+                Gender = request.Gender,
+                DateOfBirth = request.DateOfBirth ?? DateTime.Now,
+                RoleName = EnumRoleName.ROLE_USER,
+                EnumAccountStatus = EnumAccountStatus.ACTIVE
+            };
+
+            var result = await _unitOfWork.Users.Add(user);
+            await _unitOfWork.SaveChangesWithTransactionAsync();
+
+            if (result != 1)
+            {
+                return ServiceResult.Fail("Tạo tài khoản thất bại");
+            }
+
+
+            return ServiceResult.Ok("Đăng ký thành công.");
         }
     }
 }
