@@ -13,5 +13,6 @@ namespace DrinkToDoor.Data.Interfaces
         Task<int> Update(User user);
         Task<bool> Delete(User user);
         Task<User?> FindByEmail(string email);
+        Task<int> TotalUser();
     }
 }

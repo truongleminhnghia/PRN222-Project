@@ -43,7 +43,7 @@ builder.Services.AddDbContext<DrinkToDoorDbContext>(options =>
         mySqlOptions =>
             mySqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(10),
+                maxRetryDelay: TimeSpan.FromSeconds(60),
                 errorNumbersToAdd: null
             )
     );
@@ -83,7 +83,6 @@ var CHECKSUMKEY = PayOS["CHECKSUM_KEY"];
 PayOS payOS = new PayOS(ClientId,
                     APILEY,
                     CHECKSUMKEY);
-payOS.confirmWebhook("https://localhost:7153/Payments/Verify");
 
 builder.Services.AddSingleton(payOS);
 
@@ -102,7 +101,7 @@ using (var scope = app.Services.CreateScope())
     var db = scope.ServiceProvider.GetRequiredService<DrinkToDoorDbContext>();
     db.Database.Migrate();
 
-    bool adminExists = db.Users.Any(u => u.Email == "admin@example.com");
+    bool adminExists = db.Users.Any(u => u.RoleName == EnumRoleName.ROLE_ADMIN);
 
     if (!adminExists)
     {
@@ -110,7 +109,8 @@ using (var scope = app.Services.CreateScope())
         {
             Email = "admin@example.com",
             Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
-            RoleName = EnumRoleName.ROLE_ADMIN
+            RoleName = EnumRoleName.ROLE_ADMIN,
+            EnumAccountStatus = EnumAccountStatus.ACTIVE
         };
 
         db.Users.Add(adminUser);

@@ -41,5 +41,22 @@ namespace DrinkToDoor.Business.Services
                 throw new Exception("Server Error");
             }
         }
+
+        public async Task<bool> DeleteItem(Guid id)
+        {
+            try
+            {
+                var cartItemExisting = await _unitOfWork.CartItems.FindByIdAsync(id);
+                if (cartItemExisting == null) throw new Exception("Item không tồn tại");
+                await _unitOfWork.CartItems.DeleteAsync(cartItemExisting);
+                var result = await _unitOfWork.SaveChangesWithTransactionAsync();
+                return result > 0 ? true : false;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
+        }
     }
 }

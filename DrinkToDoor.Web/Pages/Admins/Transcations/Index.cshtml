@@ -1,0 +1,133 @@
+@page
+@using DrinkToDoor.Data.enums
+@model DrinkToDoor.Web.Pages.Admins.Transcations.Index
+@{
+    ViewData["Title"] = "Danh sách giao dịch";
+    Layout = "_LayoutAdmin";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="container-xxxl py-5">
+
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <form method="get" class="row gx-3 gy-2 align-items-end">
+                <div class="col-sm-6 col-md-3">
+                    <label asp-for="PaymentParams.FromDate" class="form-label text-14">Từ ngày</label>
+                    <input asp-for="PaymentParams.FromDate" class="form-control text-14" type="date" />
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <label asp-for="PaymentParams.ToDate" class="form-label text-14">Đến ngày</label>
+                    <input asp-for="PaymentParams.ToDate" class="form-control text-14" type="date" />
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <label asp-for="PaymentParams.MinPrice" class="form-label text-14">Tổng tiền từ</label>
+                    <input asp-for="PaymentParams.MinPrice" class="form-control text-14"
+                        placeholder="Nhập mã hoặc tên..." />
+                    <span asp-validation-for="PaymentParams.MinPrice" class="text-danger small"></span>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <label asp-for="PaymentParams.MaxPrice" class="form-label text-14">Tổng tiền đến</label>
+                    <input asp-for="PaymentParams.MaxPrice" class="form-control text-14"
+                        placeholder="Nhập mã hoặc tên..." />
+                    <span asp-validation-for="PaymentParams.MaxPrice" class="text-danger small"></span>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <label class="form-label text-14">Phương thức thanh toán</label>
+                    <select asp-for="PaymentParams.PaymentMethod" class="form-select text-14"
+                        asp-items="Html.GetEnumSelectList<EnumPaymentMethod>()">
+                        <option value="">— Tất cả —</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <label class="form-label text-14">Loại tiền</label>
+                    <select asp-for="PaymentParams.Currency" class="form-select text-14"
+                        asp-items="Html.GetEnumSelectList<EnumCurrency>()">
+                        <option value="">— Tất cả —</option>
+                    </select>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                    <label class="form-label text-14">Trạng thái</label>
+                    <select asp-for="PaymentParams.Status" class="form-select text-14"
+                        asp-items="Html.GetEnumSelectList<EnumPaymentStatus>()">
+                        <option value="">— Tất cả —</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary text-14">
+                        <i class="bi bi-funnel-fill me-1"></i> Lọc
+                    </button>
+                    <a asp-page="Index" class="btn btn-outline-secondary text-14 ms-2">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr class="text-14">
+                        <th class="text-center" style="width:5%">STT</th>
+                        <th class="text-start" style="width:25%">Full name</th>
+                        <th class="text-center" style="width:10%">Email</th>
+                        <th class="text-center" style="width:10%">Phương thức</th>
+                        <th class="text-center" style="width:10%">Tổng tiền</th>
+                        <th class="text-center" style="width:10%">Trạng thái</th>
+                        <th class="text-center" style="width:10%">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Payments.Select((u, idx) => new { u, idx }))
+                    {
+                        <tr class="text-14">
+                            <td class="text-center">@((Model.PageCurrent - 1) * Model.PageSize + item.idx + 1)</td>
+                            <td class="text-start">@item.u?.User?.LastName @item.u?.User?.FirstName</td>
+                            <td class="text-center">@item.u?.User?.Email</td>
+                            <td class="text-center">@item.u?.PaymentMethod</td>
+                            <td class="text-center">@item.u?.Amount VNĐ</td>
+                            <td class="text-center">
+                                @{
+                                    var badge = item.u?.Status == EnumPaymentStatus.SUCCESS ? "bg-success" : "bg-danger";
+                                }
+                                <span class="badge @badge">@item.u?.Status</span>
+                            </td>
+
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-page="Detail" asp-route-id="@item.u?.Id" class="btn btn-info text-white me-1">
+                                        Xem
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="card-footer bg-white">
+            <nav aria-label="Trang">
+                <ul class="pagination pagination-sm mb-0 justify-content-start">
+                    <li class="page-item @(Model.PageCurrent == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent - 1)"
+                            asp-route-PageSize="@Model.PageSize">&lsaquo;</a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageCurrent ? "active" : "")">
+                            <a class="page-link" asp-route-PageCurrent="@i" asp-route-PageSize="@Model.PageSize">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageCurrent == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent + 1)"
+                            asp-route-PageSize="@Model.PageSize">&rsaquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

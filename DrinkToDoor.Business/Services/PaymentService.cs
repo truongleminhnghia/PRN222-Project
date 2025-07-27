@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using DrinkToDoor.Business.Dtos.Requests;
+using DrinkToDoor.Business.Dtos.Responses;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Entities;
@@ -75,6 +76,44 @@ namespace DrinkToDoor.Business.Services
                 {
                     return null;
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
+        }
+
+        public async Task<Tuple<IEnumerable<PaymentResponse>, int>> GetAllAsync(int pageCurrent, int pageSize)
+        {
+            try
+            {
+                var orders = await _unitOfWork.Payments.FindAllAsync();
+                if (orders == null) return null;
+                var total = orders.Count();
+                var paged = orders.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
+                var pagedResponses = _mapper.Map<List<PaymentResponse>>(paged);
+                return Tuple.Create<IEnumerable<PaymentResponse>, int>(pagedResponses, total);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
+        }
+
+        public async Task<Tuple<IEnumerable<PaymentResponse>, int>> GetParams(EnumPaymentMethod? method, decimal? minPrice, decimal? maxPrice,
+                                                                            EnumPaymentStatus? status, DateTime? fromDate, DateTime? toDate,
+                                                                            EnumCurrency? currency, Guid? userId, int pageCurrent, int pageSize)
+        {
+            try
+            {
+                var orders = await _unitOfWork.Payments.FindParams(method, minPrice, maxPrice, status, fromDate, toDate, currency, userId);
+                if (orders == null) return null;
+                var total = orders.Count();
+                var paged = orders.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
+                var pagedResponses = _mapper.Map<List<PaymentResponse>>(paged);
+                return Tuple.Create<IEnumerable<PaymentResponse>, int>(pagedResponses, total);
             }
             catch (Exception ex)
             {

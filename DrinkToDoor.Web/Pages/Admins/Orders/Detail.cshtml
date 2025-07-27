@@ -1,0 +1,126 @@
+@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model DrinkToDoor.Web.Pages.Admins.Orders.Detail
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+    Layout = "_LayoutAdmin";
+}
+
+<h2 class="mb-4"><i class="bi bi-info-circle me-2"></i>@ViewData["Title"]</h2>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <!-- Thông tin đơn hàng -->
+        <h5 class="text-primary mb-3"><i class="bi bi-receipt-cutoff me-2"></i>Thông tin đơn hàng</h5>
+        <div class="row mb-4">
+            <div class="col-md-6 col-lg-3"><strong>Mã đơn hàng:</strong><br /> @Model.OrderResponse.Id</div>
+            <div class="col-md-6 col-lg-3"><strong>Ngày đặt:</strong><br />
+                @Model.OrderResponse.OrderDate.ToString("dd/MM/yyyy")</div>
+            <div class="col-md-6 col-lg-3"><strong>Trạng thái:</strong><br /> <span
+                    class="badge bg-info">@Model.OrderResponse.Status</span></div>
+            <div class="col-md-6 col-lg-3"><strong>Tổng tiền:</strong><br /> <span
+                    class="text-danger fw-bold">@Model.OrderResponse.TotalAmount.ToString("N0") ₫</span></div>
+        </div>
+
+        <hr />
+
+        <!-- Thông tin người nhận & người đặt -->
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <h6 class="text-secondary"><i class="bi bi-box-arrow-in-down-left me-1"></i>Người nhận hàng</h6>
+                <p><strong>@Model.OrderResponse.FullNameShipping</strong></p>
+                <p>Email: @Model.OrderResponse.EmailShipping</p>
+                <p>SĐT: @Model.OrderResponse.PhoneShipping</p>
+                <p>Địa chỉ: @Model.OrderResponse.ShippingAddress</p>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <h6 class="text-secondary"><i class="bi bi-person-badge me-1"></i>Người đặt hàng</h6>
+                <p><strong>@Model.OrderResponse?.User?.LastName @Model.OrderResponse?.User?.FirstName</strong></p>
+                <p>Email: @Model.OrderResponse?.User?.Email</p>
+                <p>SĐT: @Model.OrderResponse?.User?.Phone</p>
+                <p>Địa chỉ: @Model.OrderResponse?.User?.Address</p>
+            </div>
+        </div>
+
+        @if (Model.OrderResponse.Payments != null && Model.OrderResponse.Payments.Any())
+        {
+            <hr />
+            <!-- Thông tin thanh toán -->
+            <h6 class="text-secondary mb-3"><i class="bi bi-credit-card me-1"></i>Thông tin thanh toán</h6>
+            @foreach (var payment in Model.OrderResponse.Payments)
+            {
+                <div class="row mb-3">
+                    <div class="col-md-4"><strong>Phương thức:</strong> @payment.PaymentMethod</div>
+                    <div class="col-md-4"><strong>Ngày thanh toán:</strong> @payment.PaymentDate.ToString("dd/MM/yyyy HH:mm")
+                    </div>
+                    <div class="col-md-4"><strong>Trạng thái:</strong> <span class="badge bg-success">@payment.Status</span>
+                    </div>
+                    <div class="col-md-4"><strong>Mã giao dịch:</strong> @payment.TransactionCode</div>
+                    <div class="col-md-4"><strong>Loại tiền:</strong> @payment.Currency</div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<!-- Danh sách sản phẩm -->
+<h5 class="mb-3"><i class="bi bi-box-seam me-2"></i>Danh sách sản phẩm</h5>
+
+@if (Model.OrderResponse.OrderDetails != null && Model.OrderResponse.OrderDetails.Any())
+{
+    <div class="list-group mb-4">
+        @foreach (var item in Model.OrderResponse.OrderDetails)
+        {
+            var product = item.IngredientProduct;
+
+            <div class="list-group-item py-3 d-flex align-items-start gap-3">
+                <img src="@product?.Ingredient?.Images?.FirstOrDefault()?.Url" alt="@product?.Name" class="rounded"
+                    style="width: 64px; height: 64px; object-fit: cover;" />
+
+                <div class="flex-grow-1">
+                    <div class="fw-semibold">@product?.Name</div>
+                    <small class="text-muted">@product?.Ingredient?.Description</small>
+                    <div><small>Đóng gói: <span class="text-dark">@product?.UnitPackage</span></small></div>
+                </div>
+
+                <div class="text-end">
+                    <div>Giá: <strong>@item.Price.ToString("N0") ₫</strong></div>
+                    <div>SL: <strong>@item.Quantity</strong></div>
+                    <div class="text-danger">Tổng: <strong>@item.TotalPrice.ToString("N0") ₫</strong></div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">Không có sản phẩm nào trong đơn hàng này.</div>
+}
+
+<!-- Form xử lý -->
+<form method="post" class="mb-5">
+    <input type="hidden" name="id" value="@Model.OrderResponse.Id" />
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title text-secondary"><i class="bi bi-gear me-1"></i> Xử lý đơn hàng</h5>
+            <div class="mb-3">
+                <label asp-for="Reason" class="form-label">Lý do hủy (nếu có)</label>
+                <input asp-for="Reason" class="form-control" placeholder="Nhập lý do hủy đơn" />
+                <span asp-validation-for="Reason" class="text-danger small"></span>
+            </div>
+            <div>
+                <button type="submit" asp-page-handler="Cancel" class="btn btn-outline-danger me-2">
+                    <i class="bi bi-x-circle me-1"></i> Hủy đơn
+                </button>
+                <button type="submit" asp-page-handler="Approve" class="btn btn-success">
+                    <i class="bi bi-check-circle me-1"></i> Xác nhận đơn
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

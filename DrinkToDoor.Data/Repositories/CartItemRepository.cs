@@ -40,7 +40,6 @@ namespace DrinkToDoor.Data.Repositories
         public async Task<bool> DeleteAsync(CartItem item)
         {
             _context.CartItems.Remove(item);
-            await _context.SaveChangesAsync();
             return true;
         }
     }

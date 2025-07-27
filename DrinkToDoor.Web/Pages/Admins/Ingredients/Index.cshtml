@@ -62,9 +62,37 @@
     <div class="card-body">
       <form method="get" class="row gx-3 gy-2 align-items-end">
         <div class="col-sm-6 col-md-3">
-          <label class="form-label text-14">Mã hoặc Tên</label>
-          <input name="Name" value="@(Model.IngredientParams?.Name ?? "")" class="form-control text-14"
+          <label asp-for="IngredientParams.Name" class="form-label text-14">Mã hoặc Tên</label>
+          <input asp-for="IngredientParams.Name" class="form-control text-14" placeholder="Nhập mã hoặc tên..." />
+          <span asp-validation-for="IngredientParams.Name" class="text-danger small"></span>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <label asp-for="IngredientParams.MinPrice" class="form-label text-14">Min Price</label>
+          <input asp-for="IngredientParams.MinPrice" class="form-control text-14" placeholder="Nhập mã hoặc tên..." />
+          <span asp-validation-for="IngredientParams.MinPrice" class="text-danger small"></span>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <label asp-for="IngredientParams.MaxPrice" class="form-label text-14">Max Price</label>
+          <input asp-for="IngredientParams.MaxPrice" class="form-control text-14" placeholder="Nhập mã hoặc tên..." />
+          <span asp-validation-for="IngredientParams.MinPrice" class="text-danger small"></span>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <label asp-for="IngredientParams.MinStockQty" class="form-label text-14">Min Quantity</label>
+          <input asp-for="IngredientParams.MinStockQty" class="form-control text-14"
             placeholder="Nhập mã hoặc tên..." />
+          <span asp-validation-for="IngredientParams.MinStockQty" class="text-danger small"></span>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <label asp-for="IngredientParams.MaxStockQty" class="form-label text-14">Max Quantity</label>
+          <input asp-for="IngredientParams.MaxStockQty" class="form-control text-14"
+            placeholder="Nhập mã hoặc tên..." />
+          <span asp-validation-for="IngredientParams.MaxStockQty" class="text-danger small"></span>
+        </div>
+        <div class="col-sm-6 col-md-3">
+          <label asp-for="CategoryId" class="form-label text-14">Loại</label>
+          <select asp-for="CategoryId" class="form-select text-14" asp-items="@Model.CategoryList">
+            <option value="">— Tất cả —</option>
+          </select>
         </div>
         <div class="col-sm-6 col-md-3">
           <label class="form-label text-14">Trạng thái</label>

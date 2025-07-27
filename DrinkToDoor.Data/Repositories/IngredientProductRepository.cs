@@ -51,7 +51,9 @@ namespace DrinkToDoor.Data.Repositories
         public async Task<IngredientProduct?> FindById(Guid id)
         {
             return await _context
-                .IngredientProducts.Include(ip => ip.Ingredient).ThenInclude(i => i.Images)
+                .IngredientProducts
+                    .Include(ip => ip.Ingredient)
+                    .ThenInclude(i => i.Images)
                 .FirstOrDefaultAsync(ip => ip.Id == id);
         }
 

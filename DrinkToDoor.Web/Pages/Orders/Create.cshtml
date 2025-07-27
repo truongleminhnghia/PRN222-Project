@@ -19,34 +19,68 @@
                     <div class="text-center" style="width: 120px;">Số lượng</div>
                     <div class="text-center" style="width: 120px;">Thành tiền</div>
                 </div>
+                @if (Model.SelectedCartItems != null && Model.SelectedCartItems.Any())
+                {
+                    @foreach (var item in Model.SelectedCartItems)
+                    {
+                        <div class="d-flex align-items-center py-3 border-bottom px-2">
+                            <div class="d-flex flex-grow-1 pe-3">
+                                <img src="@item.IngredientProduct?.Ingredient?.Images?.FirstOrDefault()?.Url"
+                                    alt="@item.IngredientProduct?.Name" class="me-3 rounded"
+                                    style="width: 100px; height: 100px; object-fit: cover;" />
+                                <div>
+                                    <p class="mb-1 fw-semibold">@item.IngredientProduct?.Name</p>
+                                    <p class="mb-0 text-muted">
+                                        <span class="fw-normal">Loại:</span>
+                                        @item.IngredientProduct?.Ingredient?.Category?.Name
+                                    </p>
+                                </div>
+                            </div>
 
-                @foreach (var item in Model.SelectedCartItems)
+                            <div class="text-center" style="width: 120px;">
+                                @String.Format("{0:N0}", item.IngredientProduct?.Price) <strong>VNĐ</strong>
+                            </div>
+                            <div class="text-center" style="width: 120px;">
+                                @item.IngredientProduct?.QuantityPackage
+                            </div>
+                            <div class="text-center" style="width: 120px;">
+                                @String.Format("{0:N0}", item.IngredientProduct?.TotalAmount) <strong>VNĐ</strong>
+                            </div>
+                        </div>
+                    }
+                }
+                else if (Model.IngredientProduct != null)
                 {
                     <div class="d-flex align-items-center py-3 border-bottom px-2">
                         <div class="d-flex flex-grow-1 pe-3">
-                            <img src="@item.IngredientProduct?.Ingredient?.Images?.FirstOrDefault()?.Url"
-                                alt="@item.IngredientProduct?.Name" class="me-3 rounded"
+                            <img src="@Model.IngredientProduct?.Ingredient?.Images?.FirstOrDefault()?.Url"
+                                alt="@Model.IngredientProduct?.Name" class="me-3 rounded"
                                 style="width: 100px; height: 100px; object-fit: cover;" />
                             <div>
-                                <p class="mb-1 fw-semibold">@item.IngredientProduct?.Name</p>
+                                <p class="mb-1 fw-semibold">@Model.IngredientProduct?.Name</p>
                                 <p class="mb-0 text-muted">
                                     <span class="fw-normal">Loại:</span>
-                                    @item.IngredientProduct?.Ingredient?.Category?.Name
+                                    @Model.IngredientProduct?.Ingredient?.Category?.Name
                                 </p>
                             </div>
                         </div>
 
                         <div class="text-center" style="width: 120px;">
-                            @String.Format("{0:N0}", item.IngredientProduct?.Price) <strong>VNĐ</strong>
+                            @String.Format("{0:N0}", Model.IngredientProduct?.Price) <strong>VNĐ</strong>
                         </div>
                         <div class="text-center" style="width: 120px;">
-                            @item.IngredientProduct?.QuantityPackage
+                            @Model.IngredientProduct?.QuantityPackage
                         </div>
                         <div class="text-center" style="width: 120px;">
-                            @String.Format("{0:N0}", item.IngredientProduct?.TotalAmount) <strong>VNĐ</strong>
+                            @String.Format("{0:N0}", Model.IngredientProduct?.TotalAmount) <strong>VNĐ</strong>
                         </div>
                     </div>
                 }
+                else
+                {
+                    <div class="alert alert-warning">Không có sản phẩm nào để hiển thị.</div>
+                }
+
             </div>
 
             <div class="col-md-4 shadow-sm bg-white rounded p-4">

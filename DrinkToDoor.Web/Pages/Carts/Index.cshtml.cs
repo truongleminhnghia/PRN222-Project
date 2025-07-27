@@ -15,17 +15,20 @@ namespace DrinkToDoor.Web.Pages.Carts
         private readonly ICartService _cartService;
         private readonly IUserService _userService;
         private readonly INotyfService _toast;
+        private readonly ICartItemService _cartItemService;
 
         public IndexModel(
             ILogger<IndexModel> logger,
             ICartService cartService,
             IUserService userService,
-            INotyfService toastNotification)
+            INotyfService toastNotification,
+            ICartItemService cartItemService)
         {
             _logger = logger;
             _cartService = cartService;
             _userService = userService;
             _toast = toastNotification;
+            _cartItemService = cartItemService;
         }
 
         public IEnumerable<CartItemResponse> CartItemResponses { get; set; }
@@ -59,7 +62,7 @@ namespace DrinkToDoor.Web.Pages.Carts
             var userId = GetUserIdOrRedirect();
             if (SelectedIds == null || !SelectedIds.Any())
             {
-                _toast.Warning("Bạn chưa chọn sản phẩm nào để mua.");
+                _toast.Warning("Bạn chưa chọn sản phẩm nào để mua.", 5);
                 return RedirectToPage();
             }
             TempData["SelectedIds"] = JsonSerializer.Serialize(SelectedIds);
@@ -70,9 +73,17 @@ namespace DrinkToDoor.Web.Pages.Carts
         public async Task<IActionResult> OnPostRemoveAsync(Guid id)
         {
             var userId = GetUserIdOrRedirect();
-            // await _cartService.RemoveFromCartAsync(userId, id);
-            _toast.Success("Đã xóa sản phẩm khỏi giỏ hàng.");
-            return RedirectToPage();
+            var result = await _cartItemService.DeleteItem(id);
+            if (result)
+            {
+                _toast.Success("Đã xóa sản phẩm khỏi giỏ hàng.", 5);
+            }
+            else
+            {
+                _toast.Error("Xóa giỏ hàng thất bại.", 5);
+            }
+            await EnsureCartExists(userId);
+            return RedirectToPage(); 
         }
 
         private async Task EnsureCartExists(Guid userId)

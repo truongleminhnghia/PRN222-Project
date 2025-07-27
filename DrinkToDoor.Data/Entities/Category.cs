@@ -25,6 +25,5 @@ namespace DrinkToDoor.Data.Entities
         public EnumCategoryType CategoryType { get; set; }
 
         public virtual ICollection<Ingredient>? Ingredients { get; set; }
-        public virtual ICollection<Kit>? Kits { get; set; }
     }
 }

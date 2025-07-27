@@ -86,7 +86,8 @@
         <div class="card-body">
             <form method="get" class="row gx-3 gy-2 align-items-end">
                 <div class="col-sm-6 col-md-3">
-                    <input name="FirstName" class="form-control" value="@(Model.UserParams?.Keyword ?? "")" placeholder="Tìm kiếm"/>
+                    <input name="FirstName" class="form-control" value="@(Model.UserParams?.Keyword ?? "")"
+                        placeholder="Tìm kiếm" />
                 </div>
                 <div class="col-sm-6 col-md-2">
                     <label asp-for="UserParams.RoleName" class="form-label">Role</label>
@@ -164,7 +165,6 @@
                             <span class="badge @badge">@status</span>
                         </td>
                         <td class="text-center">
-                            <a asp-page="Edit" asp-route-id="@item.u.Id" class="btn btn-sm btn-warning me-1">Edit</a>
                             <a asp-page="Detail" asp-route-id="@item.u.Id" class="btn btn-sm btn-info me-1">Detail</a>
                             <form method="post" asp-page-handler="Delete" asp-route-id="@item.u.Id"
                                 onsubmit="return confirm('Bạn có chắc chắn xóa?');" class="d-inline">

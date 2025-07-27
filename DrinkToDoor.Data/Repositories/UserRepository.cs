@@ -67,6 +67,13 @@ namespace DrinkToDoor.Data.Repositories
             return await query.ToListAsync();
         }
 
+        public async Task<int> TotalUser()
+        {
+            return await _context.Users
+                                 .Where(u => u.RoleName == EnumRoleName.ROLE_USER)
+                                 .CountAsync();
+        }
+
         public async Task<int> Update(User user)
         {
             _context.Users.Update(user);

@@ -10,5 +10,7 @@ namespace DrinkToDoor.Data.Interfaces
         Task<bool> DeleteAsync(Order entity);
         Task<Order?> FindById(Guid id);
         Task<IEnumerable<Order>> GetAllAsync(Guid? userId, EnumOrderStatus? status);
+        Task<IEnumerable<Order>> FindByYear(int year);
+        Task<IEnumerable<Order>> FindByMonthOfYear(int month, int year);
     }
 }

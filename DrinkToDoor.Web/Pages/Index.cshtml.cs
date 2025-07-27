@@ -26,7 +26,7 @@ public class Index : PageModel
     public async Task OnGet()
     {
         Banners = await _bannerService.GetAllBannersAsync();
-        var listIngredient = await _ingredientService.GetAsync(null, 1, 10);
+        var listIngredient = await _ingredientService.GetAsync(null, null, null, null, null, null, null, null, null, null, 1, 10);
         Ingredients = listIngredient.Item1;
     }
 }

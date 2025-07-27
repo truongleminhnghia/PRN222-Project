@@ -93,14 +93,14 @@ namespace DrinkToDoor.BLL.Services
         {
             try
             {
-                var result = await _unitOfWork.Ingredients.GetAllAsync();
-                if (result == null) throw new AppException(ErrorCode.LIST_EMPTY);
-                var pagedResult = result.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
-                var total = result.Count();
-                var data = _mapper.Map<List<IngredientResponse>>(pagedResult);
-                if (data == null || !data.Any()) throw new AppException(ErrorCode.LIST_EMPTY);
-                var pageResult = new PageResult<IngredientResponse>(data, pageSize, pageCurrent, total);
-                return pageResult;
+                // var result = await _unitOfWork.Ingredients.GetAllAsync();
+                // if (result == null) throw new AppException(ErrorCode.LIST_EMPTY);
+                // var pagedResult = result.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
+                // var total = result.Count();
+                // var data = _mapper.Map<List<IngredientResponse>>(pagedResult);
+                // if (data == null || !data.Any()) throw new AppException(ErrorCode.LIST_EMPTY);
+                // var pageResult = new PageResult<IngredientResponse>(data, pageSize, pageCurrent, total);
+                return null;
             }
             catch (AppException ex)
             {

@@ -260,10 +260,6 @@ namespace DrinkToDoor.Data.Migrations
                         .HasColumnType("char(36)")
                         .HasColumnName("kit_id");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("category_id");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -298,8 +294,6 @@ namespace DrinkToDoor.Data.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
 
                     b.HasIndex(new[] { "Status" }, "IX_Kit_Status");
 
@@ -769,17 +763,6 @@ namespace DrinkToDoor.Data.Migrations
                     b.Navigation("Ingredient");
                 });
 
-            modelBuilder.Entity("DrinkToDoor.Data.Entities.Kit", b =>
-                {
-                    b.HasOne("DrinkToDoor.Data.Entities.Category", "Category")
-                        .WithMany("Kits")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
             modelBuilder.Entity("DrinkToDoor.Data.Entities.KitIngredient", b =>
                 {
                     b.HasOne("DrinkToDoor.Data.Entities.Ingredient", "Ingredient")
@@ -901,8 +884,6 @@ namespace DrinkToDoor.Data.Migrations
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Category", b =>
                 {
                     b.Navigation("Ingredients");
-
-                    b.Navigation("Kits");
                 });
 
             modelBuilder.Entity("DrinkToDoor.Data.Entities.Ingredient", b =>

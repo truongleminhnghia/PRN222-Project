@@ -15,5 +15,6 @@ namespace DrinkToDoor.Business.Dtos.Responses
         public string FullNameShipping { get; set; } = string.Empty;
         public virtual UserResponse? User { get; set; }
         public virtual ICollection<OrderDetailResponse>? OrderDetails { get; set; }
+        public virtual ICollection<PaymentResponse>? Payments { get; set; }
     }
 }
