@@ -1,0 +1,111 @@
+@page
+@model DrinkToDoor.Web.Pages.Introductions.Index
+@{
+    ViewData["Title"] = "Giới thiệu";
+}
+
+@section Styles {
+    <style>
+        .hero {
+            background: url('https://images.unsplash.com/photo-1510626176961-4bfb7f0c5f39?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            color: white;
+            padding: 120px 0;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-icon {
+            font-size: 2rem;
+            color: #0d6efd;
+        }
+
+        .img-cover {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+}
+
+<div class="hero text-center">
+    <div class="container">
+        <h1>Chào mừng đến với DrinkToDoor</h1>
+        <p class="lead">Cửa hàng chuyên cung cấp nguyên liệu pha chế đồ uống chất lượng hàng đầu Việt Nam</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6">
+            <h2 class="section-title">Về chúng tôi</h2>
+            <p>
+                DrinkToDoor là nền tảng thương mại điện tử chuyên cung cấp nguyên liệu pha chế đồ uống
+                cho cá nhân, quán cà phê, nhà hàng và doanh nghiệp. Với mong muốn mang đến những sản phẩm
+                chất lượng, an toàn và nhanh chóng, chúng tôi luôn nỗ lực từng ngày để phục vụ bạn tốt hơn.
+            </p>
+        </div>
+        <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1604916286558-00844b8fd1aa?auto=format&fit=crop&w=1600&q=80"
+                class="img-cover" alt="Về chúng tôi" />
+        </div>
+    </div>
+
+    <div class="row text-center mb-5">
+        <div class="col-md-4">
+            <div class="highlight-icon mb-2">🚚</div>
+            <h5>Giao hàng toàn quốc</h5>
+            <p>Chúng tôi hỗ trợ giao hàng nhanh trên toàn quốc với dịch vụ uy tín và đảm bảo.</p>
+        </div>
+        <div class="col-md-4">
+            <div class="highlight-icon mb-2">🧃</div>
+            <h5>Nguyên liệu đa dạng</h5>
+            <p>Hơn 500 sản phẩm nguyên liệu cho trà sữa, cà phê, nước trái cây, đá xay...</p>
+        </div>
+        <div class="col-md-4">
+            <div class="highlight-icon mb-2">💬</div>
+            <h5>Tư vấn tận tình</h5>
+            <p>Đội ngũ hỗ trợ luôn sẵn sàng đồng hành cùng bạn từ khâu chọn hàng đến sử dụng.</p>
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6 order-md-2">
+            <h2 class="section-title">Sản phẩm nổi bật</h2>
+            <p>
+                Tại DrinkToDoor, bạn có thể tìm thấy tất cả nguyên liệu cần thiết như siro, bột nền, trân châu,
+                topping, trái cây đông lạnh... được chọn lọc kỹ càng từ các thương hiệu uy tín.
+            </p>
+        </div>
+        <div class="col-md-6 order-md-1">
+            <img src="https://images.unsplash.com/photo-1542444459-db98b982b7b9?auto=format&fit=crop&w=1600&q=80"
+                class="img-cover" alt="Nguyên liệu pha chế" />
+        </div>
+    </div>
+
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h2 class="section-title">Tại sao chọn chúng tôi?</h2>
+            <ul class="list-unstyled">
+                <li>✔ Chất lượng sản phẩm đảm bảo, có nguồn gốc rõ ràng</li>
+                <li>✔ Giao hàng nhanh chóng, đóng gói cẩn thận</li>
+                <li>✔ Hệ thống website dễ sử dụng, đặt hàng tiện lợi</li>
+                <li>✔ Chính sách đổi trả và hỗ trợ khách hàng thân thiện</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <img src="https://images.unsplash.com/photo-1627483262032-9839bba6ea44?auto=format&fit=crop&w=1600&q=80"
+                class="img-cover" alt="Khách hàng chọn chúng tôi" />
+        </div>
+    </div>
+</div>

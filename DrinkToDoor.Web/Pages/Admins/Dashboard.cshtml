@@ -1,12 +1,205 @@
 @page
+@using Newtonsoft.Json
+@using DrinkToDoor.Data.enums
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
 @model DrinkToDoor.Web.Pages.Admins.DashboardModel
 @{
     ViewData["Title"] = "Dashboard";
     Layout = "_LayoutAdmin";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h2 class="mb-4"><i class="bi bi-bar-chart-line me-2"></i>@ViewData["Title"]</h2>
 
-<div>
-
+<!-- Summary Cards -->
+<div class="row g-4">
+    @foreach (var card in new[] {
+        ("Tổng doanh thu", Model.TotalRevenue.ToString("N0") + " ₫", "bi-cash-coin", "text-success"),
+        ("Tổng đơn hàng", Model.TotalOrders.ToString(), "bi-bag-check", "text-primary"),
+        ("Đơn chờ duyệt", Model.PendingOrders.ToString(), "bi-clock-history", "text-warning"),
+        ("Người dùng", Model.TotalUsers.ToString(), "bi-people", "text-info") })
+    {
+        <div class="col-md-6 col-xl-3">
+            <div class="card shadow-sm border-0 bg-light">
+                <div class="card-body d-flex align-items-center justify-content-between">
+                    <div>
+                        <h6 class="text-muted">@card.Item1</h6>
+                        <h4 class="fw-bold @card.Item4">@card.Item2</h4>
+                    </div>
+                    <i class="bi @card.Item3 fs-2 @card.Item4"></i>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+
+<!-- Charts -->
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card mt-4 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-bar-chart-line me-2"></i>Doanh thu theo tháng</h5>
+                <canvas id="monthlyRevenueChart" style="max-height: 500px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card mt-4 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-pie-chart-fill me-2"></i>Lợi nhuận tháng @DateTime.Now.Month</h5>
+                <canvas id="monthlyProfitPieChart" style="max-height: 300px;"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tables -->
+<div class="row g-4 mt-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light fw-bold">Top đơn hàng mới</div>
+            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Full name</th>
+                            <th class="text-center">Địa chỉ</th>
+                            <th class="text-center">Tổng tiền</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Orders)
+                        {
+                            var badge = item.Status == EnumOrderStatus.DELIVERED ? "bg-success" : "bg-danger";
+                            <tr>
+                                <td>@item.FullNameShipping</td>
+                                <td class="text-center">@item.ShippingAddress</td>
+                                <td class="text-center">@item.TotalAmount.ToString("N0") ₫</td>
+                                <td class="text-center"><span class="badge @badge">@item.Status</span></td>
+                                <td class="text-center">
+                                    <a asp-page="Detail" asp-route-id="@item.Id"
+                                        class="btn btn-sm btn-info text-white">Xem</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light fw-bold">Top người dùng</div>
+            <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center">Email</th>
+                            <th>Họ & Tên</th>
+                            <th class="text-center">Role</th>
+                            <th class="text-center">Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.User)
+                        {
+                            var badge = item.EnumAccountStatus == EnumAccountStatus.ACTIVE ? "bg-success" : "bg-danger";
+                            <tr>
+                                <td class="text-center">@item.Email</td>
+                                <td>@item.FirstName @item.LastName</td>
+                                <td class="text-center">@GetDisplayName(item.RoleName)</td>
+                                <td class="text-center"><span class="badge @badge">@item.EnumAccountStatus</span></td>
+                                <td class="text-center">
+                                    <a asp-page="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-info">Detail</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetDisplayName(Enum value)
+    {
+        var member = value.GetType().GetMember(value.ToString()).FirstOrDefault();
+        var attr = member?.GetCustomAttribute<DisplayAttribute>();
+        return attr?.GetName() ?? value.ToString();
+    }
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('monthlyRevenueChart').getContext('2d');
+            const labels = @Html.Raw(JsonConvert.SerializeObject(Model.MonthlyRevenueList.Select(m => $"Tháng {m.Month}")));
+            const data = @Html.Raw(JsonConvert.SerializeObject(Model.MonthlyRevenueList.Select(m => m.Revenue)));
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Doanh thu (VNĐ)',
+                        data: data,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: context => 'Doanh thu: ' + context.raw.toLocaleString() + ' ₫'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => value.toLocaleString() + ' ₫'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Pie Chart
+            const pieCtx = document.getElementById('monthlyProfitPieChart').getContext('2d');
+            const pieLabels = @Html.Raw(JsonConvert.SerializeObject(Model.MonthlyProfitList.Select(p => p.Label)));
+            const pieData = @Html.Raw(JsonConvert.SerializeObject(Model.MonthlyProfitList.Select(p => p.Value)));
+
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: pieLabels,
+                    datasets: [{
+                        data: pieData,
+                        backgroundColor: ['#28a745'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: context => context.label + ': ' + context.raw.toLocaleString() + ' ₫'
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+}

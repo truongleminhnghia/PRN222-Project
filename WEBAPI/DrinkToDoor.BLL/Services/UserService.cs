@@ -103,11 +103,11 @@ namespace DrinkToDoor.BLL.Services
             }
         }
 
-        public async Task<PageResult<UserResponse>> GetUsers(string? lastName, string? firstName, EnumRoleName? roleName, EnumAccountStatus? status, EnumGender? gender, int pageCurrent, int pageSize)
+        public async Task<PageResult<UserResponse>> GetUsers(string? keyword, EnumRoleName? roleName, EnumAccountStatus? status, EnumGender? gender, int pageCurrent, int pageSize)
         {
             try
             {
-                var result = await _unitOfWork.Users.FindToList(lastName, firstName, roleName, status, gender);
+                var result = await _unitOfWork.Users.FindToList(keyword, roleName, status, gender);
                 if (result == null) throw new AppException(ErrorCode.LIST_EMPTY);
                 var pagedResult = result.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
                 var total = result.Count();

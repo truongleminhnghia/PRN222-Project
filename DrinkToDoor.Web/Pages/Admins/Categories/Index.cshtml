@@ -1,0 +1,185 @@
+@page
+@using DrinkToDoor.Data.enums
+@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+@model DrinkToDoor.Web.Pages.Admins.Categories.Index
+@{
+    ViewData["Title"] = "Danh sách các loại sản phẩm";
+    Layout = "_LayoutAdmin";
+}
+
+@section Styles {
+    <style>
+        .text-14 {
+            font-size: 14px;
+        }
+
+        .text-20 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .py-5 {
+            padding: 3rem 0;
+        }
+
+        .mb-4 {
+            margin-bottom: 1.5rem;
+        }
+
+        .me-1 {
+            margin-right: .25rem;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, .05);
+        }
+
+        .pagination-sm .page-link {
+            padding: .25rem .5rem;
+            font-size: .875rem;
+        }
+
+        .badge {
+            padding: 0.5em 0.75em;
+            font-size: 90%;
+            border-radius: 0.5rem;
+        }
+    </style>
+}
+
+<div class="container-xxxl py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-20 fw-bold text-primary">@ViewData["Title"]</h1>
+        <button type="button" class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#createUserModal">
+            <i class="bi bi-plus-circle me-1"></i> Tạo Mới
+        </button>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-center text-14">
+                    <tr>
+                        <th style="width: 10%;">STT</th>
+                        <th class="text-start" style="width: 40%;">Tên danh mục</th>
+                        <th style="width: 20%;">Loại</th>
+                        <th style="width: 30%;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Categories.Select((u, idx) => new { u, idx }))
+                    {
+                        var badgeClass = GetBadgeClass(item.u.CategoryType);
+                        <tr class="text-14 text-center">
+                            <td>@((Model.PageCurrent - 1) * Model.PageSize + item.idx + 1)</td>
+                            <td class="text-start">@item.u.Name</td>
+                            <td>
+                                <span class="badge @badgeClass">
+                                    @GetDisplayName(item.u.CategoryType)
+                                </span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-page="Edit" asp-route-id="@item.u.Id" class="btn btn-warning text-white me-1">Sửa</a>
+                                    <a asp-page="Detail" asp-route-id="@item.u.Id" class="btn btn-info text-white me-1">Xem</a>
+                                    <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal"
+                                            data-bs-target="#deleteIngredientModal"
+                                            data-id="@item.u.Id" data-name="@item.u.Name">
+                                        Xóa
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="card-footer bg-white">
+            <nav aria-label="Trang">
+                <ul class="pagination pagination-sm mb-0 justify-content-start">
+                    <li class="page-item @(Model.PageCurrent == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent - 1)" asp-route-PageSize="@Model.PageSize">&lsaquo;</a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageCurrent ? "active" : "")">
+                            <a class="page-link" asp-route-PageCurrent="@i" asp-route-PageSize="@Model.PageSize">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageCurrent == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent + 1)" asp-route-PageSize="@Model.PageSize">&rsaquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="createUserForm" method="post">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createUserModalLabel">Tạo Danh Mục Mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label asp-for="CategoryRequest.Name" class="form-label">Tên danh mục</label>
+                        <input asp-for="CategoryRequest.Name" class="form-control" placeholder="Nhập tên danh mục" />
+                        <span asp-validation-for="CategoryRequest.Name" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="CategoryRequest.CategoryType" class="form-label">Loại</label>
+                        <select asp-for="CategoryRequest.CategoryType" class="form-select">
+                            <option value="">-- Chọn loại --</option>
+                            @foreach (EnumCategoryType g in Enum.GetValues(typeof(EnumCategoryType)))
+                            {
+                                <option value="@g" selected="@(g == Model.CategoryRequest.CategoryType ? "selected" : null)">
+                                    @GetDisplayName(g)
+                                </option>
+                            }
+                        </select>
+                        <span asp-validation-for="CategoryRequest.CategoryType" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        if (@Model.ShowCreateModal.ToString().ToLower()) {
+            new bootstrap.Modal('#createUserModal').show();
+        }
+    </script>
+}
+
+@functions {
+    private string GetDisplayName(Enum value)
+    {
+        var member = value.GetType().GetMember(value.ToString()).FirstOrDefault();
+        var attr = member?.GetCustomAttribute<DisplayAttribute>();
+        return attr?.GetName() ?? value.ToString();
+    }
+
+    private string GetBadgeClass(EnumCategoryType categoryType)
+    {
+        return categoryType switch
+        {
+            EnumCategoryType.INGREDIENT => "bg-success",
+            EnumCategoryType.RECIPE => "bg-primary",
+            _ => "bg-secondary"
+        };
+    }
+}

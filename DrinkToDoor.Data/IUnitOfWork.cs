@@ -7,8 +7,6 @@ namespace DrinkToDoor.Data
         IUserRepository Users { get; }
         ICategoryRepository Categories { get; }
         IIngredientProductRepository IngredientProducts { get; }
-
-        ISupplierRepository Suppliers { get; }
         IImageRepository Images { get; }
         IIngredientRepository Ingredients { get; }
 
@@ -19,6 +17,10 @@ namespace DrinkToDoor.Data
         IOrderRepository Orders { get; }
         IOrderDetailRepository OrderDetails { get; }
         IPackagingOptionRepository PackagingOptions { get; }
+        IPaymentRepository Payments { get; }
+        IKitRepository Kits { get; }
+        IKitIngredientRepository KitIngredients { get; }
+        IKitProductRepository KitProducts { get; }
 
         IMessageRepository Messages { get; }
         Task SaveChangesAsync();

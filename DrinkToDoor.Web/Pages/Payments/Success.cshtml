@@ -1,0 +1,47 @@
+@page
+@model DrinkToDoor.Web.Pages.Payments.Success
+@{
+    ViewData["Title"] = "Thanh toán thành công";
+}
+
+<div class="container mt-5">
+    <div class="card border-success shadow">
+        <div class="card-header bg-success text-white">
+            <h2 class="mb-0">@ViewData["Title"]</h2>
+        </div>
+
+        <div class="card-body">
+            @if (Model.Paid)
+            {
+                <div class="alert alert-success">
+                    <strong>🎉 Cảm ơn bạn đã đặt hàng!</strong> Đơn hàng của bạn đã được thanh toán thành công.
+                </div>
+
+                <ul class="list-group list-group-flush mb-3">
+                    <li class="list-group-item">
+                        <strong>Mã đơn hàng:</strong> <span class="text-primary">@Model.Code</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>ID giao dịch:</strong> @Model.Id
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Trạng thái đơn hàng:</strong>
+                        <span class="badge bg-info">@Model.Status</span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Mã order hệ thống:</strong> @Model.OrderCode
+                    </li>
+                </ul>
+
+                <a href="/" class="btn btn-outline-success">🔙 Quay lại trang chủ</a>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    ❌ Thanh toán không thành công. Vui lòng thử lại hoặc liên hệ bộ phận hỗ trợ.
+                </div>
+                <a href="/Payments/Retry" class="btn btn-danger">Thử lại thanh toán</a>
+            }
+        </div>
+    </div>
+</div>

@@ -12,11 +12,15 @@ namespace DrinkToDoor.Web.Configurations
             services.AddAutoMapper(typeof(UserMapper));
             services.AddAutoMapper(typeof(IngredientMapper));
             services.AddAutoMapper(typeof(ImageMapper));
-            services.AddAutoMapper(typeof(SupplierMapper));
             services.AddAutoMapper(typeof(PackageOptionMapper));
             services.AddAutoMapper(typeof(CartMapper));
             services.AddAutoMapper(typeof(CartItemMapper));
             services.AddAutoMapper(typeof(IngredientProductMapper));
+            services.AddAutoMapper(typeof(OrderMapper));
+            services.AddAutoMapper(typeof(OrderDetailMapper));
+            services.AddAutoMapper(typeof(PaymentMapper));
+            services.AddAutoMapper(typeof(KitMapper));
+            services.AddAutoMapper(typeof(KitIngredientMapper));
             return services;
         }
     }

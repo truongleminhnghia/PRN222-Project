@@ -1,11 +1,11 @@
-
-using System.Drawing;
 using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Business.Services;
+using DrinkToDoor.Web.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DrinkToDoor.Web.Pages.Admins.Ingredients
 {
@@ -14,37 +14,33 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
         private readonly ILogger<Create> _logger;
         private readonly IIngredientService _ingredientService;
         private readonly ICategoryService _categoryService;
-        private readonly ISupplierService _supplierService;
         private readonly IWebHostEnvironment _env;
+        private readonly IHubContext<IngredientHub> _hubContext;
 
         public Create(ILogger<Create> logger, IIngredientService ingredientService,
-                      ICategoryService categoryService, ISupplierService supplierService,
+                      ICategoryService categoryService, IHubContext<IngredientHub> hubContext,
                       IWebHostEnvironment env)
         {
             _ingredientService = ingredientService;
             _categoryService = categoryService;
-            _supplierService = supplierService;
             _logger = logger;
             _env = env;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
         public IngredientRequest IngredientRequest { get; set; } = new IngredientRequest();
 
         public SelectList Categories { get; set; }
-        public SelectList Suppliers { get; set; }
-
-        public ImageRequest ImageRequest { get; set; } = new ImageRequest();
 
         [BindProperty]
         public PackagingOptionRequest PackagingOptionRequest { get; set; } = new PackagingOptionRequest();
+
         [BindProperty]
-        public List<IFormFile> ImagesRequest { get; set; }
+        public List<IFormFile> ImagesRequest { get; set; } = new List<IFormFile>();
 
         public async Task<IActionResult> OnGet()
         {
-            var supplier = await _supplierService.GetAll();
-            Suppliers = new SelectList(supplier, "Id", "Name");
             var categories = await _categoryService.GetAll();
             Categories = new SelectList(categories, "Id", "Name");
             return Page();
@@ -52,12 +48,11 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var categories = await _categoryService.GetAll();
+            Categories = new SelectList(categories, "Id", "Name");
+
             if (!ModelState.IsValid)
             {
-                var supplier = await _supplierService.GetAll();
-                Suppliers = new SelectList(supplier, "Id", "Name");
-                var categories = await _categoryService.GetAll();
-                Categories = new SelectList(categories, "Id", "Name");
                 return Page();
             }
 
@@ -69,7 +64,6 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
                     if (!Directory.Exists(uploadsFolder))
                         Directory.CreateDirectory(uploadsFolder);
 
-                    // Tạo list đường dẫn lưu vào DB
                     var savedPaths = new List<string>();
 
                     foreach (var formFile in ImagesRequest)
@@ -87,10 +81,24 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
                             savedPaths.Add($"/images/ingredients/{uniqueFileName}");
                         }
                     }
-                    IngredientRequest.ImagesRequest = savedPaths.Select(url => new ImageRequest { ImageUrl = url }).ToList();
+
+                    IngredientRequest.ImagesRequest = savedPaths
+                        .Select(path => new ImageRequest { ImageUrl = path })
+                        .ToList();
                 }
-                IngredientRequest.PackagingOptions.Add(PackagingOptionRequest);
-                await _ingredientService.CreateAsync(IngredientRequest);
+
+                IngredientRequest.PackagingOptionsRequest.Add(PackagingOptionRequest);
+                var ingredientResponse = await _ingredientService.CreateAsync(IngredientRequest);
+
+                await _hubContext.Clients.All.SendAsync("ReceiveNewIngredient", new
+                {
+                    Id = ingredientResponse.Id,
+                    Name = ingredientResponse.Name,
+                    Price = ingredientResponse.Price,
+                    Description = ingredientResponse.Description,
+                    Images = ingredientResponse.Images?.Select(img => img.Url).ToList()
+                });
+
                 return RedirectToPage("Index");
             }
             catch (Exception ex)

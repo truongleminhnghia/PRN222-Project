@@ -1,12 +1,78 @@
 @page
+@using DrinkToDoor.Data.enums
 @model DrinkToDoor.Web.Pages.Admins.Orders.IndexModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sách đơn hàng";
     Layout = "_LayoutAdmin";
 }
 
 <h1>@ViewData["Title"]</h1>
 
-<div>
-    
+<div class="container-xxxl py-5">
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr class="text-14">
+                        <th class="text-center" style="width:5%">STT</th>
+                        <th class="text-start" style="width:25%">Full name</th>
+                        <th class="text-center" style="width:10%">Email</th>
+                        <th class="text-center" style="width:10%">Phone</th>
+                        <th class="text-center" style="width:10%">Địa chỉ</th>
+                        <th class="text-center" style="width:10%">Tổng tiền</th>
+                        <th class="text-center" style="width:15%">Trạng thái</th>
+                        <th class="text-center" style="width:10%">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Orders.Select((u, idx) => new { u, idx }))
+                    {
+                        <tr class="text-14">
+                            <td class="text-center">@((Model.PageCurrent - 1) * Model.PageSize + item.idx + 1)</td>
+                            <td class="text-start">@item.u.FullNameShipping</td>
+                            <td class="text-center">@item.u.EmailShipping</td>
+                            <td class="text-center">@item.u.PhoneShipping</td>
+                            <td class="text-center">@item.u.ShippingAddress</td>
+                            <td class="text-center">@item.u.TotalAmount VNĐ</td>
+                            <td class="text-center">
+                                @{
+                                    var badge = item.u.Status == EnumOrderStatus.DELIVERED ? "bg-success" : "bg-danger";
+                                }
+                                <span class="badge @badge">@item.u.Status</span>
+                            </td>
+
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a asp-page="Detail" asp-route-id="@item.u.Id" class="btn btn-info text-white me-1">
+                                        Xem
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="card-footer bg-white">
+            <nav aria-label="Trang">
+                <ul class="pagination pagination-sm mb-0 justify-content-start">
+                    <li class="page-item @(Model.PageCurrent == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent - 1)"
+                            asp-route-PageSize="@Model.PageSize">&lsaquo;</a>
+                    </li>
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageCurrent ? "active" : "")">
+                            <a class="page-link" asp-route-PageCurrent="@i" asp-route-PageSize="@Model.PageSize">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.PageCurrent == Model.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-route-PageCurrent="@(Model.PageCurrent + 1)"
+                            asp-route-PageSize="@Model.PageSize">&rsaquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 </div>

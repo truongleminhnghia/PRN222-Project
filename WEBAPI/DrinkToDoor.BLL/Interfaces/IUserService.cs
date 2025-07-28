@@ -9,9 +9,7 @@ namespace DrinkToDoor.BLL.Interfaces
     {
         Task<bool> CreateAccount(UserRequest request);
         Task<UserResponse> GetById(Guid id);
-        Task<PageResult<UserResponse>> GetUsers(string? lastName, string? firstName, EnumRoleName? roleName,
-                                                EnumAccountStatus? status, EnumGender? gender,
-                                                int pageCurrent, int pageSize);
+        Task<PageResult<UserResponse>> GetUsers(string? keyword, EnumRoleName? roleName, EnumAccountStatus? status, EnumGender? gender, int pageCurrent, int pageSize);
         Task<bool> DeleteById(Guid id);
         Task<bool> ChangeStatus(Guid id, EnumAccountStatus status);
         Task<bool> UpdateUser(Guid id, UserRequest request);

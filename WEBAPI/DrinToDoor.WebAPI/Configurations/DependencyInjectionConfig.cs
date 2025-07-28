@@ -20,7 +20,6 @@ namespace DrinToDoor.WebAPI.Configurations
             // services
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ISupplierService, SupplierService>();
             services.AddScoped<IPackagingOptionService, PackagingOptionService>();
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IIngredientService, IngredientService>();
@@ -34,7 +33,6 @@ namespace DrinToDoor.WebAPI.Configurations
 
             // repository
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<
                 IIngredientRepository,
                 DrinkToDoor.Data.Repositories.IngredientRepository

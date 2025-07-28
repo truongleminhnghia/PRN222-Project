@@ -2,14 +2,17 @@ using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Business.Services;
+using DrinkToDoor.Business.Services.BackgroundServices;
 using DrinkToDoor.Data.Context;
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
 using DrinkToDoor.Data.Interfaces;
 using DrinkToDoor.Data.Repositories;
 using DrinkToDoor.Web.Configurations;
+using DrinkToDoor.Web.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using Net.payOS;
 using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,7 +45,7 @@ builder.Services.AddDbContext<DrinkToDoorDbContext>(options =>
         mySqlOptions =>
             mySqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 5,
-                maxRetryDelay: TimeSpan.FromSeconds(10),
+                maxRetryDelay: TimeSpan.FromSeconds(60),
                 errorNumbersToAdd: null
             )
     );
@@ -53,9 +56,13 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     options.LoginPath = "/Login";
 });
 
+builder.Services.AddHttpContextAccessor();
+
 
 builder.Services.AddProjectDependencies();
 builder.Services.AddAutoMapperConfiguration();
+builder.Services.AddHostedService<OrderStatusUpdater>();
+
 
 // Add services to the container.
 builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions
@@ -72,6 +79,19 @@ builder.Services.AddNotyf(options =>
     options.Position = NotyfPosition.TopRight;
 });
 
+var PayOS = builder.Configuration.GetSection("PAYOS");
+var ClientId = PayOS["CLIENT_ID"];
+var APILEY = PayOS["API_KEY"];
+var CHECKSUMKEY = PayOS["CHECKSUM_KEY"];
+
+PayOS payOS = new PayOS(ClientId,
+                    APILEY,
+                    CHECKSUMKEY);
+
+builder.Services.AddSingleton(payOS);
+
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -86,19 +106,25 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<DrinkToDoorDbContext>();
     db.Database.Migrate();
+
     bool adminExists = db.Users.Any(u => u.RoleName == EnumRoleName.ROLE_ADMIN);
+
     if (!adminExists)
     {
         var adminUser = new User
         {
             Email = "admin@example.com",
             Password = BCrypt.Net.BCrypt.HashPassword("123456789"),
-            RoleName = EnumRoleName.ROLE_ADMIN
+            RoleName = EnumRoleName.ROLE_ADMIN,
+            EnumAccountStatus = EnumAccountStatus.ACTIVE
         };
+
         db.Users.Add(adminUser);
         db.SaveChanges();
     }
 }
+
+app.MapHub<IngredientHub>("/ingredientHub");
 
 app.UseHttpsRedirection();
 

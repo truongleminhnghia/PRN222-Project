@@ -7,6 +7,7 @@ using DrinkToDoor.Business.Utils;
 using DrinkToDoor.Data;
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace DrinkToDoor.Business.Services
@@ -30,7 +31,7 @@ namespace DrinkToDoor.Business.Services
             _packagingOptionService = packagingOptionService;
         }
 
-        public async Task<bool> CreateAsync(IngredientRequest request)
+        public async Task<IngredientResponse> CreateAsync(IngredientRequest request)
         {
             try
             {
@@ -43,25 +44,15 @@ namespace DrinkToDoor.Business.Services
                 {
                     throw new ArgumentException($"Danh mục không tồn tại với ID {request.CategoryId}");
                 }
-                if (request.SupplierId == null || request.SupplierId == Guid.Empty)
-                {
-                    throw new ArgumentException("SupplierId không được bỏ trống");
-                }
-                var supplier = await _unitOfWork.Suppliers.FindById(request.SupplierId.Value);
-                if (supplier == null)
-                {
-                    throw new ArgumentException($"Nhà cung cấp không tồn tại với ID {request.SupplierId}");
-                }
                 var ingredient = _mapper.Map<Ingredient>(request);
                 ingredient.Code = Base.GenerateCode('P');
                 ingredient.Status = EnumStatus.ACTIVE;
                 ingredient.CategoryId = cateogry.Id;
-                ingredient.SupplierId = supplier.Id;
                 await _unitOfWork.Ingredients.AddAsync(ingredient);
                 var image = await _imageService.AddImages(ingredient.Id, request.ImagesRequest);
-                var package = await _packagingOptionService.Add(ingredient.Id, request.PackagingOptions);
+                var package = await _packagingOptionService.Add(ingredient.Id, request.PackagingOptionsRequest);
                 var result = await _unitOfWork.SaveChangesWithTransactionAsync();
-                return result > 0 ? true : false;
+                return result > 0 ? _mapper.Map<IngredientResponse>(ingredient) : null;
             }
             catch (Exception ex)
             {
@@ -99,11 +90,34 @@ namespace DrinkToDoor.Business.Services
             }
         }
 
-        public async Task<Tuple<IEnumerable<IngredientResponse>, int>> GetAsync(string? name, int pageCurrent, int pageSize)
+        // public async Task<Tuple<IEnumerable<IngredientResponse>, int>> GetAsync(string? name, int pageCurrent, int pageSize)
+        // {
+        //     try
+        //     {
+        //         var result = await _unitOfWork.Ingredients.GetAllAsync();
+        //         if (result == null)
+        //         {
+        //             throw new ArgumentException("Danh sách rỗng");
+        //         }
+        //         var total = result.Count();
+        //         var paged = result.Skip((pageCurrent - 1) * pageSize).Take(pageSize).ToList();
+        //         var pagedResponses = _mapper.Map<List<IngredientResponse>>(paged);
+        //         return Tuple.Create<IEnumerable<IngredientResponse>, int>(pagedResponses, total);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _logger.LogError("Error {ex}", ex);
+        //         throw new Exception("Server Error");
+        //     }
+        // }
+
+        public async Task<Tuple<IEnumerable<IngredientResponse>, int>> GetAsync(string? keyword, string? name, Guid? categoryId, decimal? minPirce, decimal? maxPrice,
+                                                                                decimal? minCost, decimal? maxCost, int? minQuantity, int? maxQuantity,
+                                                                                EnumStatus? status, int pageCurrent, int pageSize)
         {
             try
             {
-                var result = await _unitOfWork.Ingredients.GetAllAsync();
+                var result = await _unitOfWork.Ingredients.GetAllAsync(keyword, name, categoryId, minPirce, maxPrice, minCost, maxCost, minQuantity, maxQuantity, status);
                 if (result == null)
                 {
                     throw new ArgumentException("Danh sách rỗng");
@@ -134,6 +148,20 @@ namespace DrinkToDoor.Business.Services
                     throw new ArgumentException($"Nguyên liệu không tồn tại với ID {id}");
                 }
                 return _mapper.Map<IngredientResponse>(ingredient);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
+        }
+
+        public async Task<IEnumerable<IngredientResponse>> OnGetSearchIngredientsAsync(string term)
+        {
+            try
+            {
+                var ingredients = await _unitOfWork.Ingredients.FindByName(term);
+                return _mapper.Map<IEnumerable<IngredientResponse>>(ingredients);
             }
             catch (Exception ex)
             {

@@ -38,11 +38,12 @@ namespace DrinkToDoor.Data.Entities
         [Column("stock_qty", TypeName = "int")]
         public int StockQty { get; set; }
 
-        [Column("supplier_id")]
-        public Guid? SupplierId { get; set; }
+        [Column("origin", TypeName = "varchar(300)")]
+        public string? Origin { get; set; }
 
-        [ForeignKey(nameof(SupplierId))]
-        public Supplier? Supplier { get; set; }
+        [Column("trademark", TypeName = "varchar(300)")]
+        public string? Trademark { get; set; }
+
         [Column("default_packaging_option_id")]
         public Guid? DefaultPackagingOptionId { get; set; }
 

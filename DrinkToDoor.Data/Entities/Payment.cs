@@ -44,5 +44,13 @@ namespace DrinkToDoor.Data.Entities
         public Guid UserId { get; set; }
         [ForeignKey(nameof(UserId))]
         public virtual User? User { get; set; }
+
+        [Column("currency", TypeName = "varchar(10)")]
+        [Required]
+        [EnumDataType(typeof(EnumCurrency))]
+        public EnumCurrency Currency { get; set; }
+
+        [Column("transaction_code", TypeName = "varchar(150)")]
+        public string? TransactionCode { get; set; }
     }
 }

@@ -1,0 +1,43 @@
+@page
+@model DrinkToDoor.Web.Pages.Admins.Kits.Detail
+@{
+    ViewData["Title"] = "Chi tiết bộ Kit";
+    Layout = "_LayoutAdmin";
+}
+
+<h2 class="mb-4">@ViewData["Title"]</h2>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="card-title text-primary">@Model.KitResponse.Name</h4>
+        <p class="card-text text-muted">@Model.KitResponse.Description</p>
+
+        <div class="row mb-2">
+            <div class="col-md-3"><strong>Thành tiền:</strong> @Model.KitResponse.TotalAmount ₫</div>
+            <div class="col-md-3"><strong>Trạng thái:</strong> @Model.KitResponse.Status</div>
+            <div class="col-md-3"><strong>Ngày tạo:</strong> @Model.KitResponse.CreatedAt.ToString("dd/MM/yyyy")</div>
+            <div class="col-md-3"><strong>Ngày cập nhật:</strong> @Model.KitResponse.UpdatedAt.ToString("dd/MM/yyyy")
+            </div>
+        </div>
+    </div>
+</div>
+
+<h5 class="mb-3">Danh sách nguyên liệu:</h5>
+
+<div class="row">
+    @foreach (var item in Model.KitResponse.KitIngredients)
+    {
+        var ingredient = item?.Ingredient;
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="@ingredient?.Images?.FirstOrDefault()?.Url" class="card-img-top"
+                    alt="@ingredient?.Name" style="object-fit: cover; height: 180px;" />
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title text-primary">@ingredient?.Name</h6>
+                    <p class="card-text text-muted small">@ingredient?.Description</p>
+                    <div class="mt-auto fw-bold text-danger">@ingredient?.Price.ToString("N0") ₫</div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

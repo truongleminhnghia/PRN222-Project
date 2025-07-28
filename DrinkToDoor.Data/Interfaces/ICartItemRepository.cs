@@ -10,6 +10,7 @@ namespace DrinkToDoor.Data.Interfaces
         Task<bool> UpdateQuantityAsync(CartItem item);
         Task<CartItem?> FindByIdAsync(Guid id);
         Task<bool> DeleteAsync(CartItem item);
+        Task<int> Count(Guid cartId);
 
     }
 }

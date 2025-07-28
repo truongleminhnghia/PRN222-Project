@@ -54,8 +54,10 @@ namespace DrinkToDoor.Web.Pages
             //creating the scurity context
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.RoleName.ToString()),
+                new Claim(ClaimTypes.Name, user.FirstName ?? string.Empty),
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);

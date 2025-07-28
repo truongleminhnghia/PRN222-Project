@@ -32,10 +32,13 @@ namespace DrinkToDoor.Data.Repositories
 
         public async Task<IEnumerable<Order>> GetAllAsync(Guid? userId, EnumOrderStatus? status)
         {
-            IQueryable<Order> query = _context
-                .Orders.Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .Include(o => o.Payments);
+            IQueryable<Order> query = _context.Orders
+                                                .Include(o => o.User)
+                                                .Include(o => o.OrderDetails)
+                                                    .ThenInclude(od => od.IngredientProduct)
+                                                    .ThenInclude(od => od.Ingredient)
+                                                    .ThenInclude(od => od.Images)
+                                                .Include(o => o.Payments);
 
             if (userId.HasValue)
                 query = query.Where(o => o.UserId == userId.Value);
@@ -48,11 +51,14 @@ namespace DrinkToDoor.Data.Repositories
 
         public async Task<Order?> FindById(Guid id)
         {
-            return await _context
-                .Orders.Include(o => o.User)
-                .Include(o => o.OrderDetails)
-                .Include(o => o.Payments)
-                .FirstOrDefaultAsync(o => o.Id == id);
+            return await _context.Orders
+                                .Include(o => o.User)
+                                .Include(o => o.OrderDetails)
+                                    .ThenInclude(od => od.IngredientProduct)
+                                    .ThenInclude(od => od.Ingredient)
+                                    .ThenInclude(od => od.Images)
+                                .Include(o => o.Payments)
+                                .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<int> UpdateAsync(Order entity)
@@ -60,6 +66,20 @@ namespace DrinkToDoor.Data.Repositories
             entity.UpdatedAt = DateTime.UtcNow;
             _context.Orders.Update(entity);
             return 1;
+        }
+
+        public async Task<IEnumerable<Order>> FindByYear(int year)
+        {
+            return await _context.Orders
+                                    .Where(o => o.Status == EnumOrderStatus.SUCCESS && o.OrderDate.Year == year)
+                                    .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Order>> FindByMonthOfYear(int month, int year)
+        {
+            return await _context.Orders
+                                    .Where(o => o.Status == EnumOrderStatus.SUCCESS && o.OrderDate.Month == month && o.OrderDate.Year == year)
+                                    .ToListAsync();
         }
     }
 }

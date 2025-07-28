@@ -1,0 +1,150 @@
+@page
+@model DrinkToDoor.Web.Pages.Admins.Kits.Create
+@{
+    ViewData["Title"] = "Tạo mới";
+    Layout = "_LayoutAdmin";
+}
+
+<h1 class="mb-4">@ViewData["Title"]</h1>
+
+<div class="container-xxxl py-4">
+    <form method="post">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label asp-for="KitRequest.Name" class="form-label">Tên bộ kit</label>
+                <input asp-for="KitRequest.Name" class="form-control" />
+                <span asp-validation-for="KitRequest.Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="KitRequest.Description" class="form-label">Mô tả</label>
+                <input asp-for="KitRequest.Description" class="form-control" />
+                <span asp-validation-for="KitRequest.Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <!-- Search input + clear -->
+        <div class="mb-4 position-relative">
+            <label for="ingredientSearch" class="form-label">Tìm nguyên liệu</label>
+            <div class="input-group">
+                <input id="ingredientSearch" class="form-control" placeholder="Nhập tên nguyên liệu..."
+                    autocomplete="off" />
+                <button id="clearSearch" type="button" class="btn btn-outline-secondary d-none">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div id="ingredientDropdown" class="dropdown-menu w-100 shadow"
+                style="display: none; max-height: 300px; overflow-y: auto; position: absolute; z-index: 1050;"></div>
+        </div>
+
+        <h5>Danh sách nguyên liệu đã chọn:</h5>
+        <ul id="selectedIngredients" class="list-group mb-3"></ul>
+
+        <div id="ingredientIdsContainer"></div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">Tạo mới</button>
+            <a asp-page="Index" class="btn btn-secondary ms-2">Hủy</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        const dropdown = document.getElementById("ingredientDropdown");
+        const searchBox = document.getElementById("ingredientSearch");
+        const clearSearch = document.getElementById("clearSearch");
+        const selectedList = document.getElementById("selectedIngredients");
+        const hiddenContainer = document.getElementById("ingredientIdsContainer");
+        const selectedIngredients = new Map();
+
+        searchBox.addEventListener("input", async function () {
+            const term = this.value.trim();
+
+            clearSearch.classList.toggle("d-none", term === "");
+
+            if (!term) {
+                dropdown.style.display = "none";
+                return;
+            }
+
+            const res = await fetch(`?handler=SearchIngredients&term=${encodeURIComponent(term)}`);
+            const ingredients = await res.json();
+
+            dropdown.innerHTML = "";
+            if (ingredients.length === 0) {
+                dropdown.style.display = "none";
+                return;
+            }
+
+            ingredients.forEach(i => {
+                const item = document.createElement("div");
+                item.className = "dropdown-item d-flex align-items-center justify-content-between";
+                item.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <img src="${i.imageUrl}" class="rounded" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" />
+                            <div>
+                                <div><strong>${i.name}</strong></div>
+                                <small class="text-muted">Mã: ${i.code} - Giá: ${i.price.toLocaleString()}₫</small>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-success ms-2">+</button>
+                    `;
+
+                item.querySelector("button").addEventListener("click", () => {
+                    if (!selectedIngredients.has(i.id)) {
+                        selectedIngredients.set(i.id, i);
+                        renderSelectedIngredients();
+                        dropdown.style.display = "none";
+                        searchBox.value = "";
+                        clearSearch.classList.add("d-none");
+                    }
+                });
+
+                dropdown.appendChild(item);
+            });
+
+            dropdown.style.display = "block";
+        });
+
+        clearSearch.addEventListener("click", () => {
+            searchBox.value = "";
+            clearSearch.classList.add("d-none");
+            dropdown.style.display = "none";
+        });
+
+        function renderSelectedIngredients() {
+            selectedList.innerHTML = "";
+            hiddenContainer.innerHTML = "";
+
+            selectedIngredients.forEach(i => {
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex justify-content-between align-items-center";
+
+                li.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <img src="${i.imageUrl}" class="rounded" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;" />
+                            <div>
+                                <strong>${i.name}</strong> <small class="text-muted">(${i.code})</small>
+                            </div>
+                        </div>
+                        <button class="btn btn-sm btn-danger">×</button>
+                    `;
+
+                li.querySelector("button").addEventListener("click", () => {
+                    selectedIngredients.delete(i.id);
+                    renderSelectedIngredients();
+                });
+
+                selectedList.appendChild(li);
+
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "KitRequest.IngredientIds";
+                input.value = i.id;
+                hiddenContainer.appendChild(input);
+            });
+        }
+    </script>
+}

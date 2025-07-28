@@ -3,13 +3,12 @@ namespace DrinkToDoor.Data.enums
     public enum EnumOrderStatus
     {
         PEDING,
-        SUCCESS,
-        FAILED,
-        WAITING_CONFIRMATION,
+        PAYMENT_FAILED,
+        WAITING_DELIVER,
         DELIVERING,
         DELIVERED,
-        CANCELLED,
+        CANCELED,
         REFUNDED,
-        RETURNED,
+        SUCCESS,
     }
 }

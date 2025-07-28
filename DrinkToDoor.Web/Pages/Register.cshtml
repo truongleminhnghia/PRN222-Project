@@ -1,0 +1,133 @@
+﻿@page
+@model DrinkToDoor.Web.Pages.RegisterModel
+@using DrinkToDoor.Data.enums
+
+@{
+    ViewData["Title"] = "Đăng ký";
+    Layout = "~/Pages/Shared/_LayoutAuth.cshtml";
+}
+
+<div class="card shadow-lg">
+    <div class="card-body p-4">
+        <h1 class="card-title text-center mb-4">Tạo tài khoản</h1>
+        <form method="post" novalidate>
+            <div class="mb-3">
+                <label asp-for="Register.Email" class="form-label"></label>
+                <input asp-for="Register.Email" class="form-control" />
+                <span asp-validation-for="Register.Email" class="text-danger small"></span>
+                @if (Model.RegisterResult?.Success == false)
+                {
+                    <div class="alert alert-danger mt-3">
+                        @Model.RegisterResult.Message
+                    </div>
+                }
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Register.FirstName" class="form-label"></label>
+                <input asp-for="Register.FirstName" class="form-control" />
+                <span asp-validation-for="Register.FirstName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Register.LastName" class="form-label"></label>
+                <input asp-for="Register.LastName" class="form-control" />
+                <span asp-validation-for="Register.LastName" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Register.Password" class="form-label"></label>
+                <input asp-for="Register.Password" type="password" class="form-control" />
+                <span asp-validation-for="Register.Password" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Register.Phone" class="form-label"></label>
+                <input asp-for="Register.Phone" class="form-control" />
+                <span asp-validation-for="Register.Phone" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Register.Address" class="form-label"></label>
+                <input asp-for="Register.Address" class="form-control" />
+                <span asp-validation-for="Register.Address" class="text-danger small"></span>
+
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Register.Gender" class="form-label"></label>
+                <select asp-for="Register.Gender" asp-items="Html.GetEnumSelectList<EnumGender>()" class="form-select">
+                    <option value="">-- Chọn giới tính --</option>
+                </select>
+                <span asp-validation-for="Register.Gender" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Register.DateOfBirth" class="form-label"></label>
+                <input asp-for="Register.DateOfBirth" type="date" class="form-control" />
+                <span asp-validation-for="Register.DateOfBirth" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
+        </form>
+
+        <p class="text-center mt-3">
+            Bạn đã có tài khoản?
+            <a asp-page="/Login">Đăng nhập</a>
+        </p>
+    </div>
+</div>
+@if (Model.RegisterResult?.Success == true)
+{
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content shadow text-center">
+                <div class="modal-header border-0 justify-content-center">
+                    <div class="checkmark-circle bg-success rounded-circle d-flex justify-content-center align-items-center" style="width: 60px; height: 60px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" class="bi bi-check" viewBox="0 0 16 16">
+                            <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-4.243 4.243-2.121-2.122a.75.75 0 1 1 1.06-1.06L8 8.439l3.97-3.97z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <h5 class="modal-title mb-2">Đăng ký thành công</h5>
+                    <a class="btn btn-primary w-100" asp-page="/Login">Đến trang đăng nhập</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+}
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        .checkmark-circle {
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+        }
+
+            .checkmark-circle.show {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+        .modal-backdrop {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+    </style>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const checkmark = document.querySelector('.checkmark-circle');
+            if (checkmark) {
+                // Thêm class "show" sau khi DOM đã sẵn sàng để chạy transition
+                requestAnimationFrame(() => {
+                    checkmark.classList.add('show');
+                });
+            }
+        });
+    </script>
+}

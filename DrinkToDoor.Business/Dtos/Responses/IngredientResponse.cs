@@ -17,13 +17,11 @@ namespace DrinkToDoor.Business.Dtos.Responses
         public decimal Price { get; set; }
         public decimal? Cost { get; set; }
         public int StockQty { get; set; }
-        public Guid? SupplierId { get; set; }
-        public SupplierResponse? Supplier { get; set; }
-        public PackagingOptionResponse? DefaultPackagingOption { get; set; }
+        public string? Origin { get; set; }
+        public string? Trademark { get; set; }
         public virtual CategoryResponse? Category { get; set; }
-        // public virtual ICollection<KitIngredient>? KitIngredients { get; set; }
         public virtual ICollection<ImageResponse>? Images { get; set; } = new List<ImageResponse>();
         public ICollection<PackagingOptionResponse>? PackagingOptions { get; set; }
-        
+
     }
 }

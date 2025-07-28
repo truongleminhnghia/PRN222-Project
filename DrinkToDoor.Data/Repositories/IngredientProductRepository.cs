@@ -20,6 +20,12 @@ namespace DrinkToDoor.Data.Repositories
             return 1;
         }
 
+        public async Task<IngredientProduct> Create(IngredientProduct entity)
+        {
+            await _context.IngredientProducts.AddAsync(entity);
+            return entity;
+        }
+
         public async Task<bool> DeleteAsync(IngredientProduct entity)
         {
             _context.IngredientProducts.Remove(entity);
@@ -45,7 +51,9 @@ namespace DrinkToDoor.Data.Repositories
         public async Task<IngredientProduct?> FindById(Guid id)
         {
             return await _context
-                .IngredientProducts.Include(ip => ip.Ingredient).ThenInclude(i => i.Images)
+                .IngredientProducts
+                    .Include(ip => ip.Ingredient)
+                    .ThenInclude(i => i.Images)
                 .FirstOrDefaultAsync(ip => ip.Id == id);
         }
 

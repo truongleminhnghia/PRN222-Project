@@ -12,8 +12,10 @@ namespace DrinkToDoor.Business.Services
         }
         private static readonly List<BannerResponse> _banners = new()
         {
-            new BannerResponse { Url = "https://res.cloudinary.com/dkikc5ywq/image/upload/v1741202773/banner_1_vqsiey.png" },
-            new BannerResponse { Url = "https://res.cloudinary.com/dkikc5ywq/image/upload/v1741337427/banner_2_ikyyvu.png" }
+            new BannerResponse { Url = "https://bizweb.dktcdn.net/100/486/168/themes/908225/assets/slider_2.jpg?1701164815113" },
+            new BannerResponse { Url = "https://nguyenlieuhala.com/wp-content/uploads/2018/05/nguyen-lieu-pha-che-hala-1.png" },
+            new BannerResponse { Url = "https://bizweb.dktcdn.net/100/486/168/themes/908225/assets/slider_1.jpg?1701164815113" },
+            new BannerResponse { Url = "https://glofood.vn/upload/images/nguye%CC%82n%20lie%CC%A3%CC%82u%20tra%CC%80%20tra%CC%81i%20ca%CC%82y.png" },
         };
 
         public async Task<List<BannerResponse>> GetAllBannersAsync()

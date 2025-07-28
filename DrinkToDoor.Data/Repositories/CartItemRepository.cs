@@ -33,14 +33,19 @@ namespace DrinkToDoor.Data.Repositories
             return await _context.CartItems
                 .Include(ci => ci.IngredientProduct)
                 .ThenInclude(ci => ci.Ingredient)
+                .ThenInclude(ci => ci.Images)
                 .FirstOrDefaultAsync(ci => ci.Id == id);
         }
 
         public async Task<bool> DeleteAsync(CartItem item)
         {
             _context.CartItems.Remove(item);
-            await _context.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<int> Count(Guid cartId)
+        {
+            return await _context.CartItems.Where(ci => ci.CartId == cartId).CountAsync();
         }
     }
 }

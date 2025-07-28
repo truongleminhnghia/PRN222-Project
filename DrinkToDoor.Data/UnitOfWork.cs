@@ -10,7 +10,6 @@ namespace DrinkToDoor.Data
         private readonly DrinkToDoorDbContext _context;
         private IUserRepository? _userRepository;
         private ICategoryRepository? _categoryRepository;
-        private ISupplierRepository? _supplierRepository;
         private IPackagingOptionRepository? _packagingOptionRepository;
         private IImageRepository? _imageRepository;
         private IIngredientRepository? _ingredientRepository;
@@ -19,7 +18,11 @@ namespace DrinkToDoor.Data
         private IIngredientProductRepository? _ingredientProductRepository;
         private IOrderRepository? _orderRepository;
         private IOrderDetailRepository? _orderDetailRepository;
+        private IPaymentRepository? _paymentRepository;
         private IMessageRepository? _messageRepository;
+        private IKitRepository? _kitRepository;
+        private IKitIngredientRepository? _kitIngredientRepository;
+        private IKitProductRepository? _kitProductRepository;
 
         public UnitOfWork(DrinkToDoorDbContext context)
         {
@@ -29,8 +32,6 @@ namespace DrinkToDoor.Data
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);
         public ICategoryRepository Categories =>
             _categoryRepository ??= new CategoryRepository(_context);
-        public ISupplierRepository Suppliers =>
-            _supplierRepository ??= new SupplierRepository(_context);
         public IPackagingOptionRepository PackagingOptions =>
             _packagingOptionRepository ??= new PackagingOptionRepository(_context);
 
@@ -48,11 +49,20 @@ namespace DrinkToDoor.Data
         public ICartItemRepository CartItems =>
             _cartItemRepository ??= new CartItemRepository(_context);
 
-        public ICartRepository Carts => 
+        public ICartRepository Carts =>
             _cartRepository ??= new CartRepository(_context);
 
-        public IMessageRepository Messages => 
+        public IMessageRepository Messages =>
             _messageRepository ??= new MessageRepository(_context);
+
+        public IPaymentRepository Payments => _paymentRepository ??= new PaymentRepository(_context);
+
+        public IKitRepository Kits => _kitRepository ??= new KitRepository(_context);
+
+        public IKitIngredientRepository KitIngredients => _kitIngredientRepository ??= new KitIngredientRepository(_context);
+
+        public IKitProductRepository KitProducts => _kitProductRepository ??= new KitProductRepository(_context);
+
         public async Task SaveChangesAsync()
         {
             try

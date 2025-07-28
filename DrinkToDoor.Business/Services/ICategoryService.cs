@@ -17,5 +17,6 @@ namespace DrinkToDoor.Business.Services
         Task<bool> UpdateAsync(Guid id, CategoryRequest request);
         Task<bool> DeleteAsync(Guid id);
         Task<IEnumerable<CategoryResponse>> GetAll();
+        Task<Tuple<IEnumerable<CategoryResponse>, int>> GetParams(string? name, int pageCurrent, int pageSize, EnumCategoryType? categoryType = null);
     }
 }

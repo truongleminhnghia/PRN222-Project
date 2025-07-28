@@ -1,19 +1,7 @@
 @using System.Security.Claims
 
 <div class="login-partial">
-    @if (User.Identity != null && User.Identity.IsAuthenticated)
-    {
-        var email = User.FindFirst(ClaimTypes.Email)?.Value;
-        <span class="me-2">Xin chào, @email!</span>
-        <form id="logoutForm" method="post" asp-page="/Logout" class="d-inline">
-            <button type="submit" class="btn btn-danger">Đăng Xuất</button>
-        </form>
-    }
-    else
-    {
-        <a class="btn btn-primary" asp-page="/Login"
-           style="padding: 8px 12px; text-transform: uppercase;">
-            Đăng Nhập
-        </a>
-    }
+    <a class="btn btn-primary" asp-page="/Login" style="padding: 8px 12px; text-transform: uppercase;">
+        Đăng Nhập
+    </a>
 </div>

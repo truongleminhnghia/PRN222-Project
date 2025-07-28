@@ -13,5 +13,7 @@ namespace DrinkToDoor.Business.Interfaces
                                             EnumAccountStatus? status, EnumGender? gender, int pageCurrent, int pageSize);
         Task<bool> UpdateAsync(Guid id, UserResponse response);
         Task<bool> DeleteAsync(Guid id);
+        Task<ServiceResult> RegisterAsync(RegisterRequest dto);
+
     }
 }

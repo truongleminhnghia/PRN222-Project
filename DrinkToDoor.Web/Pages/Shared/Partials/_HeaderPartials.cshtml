@@ -1,48 +1,82 @@
-<header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
+@using System.Security.Claims
+
+<header class="shadow-sm sticky-top bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-2">
+        <div class="container-fluid px-4">
             <!-- Logo -->
-            <a class="navbar-brand" asp-page="/Index">
-                <img src="~/images/logos/logo.png" alt="Logo" style="height: 60px; width: 60px;">
+            <a class="navbar-brand d-flex align-items-center" asp-page="/Index">
+                <img src="~/images/logos/logo.png" alt="Logo" style="height: 50px;" class="me-2" />
+                <span class="fw-bold fs-4 text-primary">DrinkToDoor</span>
             </a>
 
-            <!-- Toggler cho mobile -->
+            <!-- Toggle button for mobile -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
                 aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <!-- Menu items -->
-            <div class="collapse navbar-collapse" id="mainNavbar" style="margin-left: 100px;">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav mx-auto gap-2">
                     <li class="nav-item">
-                        <a class="nav-link"
-                            style="font-size: 18px; font-weight: 500; font-family: Arial, Helvetica, sans-serif;"
-                            asp-page="/Index">Trang Chủ</a>
+                        <a class="nav-link fw-semibold text-dark" asp-page="/Index">Trang Chủ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                            style="font-size: 18px; font-weight: 500; font-family: Arial, Helvetica, sans-serif;"
-                            asp-page="/KhuyenMai">Khuyến mãi</a>
+                        <a class="nav-link fw-semibold text-dark" asp-page="/KhuyenMai">Khuyến Mãi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                            style="font-size: 18px; font-weight: 500; font-family: Arial, Helvetica, sans-serif;"
-                            asp-page="/Ingredients/Index">Nguyên liệu</a>
+                        <a class="nav-link fw-semibold text-dark" asp-page="/Ingredients/Index">Nguyên Liệu</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                            style="font-size: 18px; font-weight: 500; font-family: Arial, Helvetica, sans-serif;"
-                            asp-page="/Kits">Kits</a>
+                        <a class="nav-link fw-semibold text-dark" asp-page="/Kits">Kits</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                            style="font-size: 18px; font-weight: 500; font-family: Arial, Helvetica, sans-serif;"
-                            asp-page="/GioiThieu">Giới thiệu</a>
+                        <a class="nav-link fw-semibold text-dark" asp-page="/Introductions/Index">Giới Thiệu</a>
                     </li>
                 </ul>
 
-                <partial name="~/Pages/Shared/Partials/_LoginPartial.cshtml" />
+                <!-- Cart + User -->
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Giỏ hàng -->
+                    <a asp-page="/Carts/Index" class="btn position-relative">
+                        🛒
+                        @{
+                            var cartCount = (ViewData["CartCount"] as int?) ?? 0;
+                        }
+                        @if (cartCount > 0)
+                        {
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                @cartCount
+                                <span class="visually-hidden">sản phẩm trong giỏ</span>
+                            </span>
+                        }
+                    </a>
+
+                    <!-- Tài khoản -->
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        var name = User.FindFirst(ClaimTypes.Name)?.Value;
+                        <div class="dropdown">
+                            <a class="btn btn-outline-primary dropdown-toggle" asp-page="/Users/Profile" role="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                👤 @name
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow">
+                                <li><a class="dropdown-item" asp-page="/Users/Profile">Thông tin cá nhân</a></li>
+                                <li><a class="dropdown-item" asp-page="/Orders/Index">Đơn hàng</a></li>
+                                <li>
+                                    <form id="logoutForm" method="post" asp-page="/Logout" class="d-inline">
+                                        <button type="submit" class="dropdown-item text-danger">Đăng Xuất</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <partial name="~/Pages/Shared/Partials/_LoginPartial.cshtml" />
+                    }
+                </div>
             </div>
         </div>
     </nav>
