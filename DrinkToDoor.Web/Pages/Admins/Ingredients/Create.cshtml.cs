@@ -1,4 +1,3 @@
-using System.Drawing;
 using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Business.Services;
@@ -90,14 +89,16 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
 
                 IngredientRequest.PackagingOptionsRequest.Add(PackagingOptionRequest);
                 var ingredientResponse = await _ingredientService.CreateAsync(IngredientRequest);
+
                 await _hubContext.Clients.All.SendAsync("ReceiveNewIngredient", new
                 {
                     Id = ingredientResponse.Id,
                     Name = ingredientResponse.Name,
                     Price = ingredientResponse.Price,
                     Description = ingredientResponse.Description,
-                    ImagePath = ingredientResponse.Images?.FirstOrDefault()?.Url
+                    Images = ingredientResponse.Images?.Select(img => img.Url).ToList()
                 });
+
                 return RedirectToPage("Index");
             }
             catch (Exception ex)

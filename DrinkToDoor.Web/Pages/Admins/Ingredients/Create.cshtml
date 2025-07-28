@@ -108,11 +108,11 @@
                             <span class="fs-4 text-muted">+ Upload</span>
                         </label>
                     </div>
+                    @* <input name="ImagesRequest" id="imageInput" type="file" class="d-none" multiple accept="image/*" /> *@
                     <input name="ImagesRequest" id="imageInput" type="file" class="d-none" multiple accept="image/*" />
                     <span asp-validation-for="ImagesRequest" class="text-danger"></span>
                 </div>
 
-                <!-- Nút -->
                 <div class="col-12 mt-3 text-end">
                     <button type="submit" class="btn btn-primary px-4 rounded-pill">Tạo mới</button>
                     <a asp-page="Index" class="btn btn-outline-secondary px-4 ms-2 rounded-pill">Hủy</a>
@@ -128,8 +128,6 @@
         const imageInput = document.getElementById('imageInput');
         const preview = document.getElementById('imagePreview');
         const uploadTile = document.getElementById('uploadTile');
-
-        // Global list to store selected files
         let selectedFiles = [];
 
         uploadTile.addEventListener('click', (e) => {
@@ -139,10 +137,9 @@
 
         imageInput.addEventListener('change', function () {
             Array.from(this.files).forEach(file => {
-                // Avoid duplicates
+                // Nếu bạn muốn tránh thêm trùng:
                 if (!selectedFiles.some(f => f.name === file.name && f.lastModified === file.lastModified)) {
                     selectedFiles.push(file);
-
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         const wrapper = document.createElement('div');
@@ -165,10 +162,9 @@
                         delIcon.style.fontSize = '1.2rem';
                         delIcon.style.cursor = 'pointer';
                         delIcon.addEventListener('click', () => {
-                            const index = preview.children.length - 2; // -2 to skip +Upload
-                            selectedFiles.splice(index, 1);
                             wrapper.remove();
-                            updateInputFiles();
+                            // Cảnh báo: bạn cần reset toàn bộ nếu xóa vì input.files không thể chỉnh sửa
+                            alert("Đã xóa ảnh khỏi preview. Hãy chọn lại toàn bộ ảnh.");
                         });
 
                         wrapper.appendChild(delIcon);
@@ -178,8 +174,9 @@
                 }
             });
 
-            updateInputFiles();
-            this.value = ''; // reset so next change triggers
+            // ❌ KHÔNG reset this.value và KHÔNG sửa input.files
+            // this.value = '';
+            // KHÔNG dùng DataTransfer
         });
 
         function updateInputFiles() {
@@ -188,7 +185,6 @@
             imageInput.files = dataTransfer.files;
         }
     </script>
-
 }
 
 @functions {
