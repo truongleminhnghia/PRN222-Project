@@ -31,7 +31,7 @@ namespace DrinkToDoor.Business.Services
             _packagingOptionService = packagingOptionService;
         }
 
-        public async Task<bool> CreateAsync(IngredientRequest request)
+        public async Task<IngredientResponse> CreateAsync(IngredientRequest request)
         {
             try
             {
@@ -52,7 +52,7 @@ namespace DrinkToDoor.Business.Services
                 var image = await _imageService.AddImages(ingredient.Id, request.ImagesRequest);
                 var package = await _packagingOptionService.Add(ingredient.Id, request.PackagingOptionsRequest);
                 var result = await _unitOfWork.SaveChangesWithTransactionAsync();
-                return result > 0 ? true : false;
+                return result > 0 ? _mapper.Map<IngredientResponse>(ingredient) : null;
             }
             catch (Exception ex)
             {

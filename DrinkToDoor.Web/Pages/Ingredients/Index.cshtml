@@ -79,7 +79,7 @@
     </form>
 
     <!-- Card View -->
-    <div class="row gy-4">
+    <div class="row gy-4" id="ingredientList">
         @foreach (var item in Model.Ingredients)
         {
             <div class="col-12 col-md-6 col-lg-4 col-xl-3">
@@ -125,3 +125,46 @@
         </nav>
     </div>
 </div>
+
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/ingredientHub")
+            .withAutomaticReconnect()
+            .build();
+
+        connection.on("ReceiveNewIngredient", function (ingredient) {
+            const imageUrl = ingredient.imagePath || '/images/placeholder.png';
+            const description = ingredient.description ?? '';
+
+            const html = `
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                        <div class="card ingredient-card shadow-sm bg-white h-100"
+                            onclick="location.href='/Ingredients/Detail?id=${ingredient.id}'">
+                            <img src="${imageUrl}"
+                                 class="card-img-top card-thumb" alt="${ingredient.name}" />
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title clamp-1 text-dark fw-bold">${ingredient.name}</h5>
+                                <p class="text-muted mb-1">${ingredient.price.toLocaleString('vi-VN')}₫</p>
+                                <p class="card-text clamp-2 flex-grow-1">${description}</p>
+                                <div class="d-flex gap-2 mt-3">
+                                    <a class="btn btn-primary flex-fill">Thêm giỏ hàng</a>
+                                    <a href="/Ingredients/Detail?id=${ingredient.id}" class="btn btn-outline-primary flex-fill">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+
+            const container = document.getElementById("ingredientList");
+            if (container) {
+                container.insertAdjacentHTML("afterbegin", html);
+            }
+        });
+
+        connection.start()
+            .then(() => console.log("✅ Connected to IngredientHub"))
+            .catch(err => console.error("❌ SignalR connection failed:", err));
+    </script>
+}

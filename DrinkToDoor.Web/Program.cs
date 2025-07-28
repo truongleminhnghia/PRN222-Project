@@ -9,6 +9,7 @@ using DrinkToDoor.Data.enums;
 using DrinkToDoor.Data.Interfaces;
 using DrinkToDoor.Data.Repositories;
 using DrinkToDoor.Web.Configurations;
+using DrinkToDoor.Web.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Net.payOS;
@@ -89,6 +90,8 @@ PayOS payOS = new PayOS(ClientId,
 
 builder.Services.AddSingleton(payOS);
 
+builder.Services.AddSignalR();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -120,6 +123,8 @@ using (var scope = app.Services.CreateScope())
         db.SaveChanges();
     }
 }
+
+app.MapHub<IngredientHub>("/ingredientHub");
 
 app.UseHttpsRedirection();
 

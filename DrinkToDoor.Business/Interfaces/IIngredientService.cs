@@ -7,7 +7,7 @@ namespace DrinkToDoor.Business.Interfaces
 {
     public interface IIngredientService
     {
-        Task<bool> CreateAsync(IngredientRequest request);
+        Task<IngredientResponse> CreateAsync(IngredientRequest request);
         Task<IngredientResponse?> GetByIdAsync(Guid id);
         Task<Tuple<IEnumerable<IngredientResponse>, int>> GetAsync(string? keyword, string? name, Guid? categoryId, decimal? minPirce,
                                                                 decimal? maxPrice, decimal? minCost, decimal? maxCost,

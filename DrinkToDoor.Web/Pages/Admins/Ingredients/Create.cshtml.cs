@@ -2,9 +2,11 @@ using System.Drawing;
 using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Business.Services;
+using DrinkToDoor.Web.Hubs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 
 namespace DrinkToDoor.Web.Pages.Admins.Ingredients
 {
@@ -14,15 +16,17 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
         private readonly IIngredientService _ingredientService;
         private readonly ICategoryService _categoryService;
         private readonly IWebHostEnvironment _env;
+        private readonly IHubContext<IngredientHub> _hubContext;
 
         public Create(ILogger<Create> logger, IIngredientService ingredientService,
-                      ICategoryService categoryService,
+                      ICategoryService categoryService, IHubContext<IngredientHub> hubContext,
                       IWebHostEnvironment env)
         {
             _ingredientService = ingredientService;
             _categoryService = categoryService;
             _logger = logger;
             _env = env;
+            _hubContext = hubContext;
         }
 
         [BindProperty]
@@ -85,7 +89,15 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
                 }
 
                 IngredientRequest.PackagingOptionsRequest.Add(PackagingOptionRequest);
-                await _ingredientService.CreateAsync(IngredientRequest);
+                var ingredientResponse = await _ingredientService.CreateAsync(IngredientRequest);
+                await _hubContext.Clients.All.SendAsync("ReceiveNewIngredient", new
+                {
+                    Id = ingredientResponse.Id,
+                    Name = ingredientResponse.Name,
+                    Price = ingredientResponse.Price,
+                    Description = ingredientResponse.Description,
+                    ImagePath = ingredientResponse.Images?.FirstOrDefault()?.Url
+                });
                 return RedirectToPage("Index");
             }
             catch (Exception ex)
