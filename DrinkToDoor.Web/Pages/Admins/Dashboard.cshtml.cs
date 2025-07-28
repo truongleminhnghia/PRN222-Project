@@ -27,7 +27,7 @@ namespace DrinkToDoor.Web.Pages.Admins
         public IEnumerable<UserResponse> User { get; set; }
 
         [BindProperty(SupportsGet = true)]
-        public EnumOrderStatus Status { get; set; } = EnumOrderStatus.DELIVERED;
+        public EnumOrderStatus Status { get; set; } = EnumOrderStatus.SUCCESS;
         public List<MonthlyRevenueComparison> MonthlyRevenueList { get; set; } = new();
         public List<ChartData> MonthlyProfitList { get; set; } = new();
 

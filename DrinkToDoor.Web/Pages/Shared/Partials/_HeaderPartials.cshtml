@@ -40,10 +40,16 @@
                     <!-- Giỏ hàng -->
                     <a asp-page="/Carts/Index" class="btn position-relative">
                         🛒
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                            @ViewData["CartCount"] ?? 0
-                            <span class="visually-hidden">sản phẩm trong giỏ</span>
-                        </span>
+                        @{
+                            var cartCount = (ViewData["CartCount"] as int?) ?? 0;
+                        }
+                        @if (cartCount > 0)
+                        {
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                @cartCount
+                                <span class="visually-hidden">sản phẩm trong giỏ</span>
+                            </span>
+                        }
                     </a>
 
                     <!-- Tài khoản -->

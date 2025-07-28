@@ -31,6 +31,7 @@ namespace DrinkToDoor.Business.Services
                 if (orderExisting == null) throw new Exception("Đơn hàng không tồn tại");
                 if (orderExisting.Status == EnumOrderStatus.CANCELED) throw new Exception("Đơn hàng đã bị hủy trước đó");
                 orderExisting.Status = EnumOrderStatus.CANCELED;
+                orderExisting.UpdatedAt = DateTime.UtcNow;
                 // orderExisting.Reaso = reason;
                 await _unitOfWork.Orders.UpdateAsync(orderExisting);
                 var result = await _unitOfWork.SaveChangesWithTransactionAsync();
@@ -161,7 +162,7 @@ namespace DrinkToDoor.Business.Services
                     return new List<ChartData>();
 
                 var totalProfit = orders
-                    .Where(o => o.Status == EnumOrderStatus.DELIVERED)
+                    .Where(o => o.Status == EnumOrderStatus.SUCCESS)
                     .SelectMany(o => o.OrderDetails)
                     .Where(d => d.IngredientProduct != null && d.IngredientProduct.Ingredient != null)
                     .Sum(d =>

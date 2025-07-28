@@ -1,4 +1,3 @@
-
 using System.Drawing;
 using DrinkToDoor.Business.Dtos.Requests;
 using DrinkToDoor.Business.Interfaces;
@@ -31,12 +30,11 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
 
         public SelectList Categories { get; set; }
 
-        public ImageRequest ImageRequest { get; set; } = new ImageRequest();
-
         [BindProperty]
         public PackagingOptionRequest PackagingOptionRequest { get; set; } = new PackagingOptionRequest();
+
         [BindProperty]
-        public List<IFormFile> ImagesRequest { get; set; }
+        public List<IFormFile> ImagesRequest { get; set; } = new List<IFormFile>();
 
         public async Task<IActionResult> OnGet()
         {
@@ -47,10 +45,11 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
 
         public async Task<IActionResult> OnPostAsync()
         {
+            var categories = await _categoryService.GetAll();
+            Categories = new SelectList(categories, "Id", "Name");
+
             if (!ModelState.IsValid)
             {
-                var categories = await _categoryService.GetAll();
-                Categories = new SelectList(categories, "Id", "Name");
                 return Page();
             }
 
@@ -62,7 +61,6 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
                     if (!Directory.Exists(uploadsFolder))
                         Directory.CreateDirectory(uploadsFolder);
 
-                    // Tạo list đường dẫn lưu vào DB
                     var savedPaths = new List<string>();
 
                     foreach (var formFile in ImagesRequest)
@@ -80,8 +78,12 @@ namespace DrinkToDoor.Web.Pages.Admins.Ingredients
                             savedPaths.Add($"/images/ingredients/{uniqueFileName}");
                         }
                     }
-                    IngredientRequest.ImagesRequest = savedPaths.Select(url => new ImageRequest { ImageUrl = url }).ToList();
+
+                    IngredientRequest.ImagesRequest = savedPaths
+                        .Select(path => new ImageRequest { ImageUrl = path })
+                        .ToList();
                 }
+
                 IngredientRequest.PackagingOptionsRequest.Add(PackagingOptionRequest);
                 await _ingredientService.CreateAsync(IngredientRequest);
                 return RedirectToPage("Index");

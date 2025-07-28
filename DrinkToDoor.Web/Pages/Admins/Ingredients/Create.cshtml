@@ -85,8 +85,7 @@
                         @foreach (EnumPackageType g in Enum.GetValues(typeof(EnumPackageType)))
                         {
                             <option value="@g" selected="@(g == Model.PackagingOptionRequest.Type ? "selected" : null)">
-                                @GetDisplayName(g)
-                            </option>
+                                @GetDisplayName(g)</option>
                         }
                     </select>
                     <span asp-validation-for="PackagingOptionRequest.Type" class="text-danger"></span>
@@ -109,8 +108,7 @@
                             <span class="fs-4 text-muted">+ Upload</span>
                         </label>
                     </div>
-                    <input asp-for="ImagesRequest" id="imageInput" type="file" class="d-none" multiple
-                        accept="image/*" />
+                    <input name="ImagesRequest" id="imageInput" type="file" class="d-none" multiple accept="image/*" />
                     <span asp-validation-for="ImagesRequest" class="text-danger"></span>
                 </div>
 
@@ -131,40 +129,66 @@
         const preview = document.getElementById('imagePreview');
         const uploadTile = document.getElementById('uploadTile');
 
-        uploadTile.addEventListener('click', () => imageInput.click());
+        // Global list to store selected files
+        let selectedFiles = [];
+
+        uploadTile.addEventListener('click', (e) => {
+            e.preventDefault();
+            imageInput.click();
+        });
 
         imageInput.addEventListener('change', function () {
             Array.from(this.files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'card position-relative rounded';
-                    wrapper.style.width = '120px';
-                    wrapper.style.height = '120px';
+                // Avoid duplicates
+                if (!selectedFiles.some(f => f.name === file.name && f.lastModified === file.lastModified)) {
+                    selectedFiles.push(file);
 
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.objectFit = 'cover';
-                    img.style.width = '100%';
-                    img.style.height = '100%';
-                    wrapper.appendChild(img);
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'card position-relative rounded';
+                        wrapper.style.width = '120px';
+                        wrapper.style.height = '120px';
 
-                    const delIcon = document.createElement('i');
-                    delIcon.className = 'bi bi-x-lg position-absolute';
-                    delIcon.style.top = '4px';
-                    delIcon.style.right = '4px';
-                    delIcon.style.color = 'red';
-                    delIcon.style.fontSize = '1.2rem';
-                    delIcon.style.cursor = 'pointer';
-                    delIcon.addEventListener('click', () => wrapper.remove());
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.objectFit = 'cover';
+                        img.style.width = '100%';
+                        img.style.height = '100%';
+                        wrapper.appendChild(img);
 
-                    wrapper.appendChild(delIcon);
-                    preview.insertBefore(wrapper, uploadTile);
-                };
-                reader.readAsDataURL(file);
+                        const delIcon = document.createElement('i');
+                        delIcon.className = 'bi bi-x-lg position-absolute';
+                        delIcon.style.top = '4px';
+                        delIcon.style.right = '4px';
+                        delIcon.style.color = 'red';
+                        delIcon.style.fontSize = '1.2rem';
+                        delIcon.style.cursor = 'pointer';
+                        delIcon.addEventListener('click', () => {
+                            const index = preview.children.length - 2; // -2 to skip +Upload
+                            selectedFiles.splice(index, 1);
+                            wrapper.remove();
+                            updateInputFiles();
+                        });
+
+                        wrapper.appendChild(delIcon);
+                        preview.insertBefore(wrapper, uploadTile);
+                    };
+                    reader.readAsDataURL(file);
+                }
             });
+
+            updateInputFiles();
+            this.value = ''; // reset so next change triggers
         });
+
+        function updateInputFiles() {
+            const dataTransfer = new DataTransfer();
+            selectedFiles.forEach(file => dataTransfer.items.add(file));
+            imageInput.files = dataTransfer.files;
+        }
     </script>
+
 }
 
 @functions {

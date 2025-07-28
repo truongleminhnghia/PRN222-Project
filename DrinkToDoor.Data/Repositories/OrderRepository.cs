@@ -71,14 +71,14 @@ namespace DrinkToDoor.Data.Repositories
         public async Task<IEnumerable<Order>> FindByYear(int year)
         {
             return await _context.Orders
-                                    .Where(o => o.Status == EnumOrderStatus.DELIVERED && o.OrderDate.Year == year)
+                                    .Where(o => o.Status == EnumOrderStatus.SUCCESS && o.OrderDate.Year == year)
                                     .ToListAsync();
         }
 
         public async Task<IEnumerable<Order>> FindByMonthOfYear(int month, int year)
         {
             return await _context.Orders
-                                    .Where(o => o.Status == EnumOrderStatus.DELIVERED && o.OrderDate.Month == month && o.OrderDate.Year == year)
+                                    .Where(o => o.Status == EnumOrderStatus.SUCCESS && o.OrderDate.Month == month && o.OrderDate.Year == year)
                                     .ToListAsync();
         }
     }

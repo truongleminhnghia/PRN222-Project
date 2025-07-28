@@ -135,7 +135,28 @@ namespace DrinkToDoor.Business.Services
                     var orderExisting = await _unitOfWork.Orders.FindById(payment.OrderId);
                     if (orderExisting == null) throw new Exception($"Đơn hàng không tồn tại với {payment.OrderId}.");
                     orderExisting.Status = EnumOrderStatus.WAITING_DELIVER;
+                    orderExisting.StatusChangedAt = DateTime.UtcNow;
                     await _unitOfWork.Orders.UpdateAsync(orderExisting);
+
+                    var orderDetail = await _unitOfWork.OrderDetails.GetAllAsync(orderExisting.Id, null, null);
+                    foreach (var detail in orderDetail)
+                    {
+                        var ingredientProduct = await _unitOfWork.IngredientProducts.FindById(detail.IngredientProductId.Value);
+                        if (ingredientProduct == null) continue;
+
+                        var ingredient = await _unitOfWork.Ingredients.FindById(ingredientProduct.IngredientId);
+                        if (ingredient == null) continue;
+                        var matchedPackaging = ingredient.PackagingOptions?
+                                                            .FirstOrDefault(p => p.Type.ToString() == ingredientProduct.UnitPackage);
+                        if (matchedPackaging != null)
+                        {
+                            matchedPackaging.StockQty -= detail.Quantity;
+                            ingredient.StockQty -= detail.Quantity;
+                            if (matchedPackaging.StockQty < 0)
+                                matchedPackaging.StockQty = 0;
+                            await _unitOfWork.Ingredients.UpdateAsync(ingredient);
+                        }
+                    }
                 }
                 else
                 {

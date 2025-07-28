@@ -2,6 +2,7 @@ using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using DrinkToDoor.Business.Interfaces;
 using DrinkToDoor.Business.Services;
+using DrinkToDoor.Business.Services.BackgroundServices;
 using DrinkToDoor.Data.Context;
 using DrinkToDoor.Data.Entities;
 using DrinkToDoor.Data.enums;
@@ -59,6 +60,8 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddProjectDependencies();
 builder.Services.AddAutoMapperConfiguration();
+builder.Services.AddHostedService<OrderStatusUpdater>();
+
 
 // Add services to the container.
 builder.Services.AddRazorPages().AddNToastNotifyNoty(new NotyOptions

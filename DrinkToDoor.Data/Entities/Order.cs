@@ -38,6 +38,9 @@ namespace DrinkToDoor.Data.Entities
         [Column("full_name_shipping", TypeName = "varchar(200)")]
         public string FullNameShipping { get; set; } = string.Empty;
 
+        [Column("status_changedAt")]
+        public DateTime StatusChangedAt { get; set; } = DateTime.UtcNow;
+
         [Column("user_id")]
         [Required]
         public Guid UserId { get; set; }

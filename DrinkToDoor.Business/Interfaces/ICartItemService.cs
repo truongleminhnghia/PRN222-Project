@@ -7,5 +7,6 @@ namespace DrinkToDoor.Business.Interfaces
     {
         Task<IEnumerable<CartItemResponse>> GetByIds(List<Guid> ids);
         Task<bool> DeleteItem(Guid id);
+        Task<int> Count(Guid cartId);
     }
 }

@@ -42,5 +42,10 @@ namespace DrinkToDoor.Data.Repositories
             _context.CartItems.Remove(item);
             return true;
         }
+
+        public async Task<int> Count(Guid cartId)
+        {
+            return await _context.CartItems.Where(ci => ci.CartId == cartId).CountAsync();
+        }
     }
 }

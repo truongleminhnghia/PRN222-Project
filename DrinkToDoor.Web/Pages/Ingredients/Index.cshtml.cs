@@ -22,7 +22,7 @@ namespace DrinkToDoor.Web.Pages.Ingredients
 
         public int TotalPages { get; set; }
         [BindProperty(SupportsGet = true)]
-        public int PageSize { get; set; } = 10;
+        public int PageSize { get; set; } = 12;
         [BindProperty(SupportsGet = true)]
         public int PageCurrent { get; set; } = 1;
 

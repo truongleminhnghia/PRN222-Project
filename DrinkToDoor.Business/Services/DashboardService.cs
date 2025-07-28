@@ -83,7 +83,7 @@ namespace DrinkToDoor.Business.Services
         {
             try
             {
-                var orders = await _unitOfWork.Orders.GetAllAsync(null, EnumOrderStatus.DELIVERED);
+                var orders = await _unitOfWork.Orders.GetAllAsync(null, EnumOrderStatus.SUCCESS);
 
                 return orders?.Sum(o => o.TotalAmount) ?? 0;
             }

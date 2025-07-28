@@ -9,5 +9,6 @@ namespace DrinkToDoor.Data.enums
         DELIVERED,
         CANCELED,
         REFUNDED,
+        SUCCESS,
     }
 }

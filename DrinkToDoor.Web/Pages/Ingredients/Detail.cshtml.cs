@@ -18,15 +18,18 @@ namespace DrinkToDoor.Web.Pages.Ingredients
         private readonly ICartService _cartService;
         private readonly INotyfService _toastNotification;
         private readonly IIngredientProductService _ingredientProductService;
+        private readonly ICartItemService _cartItemService;
 
         public Detail(ILogger<Detail> logger, IIngredientService ingredientService, INotyfService notyfService,
-                        ICartService cartService, IIngredientProductService ingredientProductService)
+                        ICartService cartService, IIngredientProductService ingredientProductService,
+                        ICartItemService cartItemService)
         {
             _logger = logger;
             _ingredientService = ingredientService;
             _toastNotification = notyfService;
             _cartService = cartService;
             _ingredientProductService = ingredientProductService;
+            _cartItemService = cartItemService;
         }
 
         public IEnumerable<PackagingOptionResponse> PackagingOptions { get; set; } = Enumerable.Empty<PackagingOptionResponse>();
@@ -133,6 +136,16 @@ namespace DrinkToDoor.Web.Pages.Ingredients
                 if (result)
                 {
                     _toastNotification.Success("Thêm giỏ hàng thành công", 5);
+                    var cart = await _cartService.GetByUser(userId);
+                    if (cart != null)
+                    {
+                        int count = await _cartItemService.Count(cart.Id);
+                        ViewData["CartCount"] = count;
+                    }
+                    else
+                    {
+                        ViewData["CartCount"] = 0;
+                    }
                 }
                 else
                 {

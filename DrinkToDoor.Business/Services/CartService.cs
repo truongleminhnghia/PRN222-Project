@@ -135,7 +135,10 @@ namespace DrinkToDoor.Business.Services
                 var userExisting = await _unitOfWork.Users.FindById(userId);
                 if (userExisting == null) throw new Exception($"Người dùng không tồn tại với {userId}");
                 var cart = await _unitOfWork.Carts.FindByUserId(userId);
-                if (cart == null) throw new Exception($"Cart không tồn tại với {userId}");
+                if (cart == null)
+                {
+                    await CreateCart(userId);
+                }
                 return _mapper.Map<CartResponse>(cart);
             }
             catch (Exception ex)

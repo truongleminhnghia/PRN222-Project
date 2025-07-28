@@ -58,5 +58,20 @@ namespace DrinkToDoor.Business.Services
                 throw new Exception("Server Error");
             }
         }
+
+        public async Task<int> Count(Guid cartId)
+        {
+            try
+            {
+                var cartItems = await _unitOfWork.CartItems.Count(cartId);
+                return cartItems; ;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error {ex}", ex);
+                throw new Exception("Server Error");
+            }
+        }
+
     }
 }
